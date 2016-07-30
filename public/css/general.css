@@ -1,0 +1,278 @@
+/*--------- body content -----------*/
+@import url(fontiran.css);
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'IRANSans';
+    outline: none;
+}
+html {
+    direction: rtl;
+}
+body {
+    font-family: 'IRANSans';
+}
+a:hover {
+    text-decoration: none;
+}
+.black {
+    color: #0d0d0d;
+}
+.right {
+    right: 0px;
+    left: auto;
+    text-align: right;
+}
+/*------ override element css--------*/
+/*------ menu ------*/
+
+.navbar-nav .dropdown-menu  li > a {
+    right:0px;
+    left:auto;
+    text-align:right;
+}
+.dropdown-header
+{
+    right:0px;
+    left:auto;
+    text-align:right;
+    color: #3d84e6;
+    font-size: 14px;
+}
+.dropdown-menu {
+    min-width: 200px;
+}
+.dropdown-menu.columns-2 {
+    min-width: 400px;
+}
+.dropdown-menu.columns-3 {
+    min-width: 600px;
+}
+.dropdown-menu li a {
+    padding: 5px 15px;
+    font-weight: 300;
+}
+.multi-column-dropdown {
+    list-style: none;
+}
+.multi-column-dropdown li a {
+    display: block;
+    clear: both;
+    line-height: 1.428571429;
+    color: #333;
+    white-space: normal;
+}
+.multi-column-dropdown li a:hover {
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, .2);
+    color:rgba(0, 0, 0, .4);
+}
+
+@media (max-width: 767px) {
+    .dropdown-menu.multi-column {
+        min-width: 240px !important;
+        overflow-x: hidden;
+    }
+}
+/*---------header of sub pages----------*/
+#head.secondary h1{
+    font-size: 4em;
+}
+
+/*---------footer-------------*/
+.footer-col h4>a {
+    color: #6E6E6E;
+}
+.footer-col a:hover {
+    text-decoration: none;
+}
+.footer-col h4>a:hover {
+    color: #3d84e6;
+}
+.supporter{
+    margin: 10px 0 30px 0;
+    height: 60px;
+}
+.supporter h4{
+    display: inline;
+}
+.supporter img{
+    width: 50px;
+    -webkit-mask-image:-webkit-linear-gradient(top, rgba(110,110,110,.6), rgba(110, 110, 110,.6));
+}
+/*-----modal in footer-----*/
+.modal hr {
+    border-style: dotted;
+}
+.search-modal {
+    right:0px;
+    left:auto;
+    text-align:right;
+    width: 130px;
+    box-sizing: border-box;
+    border: .8px solid #ccc;
+    border-radius: 20px;
+    font-size: 13px;
+    background-color: white;
+    background-image: url('../images/search-icon.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+.result-search {
+    max-height: 320px;
+    overflow-y: auto;
+}
+.search-modal:focus {
+    width: 100%;
+}
+.teacher-block {
+    right:0px;
+    left:auto;
+    text-align:right;
+    width: 100%;
+    height: 80px;
+}
+.teacher-block > img {
+    float: right;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    border: 0.1px solid #f2f2f2;
+    margin: 10px;
+}
+.teacher-block > p {
+    float: right;
+    font-size: 14px;
+    color: #333333;
+    margin: 30px 20px;
+}
+.modal-footer button {
+    border-width: 0.2px;
+    font-weight: 300;
+}
+.school-block {
+    right:0px;
+    left:auto;
+    text-align:right;
+    width: 100%;
+    height: 60px;
+    color: #333333;
+}
+.school-block > p:nth-child(1){
+    font-size: 14px;
+    margin: 5px 10px;
+}
+.school-block > p:nth-child(2){
+    font-size: 11px;
+    margin: 5px 10px;
+}
+.course-block {
+    right:0px;
+    left:auto;
+    text-align:right;
+    width: 100%;
+    height: 60px;
+    color: #333333;
+}
+.course-block > p:nth-child(1){
+    font-size: 16px;
+    margin: 5px 10px;
+}
+.course-block > p:nth-child(2){
+    font-size: 14px;
+    margin: 5px 12px;
+}
+.course-block > p > span {
+    font-size: 12px;
+    margin: 5px 10px;
+}
+
+/*----------practice page--------*/
+.question-box > img, .point{
+    float: left;
+}
+.point {
+    height: 32px;
+    padding-top: 5px;
+}
+.question-box >button {
+    color: #fff;
+    background-color: #f0ad4e;
+    border-color: #eea236;
+}
+.question-box >button:hover {
+    color: #FFFFFF;
+}
+.answer{
+    margin: 35px 0 35px 5px;
+}
+.answer label {
+    color: #0d0d0d;
+    margin-right: 10px;
+}
+.activity {
+    background-color: #fff;
+    border-radius: 4px;
+    border: .2px solid #ccc;
+}
+.panel .btn-success {
+
+    width: 100%;
+}
+.btn-success {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+/*-------------dashboard page-----------------*/
+.course-button {
+    display: inline-block;
+    margin: 10px 5px 10px;
+    border: .2px solid #b3d1ff;
+    background-color: #fff;
+    color: #000;
+}
+.dash-table {
+    padding: 10px;
+    margin: 10px;
+    border: .2px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+}
+.dash-section > div:first-child{
+    padding-right: 40px;
+}
+
+/*------------------------------*/
+@media (min-width: 768px){
+    .navbar-nav>li {
+        float: right;
+    }
+    .multi-column .col-sm-4 {
+        float: right;
+    }
+    #footer .footer-col {
+        float: right;
+    }
+    .col-xs-1,.col-sm-1,.col-md-1,.col-lg-1,.col-xs-2,.col-sm-2,.col-md-2,.col-lg-2,.col-xs-3,.col-sm-3,
+    .col-md-3,.col-lg-3,.col-xs-4,.col-sm-4,.col-md-4,.col-lg-4,.col-xs-5,.col-sm-5,.col-md-5,.col-lg-5,
+    .col-xs-6,.col-sm-6,.col-md-6,.col-lg-6,.col-xs-7,.col-sm-7,.col-md-7,.col-lg-7,.col-xs-8,.col-sm-8,
+    .col-md-8,.col-lg-8,.col-xs-9,.col-sm-9,.col-md-9,.col-lg-9,.col-xs-10,.col-sm-10,.col-md-10,.col-lg-10,
+    .col-xs-11,.col-sm-11,.col-md-11,.col-lg-11,.col-xs-12,.col-sm-12,.col-md-12,.col-lg-12 {
+        float: right;
+    }
+}
+@media (max-width: 767px) {
+    .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover,
+    .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus {
+        background: rgba(0, 0, 0, .2);
+        color:rgba(0, 0, 0, .4);
+    }
+    .dropdown-header {
+        font-size: 12px;
+    }
+
+}
