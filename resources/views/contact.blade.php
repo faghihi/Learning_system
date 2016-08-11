@@ -98,38 +98,46 @@
 				<div class="row">
 					<div class="col-md-8">
 						<h3 class="section-title">فرم پرسش و پاسخ</h3>
+						@if(empty($submit))
 						<p>
 						برای تسریع در فرایند پاسخگویی تمامی فیلد های زیر را پر کنید.
 						</p>
+						@endif
+						@if(!empty($submit))
+							<p style="color:red;">
+								نظر شما انتقال داده شده است ، و حتما پیگیری های لازم انجام و به اطالاع شما خواهد رسید.
+							</p>
+						@endif
 						
-						<form class="form-light mt-20" role="form">
+						<form class="form-light mt-20" role="form" method="post" action="/Contact">
 							<div class="form-group">
 								<label>نام</label>
-								<input type="text" class="form-control" placeholder="اصغر">
+								<input type="text" name="name" class="form-control" placeholder="اصغر">
 							</div>
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>ایمیل</label>
-										<input type="email" class="form-control" placeholder="example@email.com">
+										<input type="email" name="email" class="form-control" placeholder="example@email.com">
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>تلفن</label>
-										<input type="text" class="form-control" placeholder="0930-0000000">
+										<input type="text" name="phone" class="form-control" placeholder="0930-0000000">
 									</div>
 								</div>
 							</div>
 							<div class="form-group">
 								<label>موضوع</label>
-								<input type="text" class="form-control" placeholder="مشکل در ...">
+								<input type="text" name="subject" class="form-control" placeholder="مشکل در ...">
 							</div>
 							<div class="form-group">
 								<label>پیام</label>
-								<textarea class="form-control" id="message" placeholder="..." style="height:100px;"></textarea>
+								<textarea class="form-control" name="content" id="message" placeholder="..." style="height:100px;"></textarea>
 							</div>
 							<button type="submit" class="btn btn-two">ارسال</button><p><br/></p>
+							<input name="_token" type="hidden" value="{{ csrf_token() }}"/>
 						</form>
 					</div>
 					<div class="col-md-1"></div>

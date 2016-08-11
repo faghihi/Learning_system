@@ -103,57 +103,39 @@
             <h2>گردآوری داده ها</h2>
             <hr>
             <ol>
+                <?php
+                    $count=0;
+                ?>
+                @foreach($questions as $question)
                 <li>
                     <div class="question-box">
-                        <p>چند عدد صحیح در عبارت زیر وجود دارد؟</p>
-                        <p>21*x+35/2=17</p>
+                        <p>{{$question['content']}}</p>
                         <div class="point">(نمره : <span>&nbsp;3&nbsp;</span>)</div>
-                        <img src="images/emoticon/32easy.png" title="ساده">
+                        <img src="{{URL::asset('images/emoticon/32easy.png')}}" title="{{$question['level']}}">
                         <br>
                         <div class="row answer">
                             <div class="col-md-3">
-                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q1">7 تا </label>
+                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q+<?php echo $count?>">{{$question['answers'][0]}} </label>
                             </div>
                             <div class="col-md-3">
-                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q1">4تا</label>
+                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q+<?php echo $count?>">{{$question['answers'][1]}}</label>
                             </div>
                             <div class="col-md-3">
-                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q1">3تا</label>
+                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q+<?php echo $count?>">{{$question['answers'][2]}}</label>
                             </div>
                             <div class="col-md-3">
-                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q1">صفر</label>
+                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q+<?php echo $count?>">{{$question['answers'][3]}}</label>
                             </div>
                         </div>
                         <br>
-                        <button class="btn btn-warning btn-xs" >اعلام مشکل در سوال.</button>
+                        <!--<button class="btn btn-warning btn-xs" >اعلام مشکل در سوال.</button>-->
                     </div>
                     <hr>
                 </li>
-                <li>
-                    <div class="question-box">
-                        <p>کدام یک از روش های گردآوری اطلاعات نمیباشد؟</p>
-                        <div class="point">(نمره : <span>&nbsp;۲&nbsp;</span>)</div>
-                        <img src="images/emoticon/32normal.png" title="متوسط">
-                        <br>
-                        <div class="row answer">
-                            <div class="col-md-3">
-                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q2">مشاهده</label>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q2">مصاحبه</label>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q2">پایگاه دادگان</label>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q2">تخمین منطقی</label>
-                            </div>
-                        </div>
-                        <br>
-                        <button class="btn btn-warning btn-xs" >اعلام مشکل در سوال.</button>
-                    </div>
-                    <hr>
-                </li>
+                    <?php
+                            $count++;
+                    ?>
+                @endforeach
             </ol>
             <br/>
             <form id="test" method="get" action="" >

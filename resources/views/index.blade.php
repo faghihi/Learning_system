@@ -64,16 +64,27 @@
 					</li>
 					<li><a href="#">آموزش</a></li>
                     <li><a href="/Contact">ارتباط با ما</a></li>
+                    <?php
+                        if(Session::get('Login')=="True")
+                        {
+                    ?>
                     <li><a href="/Dashboard">داشبورد</a></li>
-                    <li><a href="/UserArea">ورود | ثبت نام</a></li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">روشنک
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{Session::get('Name')}}
                             &nbsp;<b class="caret"></b></a>
                         <ul class="dropdown-menu dropdown-menu-right">
                             <li><a href="/Profile">پروفایل</a></li>
-                            <li><a href="#">خروج</a></li>
+                            <li><a href="/Logout">خروج</a></li>
                         </ul>
                     </li>
+                    <?php
+                        }
+                        else {
+                    ?>
+                    <li><a href="/UserArea">ورود | ثبت نام</a></li>
+                    <?php
+                        }
+                    ?>
 				</ul>
 			</div>
 			<!--/.nav-collapse -->

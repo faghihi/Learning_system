@@ -110,22 +110,27 @@
 							</div>
 							<div class="form">
 								<h2>وارد حساب کاربریت شو :-)</h2>
-								<form>
-									<input type="text" placeholder="نام کاربری"/>
-									<input type="password" placeholder="گذر واژه"/>
-									<button>ورود</button>
+								<form action="/Login" method="post">
+									@if( ! empty($valid))
+										<p style="color:red;">رمز و نام کاربری شما مطابقت ندارد</p>
+									@endif
+									<input type="text" name="username" placeholder="نام کاربری"/>
+									<input type="password" name="password" placeholder="گذر واژه"/>
+									<input name="_token" type="hidden" value="{{ csrf_token() }}"/>
+									<input type="submit" value="ورود">
 								</form>
 							</div>
 							<div class="form">
 								<h2>حساب کاربری جدید بساز :-)</h2>
-								<form>
-									<input type="text" placeholder="نام و نام خانوادگی"/>
-									<input type="text" placeholder="نام کاربری"/>
-									<input type="password" placeholder="گذر واژه"/>
-									<input type="password" placeholder="تکرار گزر واژه"/>
-									<input type="email" placeholder="ایمیل"/>
-									<input type="tel" placeholder="تلفن"/>
-									<button>ثبت نام</button>
+								<form action="/SignUp" method="post" onsubmit="return checklogin()">
+									<input type="text" name="name" placeholder="نام و نام خانوادگی"/>
+									<input type="text" name="username" placeholder="نام کاربری"/>
+									<input type="password" id="pass" name="password" placeholder="گذر واژه"/>
+									<input type="password" id="repass" name="repassword" placeholder="تکرار گزر واژه"/>
+									<input type="email" name="email" placeholder="ایمیل"/>
+									<input type="tel" name="phone" placeholder="تلفن"/>
+									<input name="_token" type="hidden" value="{{ csrf_token() }}"/>
+									<input type="submit" value="ثبت نام">
 								</form>
 							</div>
 							<div class="cta"><a href="http://andytran.me">رمزم را فراموش کردم. :-(</a></div>
