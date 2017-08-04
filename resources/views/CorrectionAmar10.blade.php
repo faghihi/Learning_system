@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>آمار سال دهم</title>
+    <title>Correction</title>
     <link rel="favicon" href="{{URL::asset('images/favicon.png')}}">
     <!-- custome js just for login page -->
 
@@ -35,7 +35,7 @@
         </div>
         <div class="navbar-collapse collapse" >
             <ul class="nav navbar-nav pull-right mainNav" >
-                <li ><a href="/">صفحه ی اصلی</a></li>
+                <li><a href="/">صفحه ی اصلی</a></li>
                 <li><a href="/#AboutUs">درباره ی ما</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">تمرین
@@ -95,52 +95,75 @@
     </div>
 </div>
 <!-- /.navbar -->
-
 <header id="head" class="secondary">
     <div class="container">
-        <h1>آمار پایه ی دهم</h1>
+        <h1>پاسخ نامه</h1>
         <p></p>
     </div>
 </header>
 
 
 <!-- container -->
-<div class="container">
-    <br>
-    <br>
-    <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-4">
-            <p>
-                این موضوع شامل بخش های ۱۰ تا ۱۲ کتاب ریاضی سال ۱۰ ام میباشد.
-            </p>
-            <p>
-                تعداد تمرین های موجود: <span> 1000تا</span>
-            </p>
-            <p>
-                تعداد تمرین های حل شده: <span>900تا</span>
-            </p>
-            <br>
-            <p>
-                شما هم به جمع همکلاسی هایتان اضافه شوید  با آن ها رقابت کنید.
-            </p>
-        </div>
-        <div class="col-md-4">
-            <img src="{{URL::asset('images/amarBook.PNG')}}">
-        </div>
-    </div>
-    <br><br><br>
-    @if(!$Check)
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <a href="/AddCourse/amar10"><button class="btn btn-success btn-lg">اضافش کن</button></a>
-            </div>
-        </div>
-    @endif
-</div>
-</div>
-<!-- /container -->
+<section class="container black solution">
 
+    <div class="row">
+        <!-- Article main content -->
+        <article class="col-md-8 col-sm-8 maincontent">
+            <br />
+            <br />
+            <h2>نتیجه ی آزمون شما</h2>
+            <hr>
+            <ol>
+                @foreach($questions as $question)
+                    <li>
+                        <div class="question-box">
+                            <img class="answer-pic" >
+                            <p>{{$question['content']}}</p>
+                            <br>
+                            <div class="row answer">
+                                <b>پاسخ صحیح:<span class="correct-answer">&nbsp;{{$question['answer']}}</span></b>
+                                <br><br>
+                                <b>پاسخ شما:<span class="your-answer">&nbsp;{{$question['answerthis']}}</span></b>
+                            </div>
+                            <p class="NC-tag">{{$question['correct']}}</p>
+                            <div class="point">(&nbsp;<span></span>&nbsp;نمره&nbsp;)</div>
+                            <img title="{{$question['level']}}">
+                            <br>
+                        </div>
+                        <hr>
+                    </li>
+                @endforeach
+            </ol>
+            <br/>
+        </article>
+        <!-- /Article -->
+        <!-- Sidebar -->
+        <aside class="col-md-4 col-سm-4 sidebar sidebar-right">
+
+            <div class="row panel">
+                <div class="col-xs-12 activity">
+                    <h5>وضعیت شما در این آزمون:</h5>
+                    <img>
+                    <p class="pointStatus"><span>&nbsp;" ایول به خودم"</span><span>&nbsp;" به همین قانع نمیشم"</span><span>&nbsp;" از فردا تلاشم و بیشتر میکنم"</span></p>
+                    <br>
+                    <div class="progress">
+                        <div class="progress-bar  progress-bar-striped " role="progressbar">
+                        </div>
+                    </div>
+                    <p>سوالات درست حل شده: <span></span>/<span></span></p>
+                    <p>امتیاز کسب شده: <span></span>/<span></span></p>
+                    <br>
+                </div>
+            </div>
+            <div class="row panel">
+                <a href="/Dashboard"><button class="btn btn-success"> بازگشت به داشبورد.</button></a>
+            </div>
+
+        </aside>
+        <!-- /Sidebar -->
+    </div>
+</section>
+<!-- /container -->
 <footer id="footer">
 
     <div class="container">
@@ -149,29 +172,29 @@
                 <div class="col-md-3 col-sm-6 footer-col">
                     <div class="footerwidget">
                         <h4><a href="#" data-toggle="modal" data-target="#teacher-modal">
-                            اساتید عضو
-                        </a></h4>
+                                اساتید عضو
+                            </a></h4>
                         <div class="menu-course">
                             <ul class="menu">
                                 <li><a href="#">
-                                    مریم رهبر زارع
-                                </a>
+                                        مریم رهبر زارع
+                                    </a>
                                 </li>
                                 <li><a href="#">
-                                    احمد بیات
-                                </a>
+                                        احمد بیات
+                                    </a>
                                 </li>
                                 <li><a href="#">
-                                    سهیلا مورچگانی
-                                </a>
+                                        سهیلا مورچگانی
+                                    </a>
                                 </li>
                                 <li><a href="#">
-                                    میرهادی سرکارفرشی
-                                </a>
+                                        میرهادی سرکارفرشی
+                                    </a>
                                 </li>
                                 <li><a href="#">
-                                    سپیده صاحب فصولی
-                                </a>
+                                        سپیده صاحب فصولی
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -180,29 +203,29 @@
                 <div class="col-md-3 col-sm-6 footer-col">
                     <div class="footerwidget">
                         <h4><a href="#" data-toggle="modal" data-target="#school-modal">
-                            مدارس عضو
-                        </a></h4>
+                                مدارس عضو
+                            </a></h4>
                         <div class="menu-course">
                             <ul class="menu">
                                 <li> <a href="#">
-                                    فرزانگان 3 کرج
-                                </a>
+                                        فرزانگان 3 کرج
+                                    </a>
                                 </li>
                                 <li><a href="#">
-                                    علامه حلی 4 تهران
-                                </a>
+                                        علامه حلی 4 تهران
+                                    </a>
                                 </li>
                                 <li><a href="#">
-                                    شهدای کارگر
-                                </a>
+                                        شهدای کارگر
+                                    </a>
                                 </li>
                                 <li><a href="#">
-                                    ابوریحان
-                                </a>
+                                        ابوریحان
+                                    </a>
                                 </li>
                                 <li><a href="#">
-                                    سلام صادقیه
-                                </a>
+                                        سلام صادقیه
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -211,21 +234,21 @@
                 <div class="col-md-3 col-sm-6 footer-col">
                     <div class="footerwidget">
                         <h4><a href="#" data-toggle="modal" data-target="#course-modal">
-                            دروس ارائه شده
-                        </a></h4>
+                                دروس ارائه شده
+                            </a></h4>
                         <div class="menu-course">
                             <ul class="menu">
                                 <li><a href="#">
-                                    آمار
-                                </a>
+                                        آمار
+                                    </a>
                                 </li>
                                 <li> <a href="#">
-                                    ریاضی 2
-                                </a>
+                                        ریاضی 2
+                                    </a>
                                 </li>
                                 <li><a href="#">
-                                    ریاضی 1
-                                </a>
+                                        ریاضی 1
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -246,7 +269,7 @@
         </div>
         <div class="supporter text-center">
             <h4>حامیان: &nbsp;</h4>
-            <a  href="aut.ac.ir"><img  src="{{URL::asset('images/AKUT.svg.png')}}" title="دانشگاه صنعتی امیرکبیر"></a>
+            <a  href="http://www.aut.ac.ir"><img  src="images/AKUT.svg.png" title="دانشگاه صنعتی امیرکبیر"></a>
             <a href="#"></a>
         </div>
         <div class="social text-center">
@@ -276,15 +299,15 @@
                         <hr>
                         <div class="result-search">
                             <div class="teacher-block">
-                                <img src="{{URL::asset('images/profile1.png')}}">
+                                <img src="images/profile1.png">
                                 <p>مریم رهبر زارع</p>
                             </div>
                             <div class="teacher-block">
-                                <img src="{{URL::asset('images/profile2.png')}}">
+                                <img src="images/profile2.png">
                                 <p>مریم رهبر زارع</p>
                             </div>
                             <div class="teacher-block">
-                                <img src="{{URL::asset('images/profile1.png')}}">
+                                <img src="images/profile1.png">
                                 <p>مریم رهبر زارع</p>
                             </div>
                         </div>
@@ -411,8 +434,8 @@
 <script src="{{URL::asset('js/jquery-2.1.1.js')}}"></script>
 <script src="{{URL::asset('js/bootstrap.min.js')}}"></script>
 <!-- custome js just for login page -->
+<script src="{{URL::asset('js/CAmar.js')}}"></script>
 <script src="{{URL::asset('js/custom.js')}}"></script>
-
 <!-- Google Maps -->
 <script src="{{URL::asset('js/Gmap.JS')}}"></script>
 <script src="{{URL::asset('js/google-map.js')}}"></script>

@@ -1,0 +1,77 @@
+/*article {
+    border: .2px dashed #ffa366;
+    border-radius: 5px;
+}*/
+.nav-pills>li.active>a, .nav-pills>li.active>a:hover, .nav-pills>li.active>a:focus {
+    color: #428bca;
+    background-color: #fff;
+    text-shadow: none;
+}
+.nav-pills>li>a, .nav-pills>li>a:focus {
+    color: #6E6E6E;
+}
+.nav-pills>li>a:hover {
+    text-shadow: 3px 3px 8px #bfbfbf;
+    background-color: #fff;
+}
+.row {
+    margin-right: 0;
+    margin-left: 0;
+}
+/*---------------first page message part---------------------*/
+.message {
+    border: .5px solid #8c8c8c;
+    border-radius: 5px;
+    max-height: 300px;
+    padding-left: 0px;
+    padding-right: 0px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+.message-title {
+    font-weight: bold;
+    margin: 4px;
+    padding-bottom: 10px;
+    padding-top: 8px;
+    border-bottom: .3px solid #ccc;
+}
+.message-part {
+    border-bottom: .5px solid #78a9ed;
+    margin:1px;
+    padding-top: 10px;
+    padding-bottom: 2px;
+}
+.btn-delete {
+    background-color: 	#ff4d94;
+    border-color:#ff3385;
+    color: #fff;
+}
+.btn-delete:hover,.btn-delete:focus,.btn-delete:active {
+    background-color: #ff3385;
+    border-color: #cc0052;
+    color: #fff;
+}
+.btn-success {
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+    color: #fff;
+}
+.btn-success:hover ,.btn-success:focus,.btn-success:active{
+    background-color:#449d44;
+    border-color:#398439 ;
+    color: #fff;
+}

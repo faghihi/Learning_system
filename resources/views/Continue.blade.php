@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>آمار سال دهم</title>
+    <title>amar 10</title>
     <link rel="favicon" href="{{URL::asset('images/favicon.png')}}">
     <!-- custome js just for login page -->
 
@@ -35,7 +35,7 @@
         </div>
         <div class="navbar-collapse collapse" >
             <ul class="nav navbar-nav pull-right mainNav" >
-                <li ><a href="/">صفحه ی اصلی</a></li>
+                <li><a href="/">صفحه ی اصلی</a></li>
                 <li><a href="/#AboutUs">درباره ی ما</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">تمرین
@@ -98,47 +98,101 @@
 
 <header id="head" class="secondary">
     <div class="container">
-        <h1>آمار پایه ی دهم</h1>
+        <h1>تمرین آمار پایه ی دهم</h1>
         <p></p>
     </div>
 </header>
 
 
 <!-- container -->
-<div class="container">
-    <br>
-    <br>
+<section class="container black">
+
     <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-4">
-            <p>
-                این موضوع شامل بخش های ۱۰ تا ۱۲ کتاب ریاضی سال ۱۰ ام میباشد.
-            </p>
-            <p>
-                تعداد تمرین های موجود: <span> 1000تا</span>
-            </p>
-            <p>
-                تعداد تمرین های حل شده: <span>900تا</span>
-            </p>
-            <br>
-            <p>
-                شما هم به جمع همکلاسی هایتان اضافه شوید  با آن ها رقابت کنید.
-            </p>
-        </div>
-        <div class="col-md-4">
-            <img src="{{URL::asset('images/amarBook.PNG')}}">
-        </div>
-    </div>
-    <br><br><br>
-    @if(!$Check)
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <a href="/AddCourse/amar10"><button class="btn btn-success btn-lg">اضافش کن</button></a>
+        <div class="col-md-2 col-sm-2"></div>
+        <!-- Article main content -->
+        <div class="col-md-8 col-sm-8 maincontent">
+            <br />
+            <br />
+            <h2>گردآوری داده ها</h2>
+            <div class="row panel">
+                <div class="col-xs-12 activity">
+                    <h5>وضعیت فعلی:</h5>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar">
+                        </div>
+                    </div>
+                    <p>سوالات حل شده: <span class="prog-answer"></span>/<span class="prog-total"></span></p>
+                    <br>
+                </div>
             </div>
+            <br>
+            <input type="submit" form="test" formaction="/Q/Save" class="btn btn-success center-block" value="ذخیره و بازگشت به داشبورد">
+            <hr>
+            <ol>
+                <?php
+                    $count=0;
+                ?>
+                @foreach($questions as $question)
+                <li>
+                    <div class="question-box">
+                        <p>{{$question['content']}}</p>
+                        <input name="t<?php echo $count?>" type="hidden" value="{{$question['content']}}" form="test">
+                        <div class="point">(نمره : <span>&nbsp;3&nbsp;</span>)</div>
+                        <img src="{{URL::asset('images/emoticon/32easy.png')}}" title="{{$question['level']}}">
+                        <br>
+                        <div class="row answer">
+                            <input name="n<?php echo $count?>" type="hidden" value="{{$question['id']}}" form="test">
+                            <input name="a<?php echo $count?>" type="hidden" value="{{$question['answer']}}" form="test">
+                            <?php
+                                for($i=0;$i<=3;$i++) {
+                                    if($i+1==$question['checked']) {
+                                        ?>
+                                        <div class="col-md-3">
+                                            <label class="radio-inline"><input class="right" form="test"
+                                                                               type="radio"
+                                                                               name="q<?php echo $count ?>"
+                                                                               value="{{$i+1}}" checked>{{$question['answers'][$i]}}
+                                            </label>
+                                        </div>
+                                    <?php
+                                    }
+                                    else{
+
+                                            ?>
+                                            <div class="col-md-3">
+                                                <label class="radio-inline"><input class="right" form="test"
+                                                                                   type="radio"
+                                                                                   name="q<?php echo $count ?>"
+                                                                                   value="{{$i+1}}">{{$question['answers'][$i]}}
+                                                </label>
+                                            </div>
+                                            <?php
+                                        }
+                                    }
+                            ?>
+                        </div>
+                        <br>
+                        <button onclick="refresh('q<?php echo $count?>')" class="btn btn-default btn-xs" >پاک کردن جواب</button>
+                        <!-- <button class="btn btn-warning btn-xs" >اعلام مشکل در سوال.</button> -->
+                    </div>
+                    <hr>
+                </li>
+                    <?php
+                            $count++;
+                    ?>
+                @endforeach
+            </ol>
+            <br/>
+            <form id="test" method="post" action="/Q/Check" >
+                <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
+                <input name="number" type="hidden" value="{{$count}}"/>
+                <input type="submit" class="btn btn-default" value="تصحیح">
+            </form>
         </div>
-    @endif
-</div>
-</div>
+        <!-- /Article -->
+            <div class="col-md-2 col-sm-2"></div>
+    </div>
+</section>
 <!-- /container -->
 
 <footer id="footer">
@@ -246,7 +300,7 @@
         </div>
         <div class="supporter text-center">
             <h4>حامیان: &nbsp;</h4>
-            <a  href="aut.ac.ir"><img  src="{{URL::asset('images/AKUT.svg.png')}}" title="دانشگاه صنعتی امیرکبیر"></a>
+            <a  href="http://www.aut.ac.ir"><img  src="images/AKUT.svg.png" title="دانشگاه صنعتی امیرکبیر"></a>
             <a href="#"></a>
         </div>
         <div class="social text-center">
@@ -276,15 +330,15 @@
                         <hr>
                         <div class="result-search">
                             <div class="teacher-block">
-                                <img src="{{URL::asset('images/profile1.png')}}">
+                                <img src="images/profile1.png">
                                 <p>مریم رهبر زارع</p>
                             </div>
                             <div class="teacher-block">
-                                <img src="{{URL::asset('images/profile2.png')}}">
+                                <img src="images/profile2.png">
                                 <p>مریم رهبر زارع</p>
                             </div>
                             <div class="teacher-block">
-                                <img src="{{URL::asset('images/profile1.png')}}">
+                                <img src="images/profile1.png">
                                 <p>مریم رهبر زارع</p>
                             </div>
                         </div>
@@ -411,11 +465,12 @@
 <script src="{{URL::asset('js/jquery-2.1.1.js')}}"></script>
 <script src="{{URL::asset('js/bootstrap.min.js')}}"></script>
 <!-- custome js just for login page -->
+<script src="{{URL::asset('js/QAmar.js')}}"></script>
 <script src="{{URL::asset('js/custom.js')}}"></script>
-
 <!-- Google Maps -->
 <script src="{{URL::asset('js/Gmap.JS')}}"></script>
 <script src="{{URL::asset('js/google-map.js')}}"></script>
+
 
 
 </body>

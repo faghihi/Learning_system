@@ -17,72 +17,14 @@
 
     <link rel="stylesheet" href="{{URL::asset('css/general.css')}}">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>
+    <!--[if lt IE 9]>
     <script src="{{URL::asset('js/html5shiv.js')}}"></script>
     <script src="{{URL::asset('js/respond.min.js')}}"></script>
+    <![endif]-->
 </head>
 
 <body>
-<!-- Fixed navbar -->
-<div class="navbar navbar-inverse">
-    <div class="container">
-        <div class="navbar-header">
-            <!-- Button for smallest screens -->
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
-            <a class="navbar-brand" href="/">
-                <img src="images/logo.png" alt="Techro HTML5 template"></a>
-        </div>
-        <div class="navbar-collapse collapse" >
-            <ul class="nav navbar-nav pull-right mainNav" >
-                <li ><a href="/">صفحه ی اصلی</a></li>
-                <li><a href="/#AboutUs">درباره ی ما</a></li>
-                <li class="dropdown active">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">تمارین
-                        &nbsp;<b class="caret"></b></a>
-                    <ul class="dropdown-menu dropdown-menu-right multi-column columns-3" >
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <ul class="multi-column-dropdown">
-                                    <li class="dropdown-header">دوره ی دهم</li>
-                                    <li><a href="/Courses/amar10">آمار</a></li>
-                                    <li class="disabled"><a href="#">ریاضی</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-sm-4">
-                                <ul class="multi-column-dropdown">
-                                    <li class="dropdown-header">دوره ی یازدهم</li>
-                                    <li><a href="#">آمار</a></li>
-                                    <li class="disabled"><a href="#">احتمال</a></li>
-                                    <li class="disabled"><a href="#">ریاضی</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-sm-4">
-                                <ul class="multi-column-dropdown">
-                                    <li class="dropdown-header">دوره ی دوازدهم</li>
-                                    <li><a href="#">آمار</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </ul>
-                </li>
-                <li><a href="#">آموزش</a></li>
-                <li><a href="/Contact">ارتباط با ما</a></li>
-                <li><a href="/Dashboard">داشبورد</a></li>
-                <li><a href="/UserArea">ورود | ثبت نام</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">روشنک
-                        &nbsp;<b class="caret"></b></a>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        <li><a href="/Profile">پروفایل</a></li>
-                        <li><a href="#">خروج</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        <!--/.nav-collapse -->
-    </div>
-</div>
-<!-- /.navbar -->
+@include('navbar',array('active','Q'))
 
 <header id="head" class="secondary">
     <div class="container">
@@ -96,11 +38,25 @@
 <section class="container black">
 
     <div class="row">
+        <div class="col-md-2 col-sm-2"></div>
         <!-- Article main content -->
-        <article class="col-md-8  maincontent">
+        <div class="col-md-8 col-sm-8 maincontent">
             <br />
             <br />
             <h2>گردآوری داده ها</h2>
+            <div class="row panel">
+                <div class="col-xs-12 activity">
+                    <h5>وضعیت فعلی:</h5>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar">
+                        </div>
+                    </div>
+                    <p>سوالات حل شده: <span class="prog-answer"></span>/<span class="prog-total"></span></p>
+                    <br>
+                </div>
+            </div>
+            <br>
+            <input type="submit" form="test" formaction="/Q/Save" class="btn btn-success center-block" value="ذخیره و بازگشت به داشبورد">
             <hr>
             <ol>
                 <?php
@@ -110,25 +66,29 @@
                 <li>
                     <div class="question-box">
                         <p>{{$question['content']}}</p>
+                        <input name="t<?php echo $count?>" type="hidden" value="{{$question['content']}}" form="test">
                         <div class="point">(نمره : <span>&nbsp;3&nbsp;</span>)</div>
                         <img src="{{URL::asset('images/emoticon/32easy.png')}}" title="{{$question['level']}}">
                         <br>
                         <div class="row answer">
                             <div class="col-md-3">
-                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q+<?php echo $count?>">{{$question['answers'][0]}} </label>
+                                <input name="n<?php echo $count?>" type="hidden" value="{{$question['id']}}" form="test">
+                                <input name="a<?php echo $count?>" type="hidden" value="{{$question['answer']}}" form="test">
+                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q<?php echo $count?>" value="1">{{$question['answers'][0]}} </label>
                             </div>
                             <div class="col-md-3">
-                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q+<?php echo $count?>">{{$question['answers'][1]}}</label>
+                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q<?php echo $count?>" value="2">{{$question['answers'][1]}}</label>
                             </div>
                             <div class="col-md-3">
-                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q+<?php echo $count?>">{{$question['answers'][2]}}</label>
+                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q<?php echo $count?>" value="3">{{$question['answers'][2]}}</label>
                             </div>
                             <div class="col-md-3">
-                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q+<?php echo $count?>">{{$question['answers'][3]}}</label>
+                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q<?php echo $count?>" value="4">{{$question['answers'][3]}}</label>
                             </div>
                         </div>
                         <br>
-                        <!--<button class="btn btn-warning btn-xs" >اعلام مشکل در سوال.</button>-->
+                        <button onclick="refresh('q<?php echo $count?>')" class="btn btn-default btn-xs" >پاک کردن جواب</button>
+                        <!-- <button class="btn btn-warning btn-xs" >اعلام مشکل در سوال.</button> -->
                     </div>
                     <hr>
                 </li>
@@ -138,36 +98,14 @@
                 @endforeach
             </ol>
             <br/>
-            <form id="test" method="get" action="" >
-                <button class="btn btn-default">تصحیح</button>
+            <form id="test" method="post" action="/Q/Check" >
+                <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
+                <input name="number" type="hidden" value="{{$count}}"/>
+                <input type="submit" class="btn btn-default" value="تصحیح">
             </form>
-        </article>
+        </div>
         <!-- /Article -->
-        <!-- Sidebar -->
-        <aside class="col-md-4 sidebar sidebar-right">
-
-            <div class="row panel">
-                <div class="col-xs-12 activity">
-                    <h5>وضعیت فعلی:</h5>
-                    <img src="images/emoticon/64noproblem.png">
-                    <span>&nbsp; ایول به خودم</span>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar"
-                             aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width:10%">
-                            10%
-                        </div>
-                    </div>
-                    <p>سوالات حل شده: <span>0/10</span></p>
-                    <p>امتیاز کسب شده: <span>0/20</span></p>
-                    <br>
-                </div>
-            </div>
-            <div class="row panel">
-                <button class="btn btn-success">ذخیره و بازگشت به داشبورد.</button>
-            </div>
-
-        </aside>
-        <!-- /Sidebar -->
+            <div class="col-md-2 col-sm-2"></div>
     </div>
 </section>
 <!-- /container -->
@@ -442,8 +380,8 @@
 <script src="{{URL::asset('js/jquery-2.1.1.js')}}"></script>
 <script src="{{URL::asset('js/bootstrap.min.js')}}"></script>
 <!-- custome js just for login page -->
+<script src="{{URL::asset('js/QAmar.js')}}"></script>
 <script src="{{URL::asset('js/custom.js')}}"></script>
-
 <!-- Google Maps -->
 <script src="{{URL::asset('js/Gmap.JS')}}"></script>
 <script src="{{URL::asset('js/google-map.js')}}"></script>

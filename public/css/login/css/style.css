@@ -92,7 +92,8 @@ body {
   font-weight: 400;
   line-height: 1;
 }
-.form-module input {
+.form-module input,
+.form-module select{
   outline: none;
   display: block;
   width: 100%;
@@ -104,7 +105,8 @@ body {
   -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
 }
-.form-module input:focus {
+.form-module input:focus,
+.form-module select:focus{
   border: 1px solid #33b5e5;
   color: #333333;
 }
@@ -133,4 +135,12 @@ body {
 .form-module .cta a {
   color: #333333;
   text-decoration: none;
+}
+
+/*----------customize-------------*/
+input[type=checkbox]{
+  width: auto;
+  display: inline;
+  margin-left:10px;
+  margin-bottom: 20px;
 }

@@ -34,14 +34,14 @@
 			<!-- Button for smallest screens -->
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
 			<a class="navbar-brand" href="/">
-				<img src="images/logo.png" alt="Techro HTML5 template"></a>
+				<img src="{{URL::asset('images/logo.png')}}" alt="Techro HTML5 template"></a>
 		</div>
 		<div class="navbar-collapse collapse" >
 			<ul class="nav navbar-nav pull-right mainNav" >
-				<li ><a href="/">صفحه ی اصلی</a></li>
+				<li><a href="/">صفحه ی اصلی</a></li>
 				<li><a href="/#AboutUs">درباره ی ما</a></li>
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">تمارین
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">تمرین
 						&nbsp;<b class="caret"></b></a>
 					<ul class="dropdown-menu dropdown-menu-right multi-column columns-3" >
 						<div class="row">
@@ -71,16 +71,27 @@
 				</li>
 				<li><a href="#">آموزش</a></li>
 				<li><a href="/Contact">ارتباط با ما</a></li>
+				<?php
+				if(Session::get('Login')=="True")
+				{
+				?>
 				<li><a href="/Dashboard">داشبورد</a></li>
-				<li class="active"><a href="#">ورود | ثبت نام</a></li>
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">روشنک
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{Session::get('Name')}}
 						&nbsp;<b class="caret"></b></a>
 					<ul class="dropdown-menu dropdown-menu-right">
 						<li><a href="/Profile">پروفایل</a></li>
-						<li><a href="#">خروج</a></li>
+						<li><a href="/Logout">خروج</a></li>
 					</ul>
 				</li>
+				<?php
+				}
+				else {
+				?>
+				<li class="active"><a href="#">ورود | ثبت نام</a></li>
+				<?php
+				}
+				?>
 			</ul>
 		</div>
 		<!--/.nav-collapse -->
@@ -114,6 +125,7 @@
 									@if( ! empty($valid))
 										<p style="color:red;">رمز و نام کاربری شما مطابقت ندارد</p>
 									@endif
+									<input type="checkbox"><label>معلم هستید؟</label>
 									<input type="text" name="username" placeholder="نام کاربری"/>
 									<input type="password" name="password" placeholder="گذر واژه"/>
 									<input name="_token" type="hidden" value="{{ csrf_token() }}"/>
@@ -123,6 +135,7 @@
 							<div class="form">
 								<h2>حساب کاربری جدید بساز :-)</h2>
 								<form action="/SignUp" method="post" onsubmit="return checklogin()">
+									<input type="checkbox"><label>معلم هستید؟</label>
 									<input type="text" name="name" placeholder="نام و نام خانوادگی"/>
 									<input type="text" name="username" placeholder="نام کاربری"/>
 									<input type="password" id="pass" name="password" placeholder="گذر واژه"/>
@@ -130,6 +143,11 @@
 									<input type="email" name="email" placeholder="ایمیل"/>
 									<input type="tel" name="phone" placeholder="تلفن"/>
 									<input name="_token" type="hidden" value="{{ csrf_token() }}"/>
+									<select style="display:none" name="school">
+										<option value="0" selected>مدرسه من در این مدارس نیست</option>
+										<option value="1">فرزانگان ۱</option>
+										<option value="2">علامه حلی</option>
+									</select>
 									<input type="submit" value="ثبت نام">
 								</form>
 							</div>
