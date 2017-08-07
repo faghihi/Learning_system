@@ -23,6 +23,9 @@
                             <div class="col-sm-4">
                                 <ul class="multi-column-dropdown">
                                     <li class="dropdown-header">دوره ی دهم</li>
+                                    @foreach($courses as $course)
+                                        <li><a href="/Courses/{{$course->name}}">{{$course->name}}</a></li>
+                                    @endforeach
                                     <li><a href="/Courses/amar10">آمار</a></li>
                                     <li class="disabled"><a href="#">ریاضی</a></li>
                                 </ul>
@@ -30,6 +33,7 @@
                             <div class="col-sm-4">
                                 <ul class="multi-column-dropdown">
                                     <li class="dropdown-header">دوره ی یازدهم</li>
+
                                     <li><a href="#">آمار</a></li>
                                     <li class="disabled"><a href="#">احتمال</a></li>
                                     <li class="disabled"><a href="#">ریاضی</a></li>
@@ -45,12 +49,16 @@
                     </ul>
                 </li>
                 <li><a href="#">آموزش</a></li>
+                <li><a href="/Video">ویدئوها</a></li>
                 <li><a href="/Contact">ارتباط با ما</a></li>
                 <?php
                 if(Session::get('Login')=="True")
                 {
                 ?>
+
                 <li><a href="/Dashboard">داشبورد</a></li>
+
+
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{Session::get('Name')}}
                         &nbsp;<b class="caret"></b></a>

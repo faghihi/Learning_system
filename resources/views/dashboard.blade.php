@@ -25,7 +25,7 @@
 
 <body>
 <!-- Fixed navbar -->
-@include('navbar',array('active'=>'dashboard'));
+@include('navbar',array('active'=>'dashboard'))
 <!-- /.navbar -->
 
 <header id="head" class="secondary">
@@ -76,6 +76,9 @@
                         <li ><a data-toggle="pill" href="#class1"><span class="course">آمار دهم</span>&nbsp;-&nbsp;<span class="teacher">محمدی</span></a></li>
                         <li ><a data-toggle="pill" href="#class2"><span class="course">آمار دهم</span>&nbsp;-&nbsp;<span class="teacher">سایت</span></a></li>
                         <li ><a data-toggle="pill" href="#class3"><span class="course">ریاضی دهم</span>&nbsp;-&nbsp;<span class="teacher">موسوی</span></a></li>
+                        @foreach($user_course as $course)
+                        <li ><a data-toggle="pill" href="#class1"><span class="course">{{$course->course}}</span>&nbsp;-&nbsp;<span class="teacher">موسوی</span></a></li>
+                        @endforeach
                     </ul>
                     <br>
                 </div>
@@ -226,6 +229,24 @@
                                 <a href="#"><button class="btn btn-delete btn-sm">حذف</button></a>
                             </div>
                         </div>
+                        <br>
+                        @foreach($exercises as $exercise)
+                        <div class="row dash-table-content chapter">
+                            <div class="col-md-4">
+                                <p>{{$exercise->name}}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p>محمدی</p>
+                            </div>
+                            <div class="col-md-2">
+                                <a href="/exercise/{{$exercise->id}}"><button class="btn btn-success btn-sm">شروع</button></a>
+                            </div>
+                            <div class="col-md-2">
+                                <a href="/delete/exercise/{{$exercise->id}}"><button class="btn btn-delete btn-sm">حذف</button></a>
+                            </div>
+                        </div>
+
+                        @endforeach
                         <br>
                     </div>
                 </div>

@@ -1,49 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="free-educational-responsive-web-template-webEdu">
-	<meta name="author" content="webThemez.com">
-	<title>سایت آموزش آمار</title>
-	<link rel="favicon" href="{{URL::asset('images/favicon.png')}}">
-	<link rel="stylesheet" href="{{URL::asset('css/bootstrap.min.css')}}">
-	<link rel="stylesheet" href="{{URL::asset('css/font-awesome.min.css')}}">
-	<link rel="stylesheet" href="{{URL::asset('css/bootstrap-theme.css')}}" media="screen">
-	<link rel="stylesheet" href="{{URL::asset('css/style.css')}}">
-    <link rel='stylesheet' id='camera-css'  href="{{URL::asset('css/camera.css')}}" type='text/css' media='all'>
-    <link rel="stylesheet" href="{{URL::asset('css/general.css')}}">
-	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-	<!--[if lt IE 9]>
-	<script src="{{URL::asset('js/html5shiv.js')}}"></script>
-	<script src="{{URL::asset('js/respond.min.js')}}"></script>
-	<![endif]-->
-</head>
-<body>
-	@include('navbar',array('active'=>'home'))
-
-	<!-- Header -->
-	<header id="head">
-		<div class="container">
-             <div class="heading-text">							
-							<h1 class="animated flipInY delay1">شروع آموزش</h1>
-							<p>وبسایت آموزش و پرسش آنلاین </p>
-             </div>
-            
-             <div class="fluid_container">
-                    <div class="camera_wrap camera_emboss pattern_1" id="camera_wrap_4">
-                        <div data-thumb="{{URL::asset('images/slides/thumbs/img4.jpg')}}" data-src="{{URL::asset('images/slides/img4.jpg')}}">
-                        </div> 
-                        <div data-thumb="{{URL::asset('images/slides/thumbs/img2.jpg')}}" data-src="{{URL::asset('images/slides/img2.jpg')}}">
-                        </div>
-                        <div data-thumb="{{URL::asset('images/slides/thumbs/img5.jpg')}}" data-src="{{URL::asset('images/slides/img5.jpg')}}">
-                        </div> 
-                    </div><!-- #camera_wrap_3 -->
-             </div><!-- .fluid_container -->
-		</div>
-	</header>
-	<!-- /Header -->
-
+@extends('master')
+@section('content')
   <div class="container">
     <div class="row">
 
@@ -89,21 +45,89 @@
                     </div><!--/span3-->
 				</div>
     </div>
-	
-  <section class="container black" id="AboutUs">
-      <div class="row">
-      	<div class="col-md-12"><div class="title-box clearfix ">
-            <h2 class="title-box_primary">درباره ی ما</h2></div>
-            <p><span>
-                سایت آموزش و تمرین برای دانش آموزان با محیطی شاد.
-            </span></p>
-            <p>متن توضیح. متن توضیح. متن توضیح. متن توضیح. متن توضیح. ر متن توضیح. متن توضیح. متن توضیح. متن توضیح. متن توضیح. ر متن توضیح. ر رمتن توضیح.</p>
-            <p>متن توضیح. متن توضیح. متن توضیح. متن توضیح. متن توضیح. ر متن توضیح. متن توضیح. متن توضیح. متن توضیح. متن توضیح. ر متن توضیح. ر رمتن توضیح.</p>
-        </div>
-      </div>
+  <section class="news-box top-margin">
+          <div class="container">
+              <h2><span>دروس جدید</span></h2>
+              <div class="row">
+                  <div class="col-lg-4 col-md-4 col-sm-12">
+                      <div class="newsBox">
+                          <a href="#">
+                          <div class="thumbnail">
+                              <figure><img src="images/news4.jpg" alt=""></figure>
+                              <div class="caption maxheight2">
+                              <div class="box_inner">
+                                          <div class="box">
+                                              <p class="title"><h5>ریاضی</h5></p>
+                                              <p>توضیحات مرتبط. توضیحات مرتبط. توضیحات مرتبط. توضیحات مرتبط.</p>
+                                          </div>
+                                  </div>
+                              </div>
+                          </div>
+                          </a>
+                      </div>
+                  </div>
+                  <div class="col-lg-4 col-md-4 col-sm-12">
+                      <div class="newsBox">
+                          <a href="#">
+                          <div class="thumbnail">
+                              <figure><img src="images/news5.jpg" alt=""></figure>
+                              <div class="caption maxheight2">
+                              <div class="box_inner">
+                                          <div class="box">
+                                              <p class="title"><h5>هندسه</h5></p>
+                                              <p>توضیحات مرتبط. توضیحات مرتبط. توضیحات مرتبط. توضیحات مرتبط.</p>
+                                          </div>
+                                  </div>
+                              </div>
+                          </div>
+                          </a>
+                      </div>
+                  </div>
+                  <div class="col-lg-4 col-md-4 col-sm-12">
+                      <div class="newsBox">
+                          <a href="#">
+                          <div class="thumbnail">
+                              <figure><img src="images/news6.jpg" alt=""></figure>
+                              <div class="caption maxheight2">
+                             <div class="box_inner">
+                                          <div class="box">
+                                              <p class="title"><h5>جبر</h5></p>
+                                              <p>توضیحات مرتبط. توضیحات مرتبط. توضیحات مرتبط. توضیحات مرتبط.</p>
+                                          </div>
+                                  </div>
+                              </div>
+                          </div>
+                          </a>
+                      </div>
+                  </div>
+              </div>
+          </div>
       </section>
-      
-    @include('footer')
+      <br>
+      <!--videos part-->
+      <section class="container" >
+          <div class="row">
+              <div class="col-md-12"><div class="title-box clearfix ">
+                  <h2><i class="fa fa-video-camera" aria-hidden="true"></i>&nbsp;ویدئوهای آموزشی</h2>
+              </div>
+                  <p>در این قسمت می توانید ویدئوهای آموزشی که برای بهبود سطح یادگیری و یا حل تمرین های شما درست شده است را مشاهده کنید.</p>
+                  <p><a href="videos.html"><em>→ اطلاعات بیشتر </em></a></p>
+              </div>
+          </div>
+      </section>
+      <!--about us part-->
+  <section class="container black" id="AboutUs">
+            <div class="row">
+              <div class="col-md-12"><div class="title-box clearfix ">
+                  <h2 class="title-box_primary">درباره ی ما</h2></div>
+                  <p><span>
+        سایت آموزش و تمرین برای دانش آموزان با محیطی شاد.
+                  </span></p>
+                  <p>تمرین حل کنید. رقابت کنید. پیشرفت کنید.</p>
+                  <p>هدف ما این است که با محیطی جذاب حل کردن تمرین ها را برایتان لذت بخش کنیم.</p>
+              </div>
+            </div>
+  </section>
 
 	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
 	<script src="{{URL::asset('js/modernizr-latest.js')}}"></script>
@@ -136,5 +160,4 @@
       
 	</script>
     
-</body>
-</html>
+@endsection

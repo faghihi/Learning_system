@@ -52,7 +52,7 @@
                 ?>
             <div class="form-group">
                 <label>نام و نام خانوادگی</label>
-                <input type="text" name="name" class="form-control" value="{{$info['name']}}">
+                <input type="text" name="name" class="form-control" value="{{$info['name']}}" disabled>
             </div>
             <div class="form-group">
                 <label>نام کاربری</label>
@@ -61,7 +61,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>ایمیل</label>
-                        <input type="email" name="email" class="form-control" value="{{$info['email']}}">
+                        <input type="email" name="email" class="form-control" value="{{$info['email']}}" disabled>
                     </div>
                 </div>
 
@@ -71,6 +71,7 @@
                         <input type="text" name="phone" class="form-control" value="{{$info['phone']}}">
                     </div>
                 </div>
+                @if($info['type'] == 'teacher')
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
@@ -81,6 +82,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
                 <button form="changeProfile" type="submit" class="btn btn-two">ثبت تغییر</button><p><br/></p>
                 <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
             </form>

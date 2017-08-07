@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Course;
 use App\courses;
 use Illuminate\Http\Request;
 
@@ -25,8 +26,8 @@ class Amar10Controller extends Controller
                     $check=1;
             }
         }
-//        echo $check;
-       return view($name)->with('Check',$check);
+        $course = Course::where('name','=',$name)->first();
+       return view('amar10')->with(['Check'=>$check,'course'=>$course]);
     }
 
     public function quest($name){

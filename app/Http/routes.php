@@ -13,6 +13,8 @@
 
 Route::get('/', array('as' => 'home_route', 'uses' => 'HomeController@get'));
 Route::get('/Dashboard','DashboardController@get');
+//Route::get('/Dashboard','DashboardController@index');
+Route::get('/TDashboard','DashboradController@index');
 Route::get('/Dashboard/SetGoal','DashboardController@SetGoal');
 Route::get('/Contact','ContactController@get');
 Route::get('/Courses/{name}','Amar10Controller@get');
@@ -37,3 +39,18 @@ Route::get('/SignUp/Check','LoginController@checkuser');
 Route::get('/Logout','LoginController@Logout');
 Route::post('/Contact','ContactController@post');
 
+Route::get('/Forgetpass' , function(){
+
+    return view ('forget');
+});
+Route::post('/Forgetpass' , 'LoginController@forget');
+
+Route::get('/Reset' , function(){
+
+    return view('reset');
+});
+Route::post('/Reset' , 'LoginController@reset');
+
+Route::get('/Video' , function(){
+   return view('video');
+});

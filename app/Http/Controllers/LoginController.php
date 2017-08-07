@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ForgetPass;
 use App\users;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
@@ -43,19 +44,30 @@ class LoginController extends Controller
     }
 
     public function Signup(){
-        $input = Input::all();
+
         $name=Input::get('name');
         $username=Input::get('username');
+        $teacher=Input::get('teacher');
+
+        if($teacher){
+            $type = 'teacher';
+            $school=Input::get('school');
+        }else{
+            $type = 'student';
+        }
         $user= new users();
         $user->name=$name;
         $user->username=$username;
         $user->email=Input::get('email');
         $user->password=Input::get('password');
         $user->phone=Input::get('phone');
+        $user->type = $type;
+        //$user->school_id = $school;
         $user->save();
         Session::put('Login', 'True');
         Session::put('Name', "$name");
         Session::put('UserName',"$username");
+
         return redirect('/');
     }
 
@@ -77,6 +89,34 @@ class LoginController extends Controller
         }
 
     }
+
+    public function forget(){
+        $email=Input::get('email');
+        $username=Input::get('username');
+
+        $msg = new ForgetPass($username);
+
+        \Mail::to($email)->send($msg);
+
+        Session::put('UserName',$username);
+
+        return redirect('https://mailtrap.io/inboxes/235913/messages');
+    }
+
+    public function reset(){
+        $pass = Input::get('password');
+        $username = Session::get('UserName');
+
+        $update=\DB::table('users')
+            ->where('username','=',$username)
+            ->update(['password' => $pass
+            ]);
+
+
+        return redirect('/');
+
+    }
+
     public function Logout(){
         Session::flush();
         return redirect('/');

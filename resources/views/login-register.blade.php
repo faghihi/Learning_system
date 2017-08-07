@@ -125,17 +125,17 @@
 									@if( ! empty($valid))
 										<p style="color:red;">رمز و نام کاربری شما مطابقت ندارد</p>
 									@endif
-									<input type="checkbox"><label>معلم هستید؟</label>
+
 									<input type="text" name="username" placeholder="نام کاربری"/>
 									<input type="password" name="password" placeholder="گذر واژه"/>
 									<input name="_token" type="hidden" value="{{ csrf_token() }}"/>
-									<input type="submit" value="ورود">
+									<input class="btn btn-default" type="submit" value="ورود">
 								</form>
 							</div>
 							<div class="form">
 								<h2>حساب کاربری جدید بساز :-)</h2>
 								<form action="/SignUp" method="post" onsubmit="return checklogin()">
-									<input type="checkbox"><label>معلم هستید؟</label>
+									<input type="checkbox" name="teacher"><label>معلم هستید؟</label>
 									<input type="text" name="name" placeholder="نام و نام خانوادگی"/>
 									<input type="text" name="username" placeholder="نام کاربری"/>
 									<input type="password" id="pass" name="password" placeholder="گذر واژه"/>
@@ -148,10 +148,10 @@
 										<option value="1">فرزانگان ۱</option>
 										<option value="2">علامه حلی</option>
 									</select>
-									<input type="submit" value="ثبت نام">
+									<input class="btn btn-default" type="submit" value="ثبت نام">
 								</form>
 							</div>
-							<div class="cta"><a href="http://andytran.me">رمزم را فراموش کردم. :-(</a></div>
+							<div class="cta"><a href="/Forgetpass">رمزم را فراموش کردم. :-(</a></div>
 						</div>
 					</div>
 					<div class="col-md-3">

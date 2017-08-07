@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 
+use App\Course;
+use App\courses;
+use App\exercise;
+use App\School;
+use App\users;
 use Request;
 use Illuminate\Support\Facades\Input;
 use Session;
@@ -11,6 +16,10 @@ use DB;
 class DashboardController extends Controller
 {
     //
+    public function index() {
+        $schools = School::all();
+        return view('Tdashboard', compact('schools'));
+    }
     public function get(){
         if(Session::get('Login')!="True"){
             return redirect('/');
@@ -24,7 +33,10 @@ class DashboardController extends Controller
             $info['exam']=$user->exam;
             $info['questions']=$user->questions;
         }
-        return view('dashboard')->with(['info'=>$info]);
+        $courses = Course::all();
+        $exercises = exercise::all();
+        $user_course = courses::all();
+        return view('dashboard')->with(['info'=>$info,'courses'=>$courses,'exercises'=>$exercises,'user_course'=>$user_course]);
     }
     public function SetGoal(){
         $exams=(int) Input::get('exam');
