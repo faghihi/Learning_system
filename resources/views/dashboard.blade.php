@@ -74,10 +74,13 @@
                     <h4 class="section-title black">درس های فعال:</h4>
                     <ul class="nav nav-pills nav-stacked">
                         <li ><a data-toggle="pill" href="#class1"><span class="course">آمار دهم</span>&nbsp;-&nbsp;<span class="teacher">محمدی</span></a></li>
-                        <li ><a data-toggle="pill" href="#class2"><span class="course">آمار دهم</span>&nbsp;-&nbsp;<span class="teacher">سایت</span></a></li>
-                        <li ><a data-toggle="pill" href="#class3"><span class="course">ریاضی دهم</span>&nbsp;-&nbsp;<span class="teacher">موسوی</span></a></li>
-                        @foreach($user_course as $course)
-                        <li ><a data-toggle="pill" href="#class1"><span class="course">{{$course->course}}</span>&nbsp;-&nbsp;<span class="teacher">موسوی</span></a></li>
+
+                        @foreach($user_course as $co)
+                        @foreach($courses as $course)
+                        @if($co->course_id == $course->id && $co->username == $user->username)
+                            <li><a data-toggle="pill" href="#class1"><span class="course">{{$course->name}}</span>&nbsp;-&nbsp;<span class="teacher">{{$course->teacher_name}}</span></a></li>
+                        @endif
+                        @endforeach
                         @endforeach
                     </ul>
                     <br>
@@ -215,22 +218,11 @@
                             </div>
                         </div>
                         <hr>
-                        <div class="row dash-table-content chapter">
-                            <div class="col-md-4">
-                                <p>گردآوری داده - 3</p>
-                            </div>
-                            <div class="col-md-4">
-                                <p>محمدی</p>
-                            </div>
-                            <div class="col-md-2">
-                                <a href="#"><button class="btn btn-success btn-sm">شروع</button></a>
-                            </div>
-                            <div class="col-md-2">
-                                <a href="#"><button class="btn btn-delete btn-sm">حذف</button></a>
-                            </div>
-                        </div>
-                        <br>
+                        @if(count($exercises) > 0)
                         @foreach($exercises as $exercise)
+
+                        @foreach($user_exercise as $exe)
+                        @if($exercise->status == 0 && $exe->exercise_id == $exercise->id)
                         <div class="row dash-table-content chapter">
                             <div class="col-md-4">
                                 <p>{{$exercise->name}}</p>
@@ -245,9 +237,15 @@
                                 <a href="/delete/exercise/{{$exercise->id}}"><button class="btn btn-delete btn-sm">حذف</button></a>
                             </div>
                         </div>
+                        <br>
+
+                        @endif
+                        @endforeach
 
                         @endforeach
-                        <br>
+                        @else
+                            برو حال کن ، تمرین نداری
+                        @endif
                     </div>
                 </div>
             </div>
@@ -367,7 +365,8 @@
                 <h4>گرفتن تمرینی که آموزگار تعریف کرده است</h4><br>
                 <p>برای گرفتن تمرینی که آموزگارتان تعریف کرده است نام تمرین و پسورد آن را از آموزگارتان بگیرید و آن را در قسمت زیر وارد کنید.</p>
                 <br>
-                <form class="form-inline">
+                <form class="form-inline" action="/giveEx" method="post">
+                    <input type="hidden" name="_token" value={{ csrf_token()}}>
                     <div class="row">
                         <div class="col-md-5 col-sm-12">
                             <div class="form-group">

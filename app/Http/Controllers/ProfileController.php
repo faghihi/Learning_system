@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Course;
+use App\School;
 use Illuminate\Http\Request;
 
 use Session;
@@ -29,8 +30,10 @@ class ProfileController extends Controller
                }
                $userinfo['username'] = $username;
            }
+           $user = users::where('username', $username)->first();
+           $schools = School::all();
            $courses = Course::all();
-           return view('profile')->with(['info'=>$userinfo,'courses'=>$courses]);
+           return view('profile')->with(['info'=>$userinfo,'courses'=>$courses,'user'=>$user,'schools'=>$schools]);
        }
        else{
            return redirect('/UserArea');

@@ -1,9 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Goal extends Migration
+class Skill extends Migration
 {
     /**
      * Run the migrations.
@@ -12,16 +13,13 @@ class Goal extends Migration
      */
     public function up()
     {
-        //
-        Schema::create('goal', function (Blueprint $table) {
+        Schema::create('skills', function (Blueprint $table) {
             $table->string('username');
-            $table->integer('ex_count');
-            $table->integer('q_count');
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
+            $table->integer('course_id');
+            $table->integer('section_id');
             $table->double('score');
             $table->timestamps();
-            $table->primary('username');
+            $table->primary(array('course_id','username'));
             $table->foreign('username')->references('username')->on('users')->onDelete('cascade');
         });
     }
@@ -34,6 +32,5 @@ class Goal extends Migration
     public function down()
     {
         //
-        Schema::drop('goal');
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Course;
 use App\Mail\ForgetPass;
+use App\School;
 use App\users;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
@@ -19,7 +21,9 @@ class LoginController extends Controller
         {
             return redirect('/');
         }
-        return view('login-register');
+        $schools = School::all();
+        $courses = Course::all();
+        return view('login-register',compact('schools','courses'));
     }
     public function Login(){
         $username=Input::get('username');
@@ -54,6 +58,7 @@ class LoginController extends Controller
             $school=Input::get('school');
         }else{
             $type = 'student';
+            $school = null;
         }
         $user= new users();
         $user->name=$name;
@@ -62,11 +67,11 @@ class LoginController extends Controller
         $user->password=Input::get('password');
         $user->phone=Input::get('phone');
         $user->type = $type;
-        //$user->school_id = $school;
+        $user->school_id = $school;
         $user->save();
         Session::put('Login', 'True');
-        Session::put('Name', "$name");
-        Session::put('UserName',"$username");
+        Session::put('Name', $name);
+        Session::put('UserName',$username);
 
         return redirect('/');
     }

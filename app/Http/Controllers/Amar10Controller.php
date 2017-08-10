@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Section;
+use App\User;
+use App\School;
+use App\classes;
 use App\Course;
 use App\courses;
+use App\userclass;
+use App\users;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -15,19 +21,83 @@ use App\tempanswer;
 class Amar10Controller extends Controller
 {
     //
-    public function get($name){
+    public function index() {
+        $classname = Input::get('classname');
+        $school_id = Input::get('school');
+
+        $class = new classes();
+        $class->name = $classname;
+        $class->school_id = $school_id;
+        $class->save();
+
+        $students = Input::get('students');
+
+        foreach($students as $student) {
+
+            $userclass = new userclass();
+            $userclass->username = $student;
+            $class = classes::where('name','=',$classname)->first();
+            $userclass->class_id = $class->id;
+            $userclass->save();
+        }
+
+        $schools = School::all();
+        $username = Session::get('UserName');
+        $user = User::where('username','=',$username)->first();
+
+        $users = User::all();
+        $classes = classes::all();
+        $courses = Course::all();
+        return view('TDashboard',compact('schools','user','users','classes','courses'));
+    }
+
+    public function addcourse() {
+        $coursename = Input::get('coursename');
+        $grade = Input::get('grade');
+        $username = Session::get('UserName');
+        $teacher = users::where('username','=',$username)->first();
+
+        $course = new Course();
+        $course->name = $coursename;
+        $course->grade = $grade;
+        $course->teacher_name = $teacher->name;
+
+        $course->save();
+
+        $id = Course::where('name','=',$coursename)->first();
+
+        $section = new Section();
+        $section->course_id = $id;
+        $section->name = Input::get('section');
+        $section->save();
+
+        $schools = School::all();
+        $username = Session::get('UserName');
+        $user = User::where('username','=',$username)->first();
+
+        $users = User::all();
+        $classes = classes::all();
+        $courses = Course::all();
+        return view('TDashboard',compact('schools','user','users','classes','courses'));
+    }
+
+    public function get($id){
         $check=0;
         if(Session::get('Login')=="True")
         {
-            $courses=DB::select('select * from courses Where username ="'.Session::get('UserName').'" AND course = "'.$name.'"');
-            foreach ($courses as $course)
-            {
-                if($course != null)
-                    $check=1;
+            $username = Session::get('UserName');
+            $user = users::where('username','=',$username)->first();
+            $courses=courses::where('username','=',$username)->where('course_id','=',$id)->first();
+            if(count($courses) > 0) {
+                foreach ($courses as $course) {
+                    if ($course != null)
+                        $check = 1;
+                }
             }
         }
-        $course = Course::where('name','=',$name)->first();
-       return view('amar10')->with(['Check'=>$check,'course'=>$course]);
+        $courses = Course::all();
+        $course = Course::where('id','=',$id)->first();
+        return view('amar10')->with(['Check'=>$check,'courses'=>$courses,'user'=>$user,'course'=>$course]);
     }
 
     public function quest($name){
@@ -64,20 +134,24 @@ class Amar10Controller extends Controller
         
     }
 
-    public function add($name){
+    public function add($id){
         if(Session::get('Login')!="True")
         {
             return redirect('/UserArea');
         }
-        $courses=DB::select('select * from courses Where username ="'.Session::get('UserName').'" AND course = "'.$name.'"');
-        foreach ($courses as $course)
-        {
-            if($course != null)
-                return redirect('/Dashboard');
+
+        $username = Session::get('UserName');
+        $courses=courses::where('username','=',$username)->where('course_id','=',$id)->first();
+        if(count($courses) > 0) {
+            foreach ($courses as $course) {
+                if ($course != null)
+                    return redirect('/Dashboard');
+            }
         }
         $Course=new courses();
-        $Course->username=Session::get('UserName');
-        $Course->course=$name;
+        $Course->username=$username;
+        $Course->course_id=$id;
+        $Course->score = 0;
         $Course->save();
         return redirect('/Dashboard');
     }
@@ -114,12 +188,12 @@ class Amar10Controller extends Controller
     }
 
     public function check (){
-        echo "check progress";
-        print_r(Input::all());
+
         $count=Input::get('number');
         $question_array=array();
         for($i=0;$i<$count;$i++){
             $question_array[$i]['id']=Input::get('n'.$i);
+
             if(Input::has('q'.$i)){
                 $answercheck=Input::get('q'.$i);
             }
@@ -128,15 +202,19 @@ class Amar10Controller extends Controller
             }
             $question_array[$i]['answerthis']=$answercheck;
             $question_array[$i]['answer']=Input::get('a'.$i);
-            $question_array[$i]['content']=Input::get('content');
+            $question_array[$i]['content']=Input::get('t'.$i);
+
             $thisquest = DB::select('select * from questions Where id="' . $question_array[$i]['id'] . '"');
+
             foreach ($thisquest as $quest) {
-                $answers=explode(';',$quest->answers);
-                //print_r($answers);
-//                echo $question_array[$i]['answer'];
-                for($j=0;$j<=3;$j++){
-                    $question_array[$i]['answers'][$j]=$answers[$j];
+                $answers=json_decode($quest->options);
+                for($j = 0 ;$j < 4;$j++ ){
+                     foreach($answers as $answer=>$value) {
+
+                        $question_array[$i]['answers'][$answer]=$value;
+                     }
                 }
+
                 if($question_array[$i]['answerthis']==0)
                 {
                     $question_array[$i]['correct']='N';
@@ -144,13 +222,13 @@ class Amar10Controller extends Controller
                 }
                 elseif($question_array[$i]['answerthis']==$question_array[$i]['answer']){
                     $question_array[$i]['correct']='C';
-                    $question_array[$i]['answerthis']=$question_array[$i]['answers'][$question_array[$i]['answerthis']-1];
+                    $question_array[$i]['answerthis']=$question_array[$i]['answers'][$question_array[$i]['answerthis']];
                 }
                 else {
                     $question_array[$i]['correct']='N';
-                    $question_array[$i]['answerthis']=$question_array[$i]['answers'][$question_array[$i]['answerthis']-1];
+                    $question_array[$i]['answerthis']=$question_array[$i]['answers'][$question_array[$i]['answerthis']];
                 }
-                $question_array[$i]['answer']=$question_array[$i]['answers'][$question_array[$i]['answer']-1];
+                $question_array[$i]['answer']=$question_array[$i]['answers'][$question_array[$i]['answer']];
                 switch ($quest->level)
                 {
                     case 0 : $question_array[$i]['level']="ساده";

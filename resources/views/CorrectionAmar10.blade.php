@@ -117,7 +117,12 @@
                 @foreach($questions as $question)
                     <li>
                         <div class="question-box">
-                            <img class="answer-pic" >
+
+                            @if($question['correct'] == 'C')
+                                <img class="answer-pic" src="/images/Correct-stamp.png">
+                            @elseif($question['correct'] == 'N')
+                                <img class="answer-pic" src="/images/Wrong-stamp.png">
+                            @endif
                             <p>{{$question['content']}}</p>
                             <br>
                             <div class="row answer">
@@ -269,7 +274,7 @@
         </div>
         <div class="supporter text-center">
             <h4>حامیان: &nbsp;</h4>
-            <a  href="http://www.aut.ac.ir"><img  src="images/AKUT.svg.png" title="دانشگاه صنعتی امیرکبیر"></a>
+            <a  href="http://www.aut.ac.ir"><img  src="/images/AKUT.svg.png" title="دانشگاه صنعتی امیرکبیر"></a>
             <a href="#"></a>
         </div>
         <div class="social text-center">
@@ -299,7 +304,7 @@
                         <hr>
                         <div class="result-search">
                             <div class="teacher-block">
-                                <img src="images/profile1.png">
+                                <img src="/images/profile1.png">
                                 <p>مریم رهبر زارع</p>
                             </div>
                             <div class="teacher-block">

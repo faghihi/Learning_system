@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
-
+use App\classes;
+use App\Section;
+use App\User;
 use App\Course;
 use App\courses;
 use App\exercise;
 use App\School;
+use App\userexercise;
 use App\users;
 use Request;
 use Illuminate\Support\Facades\Input;
@@ -18,7 +21,14 @@ class DashboardController extends Controller
     //
     public function index() {
         $schools = School::all();
-        return view('Tdashboard', compact('schools'));
+        $username = Session::get('UserName');
+        $user = User::where('username','=',$username)->first();
+
+        $users = User::all();
+        $classes = classes::all();
+        $courses = Course::all();
+        $sections = Section::all();
+        return view('Tdashboard', compact('schools','user','users','classes','courses','sections'));
     }
     public function get(){
         if(Session::get('Login')!="True"){
@@ -36,7 +46,10 @@ class DashboardController extends Controller
         $courses = Course::all();
         $exercises = exercise::all();
         $user_course = courses::all();
-        return view('dashboard')->with(['info'=>$info,'courses'=>$courses,'exercises'=>$exercises,'user_course'=>$user_course]);
+        $user = User::where('username','=',$username)->first();
+        $user_exercise = userexercise::where('username','=',$username)->get();
+
+        return view('dashboard')->with(['info'=>$info,'courses'=>$courses,'exercises'=>$exercises,'user_course'=>$user_course,'user'=>$user,'user_exercise'=>$user_exercise]);
     }
     public function SetGoal(){
         $exams=(int) Input::get('exam');

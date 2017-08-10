@@ -16,10 +16,10 @@ class CreateExerciseTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('course_id');
+            $table->integer('section_id');
             $table->integer('easy_no');
             $table->integer('medium_no');
             $table->integer('hard_no');
-            $table->string('section');
             $table->integer('code');
             $table->integer('status')->default(0);
             $table->date('start_date')->nullable();

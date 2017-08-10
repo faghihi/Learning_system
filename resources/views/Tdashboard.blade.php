@@ -30,79 +30,8 @@
         </script>
 </head>
 <body>
-<!-- Fixed navbar -->
-<div class="navbar navbar-inverse">
-    <div class="container">
-        <div class="navbar-header">
-            <!-- Button for smallest screens -->
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
-            <a class="navbar-brand" href="index.html">
-                <img src="images/logo.png" alt="Techro HTML5 template"></a>
-        </div>
-        <div class="navbar-collapse collapse" >
-            <ul class="nav navbar-nav pull-right mainNav" >
-                <li><a href="index.html">صفحه ی اصلی</a></li>
-                <li><a href="index.html#AboutUs">درباره ی ما</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">تمرین
-                        &nbsp;<b class="caret"></b></a>
-                    <ul class="dropdown-menu dropdown-menu-right multi-column columns-3" >
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <ul class="multi-column-dropdown">
-                                    <li class="dropdown-header">دوره ی دهم</li>
-                                    <li><a href="amar10.html">آمار</a></li>
-                                    <li class="disabled"><a href="#">ریاضی</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-sm-4">
-                                <ul class="multi-column-dropdown">
-                                    <li class="dropdown-header">دوره ی یازدهم</li>
-                                    <li><a href="#">آمار</a></li>
-                                    <li class="disabled"><a href="#">احتمال</a></li>
-                                    <li class="disabled"><a href="#">ریاضی</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-sm-4">
-                                <ul class="multi-column-dropdown">
-                                    <li class="dropdown-header">دوره ی دوازدهم</li>
-                                    <li><a href="#">آمار</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </ul>
-                </li>
-                <li><a href="#">آموزش</a></li>
-                <li><a href="contact.html">ارتباط با ما</a></li>
 
-                <?php
-                if(Session::get('Login')=="True")
-                {
-                ?>
-                <li class="active"><a href="#">داشبورد</a></li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{Session::get('Name')}}
-                    &nbsp;<b class="caret"></b></a>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        <li><a href="/Profile">پروفایل</a></li>
-                        <li><a href="/Logout">خروج</a></li>
-                    </ul>
-                </li>
-                <?php
-                }
-                else {
-                ?>
-                <li><a href="/UserArea">ورود | ثبت نام</a></li>
-                <?php
-                }
-                ?>
-            </ul>
-        </div>
-        <!--/.nav-collapse -->
-    </div>
-</div>
-<!-- /.navbar -->
+@include('navbar',array('active'=>'home'))
 
 <header id="head" class="secondary">
     <div class="container">
@@ -122,6 +51,7 @@
             <ul class="nav nav-pills nav-stacked">
                 <li class="active"><a data-toggle="pill" href="#first-page">صفحه اصلی</a></li>
                 <li><a data-toggle="pill" href="#add-class">ایجاد کلاس جدید</a></li>
+                <li><a data-toggle="pill" href="#add-course">ایجاد درس جدید</a></li>
                 <li><a data-toggle="pill" href="#class-data">اطلاعات کلاس ها</a></li>
                 <li><a data-toggle="pill" href="#add-test">تعریف تمرین جدید</a></li>
                 <li><a data-toggle="pill" href="#test-data">اطلاعات تمرین ها</a></li>
@@ -240,29 +170,41 @@
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-sm-10 col-md-10">
                         <h3 class="black">اضافه کردن سوال</h3>
-                        <h4>آمار سال دهم</h4>
+
                         <br>
-                        <form>
+                        <form action="/CreateQuestion" method="post">
+                            <input type="hidden" name="_token" value={{ csrf_token() }}>
                             <div class="row">
-                                <div class="col-md-6 col-sm-6">
+                                <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
-                                        <label for="chapter">فصل:</label>
-                                        <select class="form-control" id="chapter" required>
+                                        <label for="chapter">درس :</label>
+                                        <select name="course" class="form-control" id="chapter" required>
                                             <option selected>...</option>
-                                            <option>گردآوری داده ها</option>
-                                            <option>معیارهای گرایش به مرکز</option>
-                                            <option>معیارهای پراکندگی</option>
+                                            @foreach($courses as $course)
+                                                <option value={{$course->id}}>{{$course->name}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-sm-6">
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="form-group">
+                                        <label for="chapter">فصل:</label>
+                                        <select name="section" class="form-control" id="chapter" required>
+                                            <option selected>...</option>
+                                            @foreach($sections as $section)
+                                                <option value={{$section->id}}>{{$section->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label for="difficulty">میزان سختی سوال:</label>
-                                        <select class="form-control " id="difficulty" required>
+                                        <select name="difficulty" class="form-control " id="difficulty" required>
                                             <option selected>...</option>
-                                            <option>آسان (1نمره)</option>
-                                            <option>متوسط (2نمره)</option>
-                                            <option>سخت (3نمره)</option>
+                                            <option value="0">آسان (1نمره)</option>
+                                            <option value="1">متوسط (2نمره)</option>
+                                            <option value="2">سخت (3نمره)</option>
                                         </select>
                                     </div>
                                 </div>
@@ -270,7 +212,7 @@
                             <div class="form-group">
                                 <label>صورت سوال:</label>
                                 <p>برای اطلاعات بیشتر درباره ی نحوه ی وارد کردن عکس، فرمول های ریاضی و یا نمودارها در سوالات به قسمت <a href="guidance.html">راهنمایی</a> مراجعه کنید.</p>
-                                <textarea rows="4" class="form-control" placeholder="..." required>
+                                <textarea name="question" rows="4" class="form-control" placeholder="..." required>
                                 </textarea>
                             </div>
                             <div class="form-group">
@@ -279,25 +221,25 @@
                             <div class="row">
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <input class="form-control " placeholder="گزینه 1">
+                                        <input name="gozine1" class="form-control " placeholder="گزینه 1">
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
 
-                                        <input class="form-control " placeholder="گزینه 2">
+                                        <input name="gozine2" class="form-control " placeholder="گزینه 2">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <input class="form-control " placeholder="گزینه 3">
+                                        <input name="gozine3" class="form-control " placeholder="گزینه 3">
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <input class="form-control " placeholder="گزینه 4">
+                                        <input name="gozine4" class="form-control " placeholder="گزینه 4">
                                     </div>
                                 </div>
                             </div>
@@ -305,19 +247,18 @@
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label>گزینه درست:</label>
-                                        <input class="form-control " type="number" placeholder="عدد گزینه صحیح">
+                                        <input name="answer" class="form-control " type="number" placeholder="عدد گزینه صحیح">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>راه حل(اختیاری):</label>
-                                <textarea rows="4" class="form-control" placeholder="..." required>
+                                <textarea name="solution" rows="4" class="form-control" placeholder="..." required>
                                 </textarea>
                             </div>
                             <div class="form-group">
                                     <button type="submit" class="btn btn-default btn-lg">ثبت</button>
                             </div>
-
                         </form>
                     </div>
                 </div>
@@ -327,14 +268,15 @@
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-sm-10 col-md-10">
                         <h3 class="black">اضافه کردن کلاس</h3>
-                        <h4>آمار سال دهم</h4>
+
                         <br>
-                        <form>
+                        <form action="/CreateClass" method="post">
+                            <input type="hidden" name="_token" value={{ csrf_token() }}>
                             <div class="row">
                                 <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label>نام کلاس:</label>
-                                        <input type="text" class="form-control" placeholder="کلاس">
+                                        <input name="classname" type="text" class="form-control" placeholder="کلاس">
                                     </div>
                                 </div>
                             </div>
@@ -342,14 +284,10 @@
                                 <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label>نام مدرسه:</label>
-                                        <select class="form-control" required>
-                                            <option selected value="1">...</option>
-                                            <option value="1">فرزانگان 3</option>
-                                            <option value="2">علامه حلی 1</option>
-                                            <option value="3">شهید سلطانی 3</option>
-                                            <option value="4">فرزانگان 1</option>
+                                        <select name="school" class="form-control" required>
+                                            <option selected value="0">...</option>
                                             @foreach($schools as $school)
-                                                <option value = '5'>{{$school->name}}</option>
+                                                <option value = {{$school->id}}>{{$school->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -359,9 +297,57 @@
                                 <div class="col-md-12 col-sm-12">
                                     <div class="form-group">
                                         <label>انتخاب دانش آموزان:</label>
-                                        <ul class="add-std" id="whole-student"></ul>
+                                        <select name="students[]" class="add-std" id="whole-student" multiple>
+                                            @foreach($users as $user)
+                                                @if($user->type == 'student')
+                                                <option value="{{$user->username}}">{{$user->name}}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-default btn-lg">ثبت</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="add-course" class="tab-pane fade">
+                <div class="row">
+                    <div class="col-md-1 col-sm-1"></div>
+                    <div class="col-sm-10 col-md-10">
+                        <h3 class="black">اضافه کردن درس</h3>
+
+                        <br>
+                        <form action="/CreateCourse" method="post">
+                            <input type="hidden" name="_token" value={{ csrf_token() }}>
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="form-group">
+                                        <label>نام درس :</label>
+                                        <input name="coursename" type="text" class="form-control" placeholder="درس">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="form-group">
+                                        <label>مقطع :</label>
+                                        <input name="grade" type="text" class="form-control" placeholder="مقطع">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="form-group">
+                                        <label>فصل :</label>
+                                        <input name="section" type="text" class="form-control" placeholder="فصل">
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-default btn-lg">ثبت</button>
@@ -375,26 +361,26 @@
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-sm-10 col-md-10">
                         <h3 class="black">تعریف تمرین</h3>
-                        <h4>آمار سال دهم</h4>
+
                         <br>
-                        <form>
+                        <form action="/CreateEx"  method="post">
                             <div class="row">
                                 <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label>تعداد سوالات آسان:</label>
-                                        <input class="form-control" type="number">
+                                        <input name="easy" class="form-control" type="number">
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label>تعداد سوالات متوسط:</label>
-                                        <input class="form-control" type="number">
+                                        <input name="medium" class="form-control" type="number">
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label>تعداد سوالات سخت:</label>
-                                        <input class="form-control" type="number">
+                                        <input name="hard" class="form-control" type="number">
                                     </div>
                                 </div>
                             </div>
@@ -411,10 +397,20 @@
                                 <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label>کلاس:</label>
-                                        <select class="form-control" required>
-                                            <option selected>دهم 1</option>
-                                            <option>دهم 2</option>
-                                            <option>دهم 3</option>
+                                        <select name="class" class="form-control" required>
+                                            @foreach($classes as $class)
+                                                <option value={{$class->id}}>{{$class->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="form-group">
+                                        <label>درس:</label>
+                                        <select name="course" class="form-control" required>
+                                            @foreach($courses as $course)
+                                                <option value={{$course->id}}>{{$course->name}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -429,8 +425,15 @@
                             </div>
                             <div class="form-group">
                                 <label >فصل:</label>
-                                <select class="form-control"required>
+                                <select name="section" class="form-control"required>
                                     <option selected>...</option>
+                                    @foreach($courses as $course)
+                                        @foreach($sections as $section)
+                                            @if($section->course_id == $course->id)
+                                                <option value="{{$section->id}}" />{{$section->name}}<option>
+                                            @endif
+                                        @endforeach
+                                    @endforeach
                                     <option>گردآوری داده ها</option>
                                     <option>معیارهای گرایش به مرکز</option>
                                     <option>معیارهای پراکندگی</option>
@@ -440,13 +443,13 @@
                                 <div class="col-md-6 col-sm-6">
                                     <div class="form-group">
                                         <label>نام تمرین:</label>
-                                        <input class="form-control" placeholder="test">
+                                        <input name="nameEx" class="form-control" placeholder="test">
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-6">
                                     <div class="form-group">
                                         <label>رمز:</label>
-                                        <input class="form-control" placeholder="برای ورود دانش آموزان به تمرین">
+                                        <input name="code" class="form-control" placeholder="برای ورود دانش آموزان به تمرین">
                                     </div>
                                 </div>
                             </div>
@@ -454,20 +457,22 @@
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label>تاریخ شروع تمرین:</label>
-                                        <input class="form-control" type="date" >
+                                        <input name="startdate" class="form-control" type="date" >
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label>تاریخ پایان تمرین:</label>
-                                        <input class="form-control" type="date" >
+                                        <input name="enddate" class="form-control" type="date" >
                                     </div>
                                 </div>
                             </div>
+                            <input type="hidden" name="_token" value={{ csrf_token() }}>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-default btn-lg">ثبت</button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -816,24 +821,29 @@
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-sm-10 col-md-10">
                         <h3 class="black">اطلاعات کلاس ها</h3>
-                        <h4>آمار سال دهم</h4>
+
                         <br>
-                        <form>
+                        <form >
                             <div class="row">
                                 <div class="col-md-4 col-sm-12">
                                     <div class="form-group">
                                         <label >انتخاب کلاس:</label>
                                         <select class="form-control" required>
-                                            <option selected>دهم 1</option>
-                                            <option>دهم 2</option>
-                                            <option>دهم 3</option>
+                                            @foreach($classes as $class)
+                                                <option value="{{$class->id}}">{{$class->name}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-5 col-sm-12">
                                     <div class="form-group">
                                         <label>مدرسه:</label>
-                                        <input class="form-control" type="text" value="فرزانگان 3 - کرج" disabled>
+
+                                        @foreach($schools as $school)
+                                            @if($school->id == $class->school_id)
+                                                <input class="form-control" type="text" value="{{$school->name}}" disabled>
+                                            @endif
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
@@ -1012,6 +1022,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>

@@ -6,6 +6,7 @@ use App\Course;
 use App\courses;
 use App\exercise;
 use App\users;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -14,9 +15,11 @@ class HomeController extends Controller
 {
     //
     public function get(){
-        $users = users::all();
+        $username = \Session::get('UserName');
         $courses = Course::all();
-        //echo dd($users);
-        return view('index' ,compact('users','courses'));
+
+        $user = User::where('username','=',$username)->first();
+
+        return view('index' ,compact('user','courses'));
     }
 }

@@ -8,12 +8,12 @@ $('.solution').ready(function() {
         if($(this).text()=='C')
         {
             //alert('correct');
-            $(this).siblings('.answer-pic').attr('src',"images/Correct-stamp.png");
+            $(this).siblings('.answer-pic').attr('src',"/images/Correct-stamp.png");
         }
         else
         {
             //alert('notCOrrect');
-            $(this).siblings('.answer-pic').attr('src',"images/Wrong-stamp.png");
+            $(this).siblings('.answer-pic').attr('src',"/images/Wrong-stamp.png");
         }
     });
     $('.question-box img').each(function() {

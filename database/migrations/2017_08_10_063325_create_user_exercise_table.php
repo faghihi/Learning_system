@@ -1,9 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreateUserExerciseTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,17 +13,12 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('user_exercise', function (Blueprint $table) {
             $table->string('username');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('phone');
-            $table->string('type');
-            $table->integer('school_id')->nullable();
-            $table->rememberToken();
+            $table->integer('exercise_id');
             $table->timestamps();
             $table->primary('username');
+            $table->foreign('username')->references('username')->on('users')->onDelete('cascade');
         });
     }
 
@@ -33,6 +29,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::drop('users');
+        Schema::dropIfExists('user_exercise');
     }
 }

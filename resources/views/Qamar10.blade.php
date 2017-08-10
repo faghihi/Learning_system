@@ -24,11 +24,11 @@
 </head>
 
 <body>
-@include('navbar',array('active','Q'))
+@include('navbar',array('active'=>'home'))
 
 <header id="head" class="secondary">
     <div class="container">
-        <h1>تمرین آمار پایه ی دهم</h1>
+        <h1>{{$exercise->name}}-{{$course->name}}</h1>
         <p></p>
     </div>
 </header>
@@ -43,7 +43,7 @@
         <div class="col-md-8 col-sm-8 maincontent">
             <br />
             <br />
-            <h2>گردآوری داده ها</h2>
+            <h2>{{$section->name}}</h2>
             <div class="row panel">
                 <div class="col-xs-12 activity">
                     <h5>وضعیت فعلی:</h5>
@@ -67,28 +67,37 @@
                     <div class="question-box">
                         <p>{{$question['content']}}</p>
                         <input name="t<?php echo $count?>" type="hidden" value="{{$question['content']}}" form="test">
-                        <div class="point">(نمره : <span>&nbsp;3&nbsp;</span>)</div>
-                        <img src="{{URL::asset('images/emoticon/32easy.png')}}" title="{{$question['level']}}">
+                        @if($question->level == 0)
+                            <div class="point">(نمره : <span>&nbsp;1&nbsp;</span>)</div>
+                            <img src="{{URL::asset('images/emoticon/32easy.png')}}" title="{{$question['level']}}">
+                        @elseif($question->level == 1)
+                            <div class="point">(نمره : <span>&nbsp;2&nbsp;</span>)</div>
+                            <img src="{{URL::asset('images/emoticon/32normal.png')}}" title="{{$question['level']}}">
+                        @else
+                            <div class="point">(نمره : <span>&nbsp;3&nbsp;</span>)</div>
+                            <img src="{{URL::asset('images/emoticon/32hard.png')}}" title="{{$question['level']}}">
+                        @endif
                         <br>
+
                         <div class="row answer">
+                        @foreach($answers as $ans=>$answeri)
+                        @if($ans == $question->id)
+                        @foreach($answeri as $answer=>$value)
                             <div class="col-md-3">
                                 <input name="n<?php echo $count?>" type="hidden" value="{{$question['id']}}" form="test">
                                 <input name="a<?php echo $count?>" type="hidden" value="{{$question['answer']}}" form="test">
-                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q<?php echo $count?>" value="1">{{$question['answers'][0]}} </label>
+
+                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q<?php echo $count?>" value="{{$answer}}">{{$value}} </label>
                             </div>
-                            <div class="col-md-3">
-                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q<?php echo $count?>" value="2">{{$question['answers'][1]}}</label>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q<?php echo $count?>" value="3">{{$question['answers'][2]}}</label>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="radio-inline"><input class="right" form="test" type="radio" name="q<?php echo $count?>" value="4">{{$question['answers'][3]}}</label>
-                            </div>
+
+                        @endforeach
+                        @endif
+                        @endforeach
                         </div>
+
                         <br>
                         <button onclick="refresh('q<?php echo $count?>')" class="btn btn-default btn-xs" >پاک کردن جواب</button>
-                        <!-- <button class="btn btn-warning btn-xs" >اعلام مشکل در سوال.</button> -->
+                        <button class="btn btn-warning btn-xs" >اعلام مشکل در سوال.</button>
                     </div>
                     <hr>
                 </li>

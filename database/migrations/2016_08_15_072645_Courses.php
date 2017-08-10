@@ -15,9 +15,10 @@ class Courses extends Migration
         //
         Schema::create('courses', function (Blueprint $table) {
             $table->string('username');
-            $table->string('course');
+            $table->integer('course_id');
+            $table->double('score');
             $table->timestamps();
-            $table->primary(array('course','username'));
+            $table->primary(array('course_id','username'));
             $table->foreign('username')->references('username')->on('users')->onDelete('cascade');
         });
     }

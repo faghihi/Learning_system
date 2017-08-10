@@ -15,6 +15,7 @@
                         <li><a href="/">صفحه ی اصلی</a></li>
                 @endif
                 <li><a href="/#AboutUs">درباره ی ما</a></li>
+
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">تمرین
                         &nbsp;<b class="caret"></b></a>
@@ -23,9 +24,13 @@
                             <div class="col-sm-4">
                                 <ul class="multi-column-dropdown">
                                     <li class="dropdown-header">دوره ی دهم</li>
+                                    @if(count($courses) > 0)
                                     @foreach($courses as $course)
-                                        <li><a href="/Courses/{{$course->name}}">{{$course->name}}</a></li>
+                                    @if($course->grade == "دهم")
+                                        <li><a href="/Courses/{{$course->id}}">{{$course->name}}</a></li>
+                                    @endif
                                     @endforeach
+                                    @endif
                                     <li><a href="/Courses/amar10">آمار</a></li>
                                     <li class="disabled"><a href="#">ریاضی</a></li>
                                 </ul>
@@ -33,7 +38,13 @@
                             <div class="col-sm-4">
                                 <ul class="multi-column-dropdown">
                                     <li class="dropdown-header">دوره ی یازدهم</li>
-
+                                    @if(count($courses) > 0)
+                                    @foreach($courses as $course)
+                                    @if($course->grade == "یازدهم")
+                                        <li><a href="/Courses/{{$course->id}}">{{$course->name}}</a></li>
+                                    @endif
+                                    @endforeach
+                                    @endif
                                     <li><a href="#">آمار</a></li>
                                     <li class="disabled"><a href="#">احتمال</a></li>
                                     <li class="disabled"><a href="#">ریاضی</a></li>
@@ -42,12 +53,21 @@
                             <div class="col-sm-4">
                                 <ul class="multi-column-dropdown">
                                     <li class="dropdown-header">دوره ی دوازدهم</li>
+                                    @if(count($courses) > 0)
+                                    @foreach($courses as $course)
+                                    @if($course->grade == "دوازدهم")
+                                        <li><a href="/Courses/{{$course->id}}">{{$course->name}}</a></li>
+                                    @endif
+                                    @endforeach
+                                    @endif
                                     <li><a href="#">آمار</a></li>
                                 </ul>
                             </div>
                         </div>
                     </ul>
                 </li>
+
+
                 <li><a href="#">آموزش</a></li>
                 <li><a href="/Video">ویدئوها</a></li>
                 <li><a href="/Contact">ارتباط با ما</a></li>
@@ -55,10 +75,11 @@
                 if(Session::get('Login')=="True")
                 {
                 ?>
-
+                @if($user->type == 'student')
                 <li><a href="/Dashboard">داشبورد</a></li>
-
-
+                @else
+                <li><a href="/TDashboard">داشبورد</a></li>
+                @endif
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{Session::get('Name')}}
                         &nbsp;<b class="caret"></b></a>

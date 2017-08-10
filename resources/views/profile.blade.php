@@ -77,7 +77,9 @@
                         <div class="form-group">
                             <label>مدرسه</label>
                             <select class="form-control" name="school">
-                                <option value="0" selected>مدرسه من در این مدارس نیست</option>
+                                @foreach($schools as $school)
+                                    <option value="{{$school->id}}" selected>{{$school->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
