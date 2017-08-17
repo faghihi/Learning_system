@@ -29,7 +29,7 @@
 
 <header id="head" class="secondary">
     <div class="container">
-        <h1>آمار پایه ی دهم</h1>
+        <h1>{{$course->name}}-{{$course->grade}}</h1>
         <p></p>
     </div>
 </header>
@@ -46,16 +46,22 @@
                 این موضوع شامل بخش های ۱۰ تا ۱۲ کتاب ریاضی سال ۱۰ ام میباشد.
             </p>
             <p>
-                تعداد تمرین های موجود: <span> 1000تا</span>
-            </p>
+                            تعداد تمرین های موجود: <span> {{count($exercises)}}تا</span>
+                        </p>
             <p>
-                تعداد تمرین های حل شده: <span>900تا</span>
-            </p>
+                            تعداد تمرین های حل شده: <span>{{$count_solved}}تا</span>
+                        </p>
             <br>
             <p>
                 شما هم به جمع همکلاسی هایتان اضافه شوید  با آن ها رقابت کنید.
             </p>
-            <p>{{$course->section}}-{{$course->name}}</p>
+            <hr>
+            <h4>فصل ها:</h4>
+            <ul>
+            @foreach($sections as $section)
+                <li>{{$section->name}}</li>
+            @endforeach
+            </ul>
         </div>
         <div class="col-md-4">
             <img src="{{URL::asset('images/amarBook.PNG')}}">

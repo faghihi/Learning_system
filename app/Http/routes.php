@@ -19,11 +19,13 @@ Route::get('/Contact','ContactController@get');
 Route::get('/Courses/{id}','Amar10Controller@get');
 Route::get('/Q/Courses/{name}','Amar10Controller@quest');
 Route::get('/AddCourse/{id}','Amar10Controller@add');
-Route::post('/Q/Check','Amar10Controller@check');
-Route::post('/Q/Save','Amar10Controller@save');
-Route::get('/Q/WarningSave','Amar10Controller@warning');
-Route::get('/Q/Delete','Amar10Controller@delete');
+Route::post('/DeleteCourse/{id}' , 'Amar10Controller@delete');
+Route::post('/Check/{id}','Amar10Controller@check');
+Route::post('/Save/{id}','Amar10Controller@save');
+//Route::get('/Q/WarningSave','Amar10Controller@warning');
+//Route::get('/Q/Delete','Amar10Controller@delete');
 Route::get('/Q/Continue','Amar10Controller@continuethis');
+Route::get('/Dashboard/{id}', 'DashboardController@correct');
 //Route::get('/tashih',function (){
 //   return view('CorrectionAmar10');
 //});
@@ -60,6 +62,20 @@ Route::post('/giveEx', 'ExerciseController@give');
 
 Route::get('/exercise/{id}' , 'ExerciseController@show');
 
+Route::get('/delete/{id}' , 'ExerciseController@delete');
+
+Route::post('/DeleteClass/{id}' , 'Amar10Controller@deleteclass');
+
 Route::get('/Video' , function(){
    return view('video');
 });
+
+Route::get('/guide' , 'HomeController@guide');
+
+Route::get('school/ajax/{id}','HomeController@schoolAjax');
+
+Route::get('section/ajax/{id}','HomeController@sectionAjax');
+
+Route::get('student/ajax/{id}','HomeController@studentAjax');
+
+Route::get('st/ajax/{username}','HomeController@stAjax');

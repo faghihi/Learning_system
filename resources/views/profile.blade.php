@@ -42,14 +42,7 @@
     <div class="col-md-10">
         <h3 class="section-title">اطلاعات شخصی</h3>
             <form id="changeProfile" class="form-light mt-20" role="form" action="/Profile" method="post">
-            <?php
-                if(isset($error))
-                    {
-            ?>
-                <p style="color:red;">اشکالی در آپدیت اطلاعا شما پیش آمده است.</p>
-            <?php
-                        }
-                ?>
+
             <div class="form-group">
                 <label>نام و نام خانوادگی</label>
                 <input type="text" name="name" class="form-control" value="{{$info['name']}}" disabled>

@@ -15,13 +15,14 @@ class QuestionTableMake extends Migration
         //
         Schema::create('questions', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('section_id');
             $table->integer('exercise_id');
             $table->text('content');
             $table->string('options',400);
             $table->integer('answer');
-            $table->string('course_id');
+            $table->integer('course_id');
             $table->text('solution');
-            $table->integer('writer');
+            $table->string('writer');
             $table->integer('level');
             $table->timestamps();
         });

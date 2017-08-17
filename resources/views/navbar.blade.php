@@ -25,14 +25,14 @@
                                 <ul class="multi-column-dropdown">
                                     <li class="dropdown-header">دوره ی دهم</li>
                                     @if(count($courses) > 0)
-                                    @foreach($courses as $course)
-                                    @if($course->grade == "دهم")
-                                        <li><a href="/Courses/{{$course->id}}">{{$course->name}}</a></li>
+                                        @foreach($courses as $course)
+                                            @if($course->grade == "دهم")
+                                                <li><a href="/Courses/{{$course->id}}">{{$course->name}}</a></li>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        فعلا درسی در سیستم وجود ندارد
                                     @endif
-                                    @endforeach
-                                    @endif
-                                    <li><a href="/Courses/amar10">آمار</a></li>
-                                    <li class="disabled"><a href="#">ریاضی</a></li>
                                 </ul>
                             </div>
                             <div class="col-sm-4">
@@ -44,10 +44,10 @@
                                         <li><a href="/Courses/{{$course->id}}">{{$course->name}}</a></li>
                                     @endif
                                     @endforeach
+                                    @else
+                                        هیچی
                                     @endif
-                                    <li><a href="#">آمار</a></li>
-                                    <li class="disabled"><a href="#">احتمال</a></li>
-                                    <li class="disabled"><a href="#">ریاضی</a></li>
+
                                 </ul>
                             </div>
                             <div class="col-sm-4">
@@ -59,8 +59,9 @@
                                         <li><a href="/Courses/{{$course->id}}">{{$course->name}}</a></li>
                                     @endif
                                     @endforeach
+                                    @else
+                                        هیچی
                                     @endif
-                                    <li><a href="#">آمار</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -71,10 +72,12 @@
                 <li><a href="#">آموزش</a></li>
                 <li><a href="/Video">ویدئوها</a></li>
                 <li><a href="/Contact">ارتباط با ما</a></li>
+
                 <?php
                 if(Session::get('Login')=="True")
                 {
                 ?>
+
                 @if($user->type == 'student')
                 <li><a href="/Dashboard">داشبورد</a></li>
                 @else
@@ -88,14 +91,17 @@
                         <li><a href="/Logout">خروج</a></li>
                     </ul>
                 </li>
+
                 <?php
                 }
                 else {
                 ?>
+
                 <li><a href="/UserArea">ورود | ثبت نام</a></li>
                 <?php
                 }
                 ?>
+
             </ul>
         </div>
         <!--/.nav-collapse -->

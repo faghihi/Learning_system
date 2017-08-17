@@ -161,7 +161,7 @@
                 </div>
             </div>
             <div class="row panel">
-                <a href="/Dashboard"><button class="btn btn-success"> بازگشت به داشبورد.</button></a>
+                <a href="/Dashboard/{{$score->exercise_id}}"><button class="btn btn-success"> بازگشت به داشبورد.</button></a>
             </div>
 
         </aside>

@@ -41,25 +41,19 @@ class ProfileController extends Controller
    }
 
     public function change(){
-        //echo "salam";
+
         $username=Session::get('UserName');
         $request=Input::all();
+
         $update=DB::table('users')
             ->where('username',$username)
-            ->update(['name' => $request['name'],'phone'=> $request['phone'],
-                'email' => $request['email'], 'username'=>$request['username']
-            ]);
-        //$update=users::create(Input::all());
-        if($update)
-        {
-            return redirect('/Profile');
-        }
-        else {
-            return view('profile')->with('error',1);
-        }
+            ->update(['phone'=> $request['phone'],'username'=>$request['username'],'school_id'=>$request['school']]);
+
+
+        return redirect('/');
     }
     public function changepass(){
-        //echo "salam";
+
         $username=Session::get('UserName');
         $request=Input::all();
         $update=DB::table('users')

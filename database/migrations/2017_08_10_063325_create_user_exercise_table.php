@@ -14,10 +14,11 @@ class CreateUserExerciseTable extends Migration
     public function up()
     {
         Schema::create('user_exercise', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('username');
             $table->integer('exercise_id');
+            $table->integer('status');
             $table->timestamps();
-            $table->primary('username');
             $table->foreign('username')->references('username')->on('users')->onDelete('cascade');
         });
     }

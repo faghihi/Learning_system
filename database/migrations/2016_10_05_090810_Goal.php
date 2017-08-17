@@ -14,6 +14,7 @@ class Goal extends Migration
     {
         //
         Schema::create('goal', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('username');
             $table->integer('ex_count');
             $table->integer('q_count');
@@ -21,7 +22,6 @@ class Goal extends Migration
             $table->date('end_date')->nullable();
             $table->double('score');
             $table->timestamps();
-            $table->primary('username');
             $table->foreign('username')->references('username')->on('users')->onDelete('cascade');
         });
     }

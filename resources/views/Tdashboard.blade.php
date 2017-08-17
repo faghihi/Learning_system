@@ -25,9 +25,13 @@
         <script src="js/respond.min.js"></script>
         <!--[endif]-->
         <!--for insert mathematics formula-->
+
         <script type="text/javascript" async
                 src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
         </script>
+
+        <script src="ASCIIMathML.js"></script>
+
 </head>
 <body>
 
@@ -39,7 +43,6 @@
         <p></p>
     </div>
 </header>
-
 
 <!-- container -->
 <div class="container">
@@ -178,22 +181,21 @@
                                 <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label for="chapter">درس :</label>
-                                        <select name="course" class="form-control" id="chapter" required>
+                                        <select name="course" class="form-control" id="ch_course" required>
                                             <option selected>...</option>
-                                            @foreach($courses as $course)
-                                                <option value={{$course->id}}>{{$course->name}}</option>
-                                            @endforeach
+                                            @if(count($courses) > 0)
+                                                @foreach($courses as $course)
+                                                    <option value={{$course->id}}>{{$course->name}}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label for="chapter">فصل:</label>
-                                        <select name="section" class="form-control" id="chapter" required>
-                                            <option selected>...</option>
-                                            @foreach($sections as $section)
-                                                <option value={{$section->id}}>{{$section->name}}</option>
-                                            @endforeach
+                                        <select name="section" class="form-control" id="choose_chapter" required>
+
                                         </select>
                                     </div>
                                 </div>
@@ -211,7 +213,7 @@
                             </div>
                             <div class="form-group">
                                 <label>صورت سوال:</label>
-                                <p>برای اطلاعات بیشتر درباره ی نحوه ی وارد کردن عکس، فرمول های ریاضی و یا نمودارها در سوالات به قسمت <a href="guidance.html">راهنمایی</a> مراجعه کنید.</p>
+                                <p>برای اطلاعات بیشتر درباره ی نحوه ی وارد کردن عکس، فرمول های ریاضی و یا نمودارها در سوالات به قسمت <a href="/guide">راهنمایی</a> مراجعه کنید.</p>
                                 <textarea name="question" rows="4" class="form-control" placeholder="..." required>
                                 </textarea>
                             </div>
@@ -327,7 +329,7 @@
                                 <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label>نام درس :</label>
-                                        <input name="coursename" type="text" class="form-control" placeholder="درس">
+                                        <input name="coursename" type="text" class="form-control" placeholder= "درس">
                                     </div>
                                 </div>
                             </div>
@@ -351,6 +353,7 @@
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-default btn-lg">ثبت</button>
+
                             </div>
                         </form>
                     </div>
@@ -398,19 +401,24 @@
                                     <div class="form-group">
                                         <label>کلاس:</label>
                                         <select name="class" class="form-control" required>
-                                            @foreach($classes as $class)
-                                                <option value={{$class->id}}>{{$class->name}}</option>
-                                            @endforeach
+                                            @if(count($classes) > 0)
+                                                @foreach($classes as $class)
+                                                    <option value={{$class->id}}>{{$class->name}}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label>درس:</label>
-                                        <select name="course" class="form-control" required>
-                                            @foreach($courses as $course)
-                                                <option value={{$course->id}}>{{$course->name}}</option>
-                                            @endforeach
+                                        <select id="choose_course" name="course" class="form-control" required>
+                                            <option selected>...</option>
+                                            @if(count($courses) > 0)
+                                                @foreach($courses as $course)
+                                                    <option value={{$course->id}}>{{$course->name}}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
@@ -425,18 +433,7 @@
                             </div>
                             <div class="form-group">
                                 <label >فصل:</label>
-                                <select name="section" class="form-control"required>
-                                    <option selected>...</option>
-                                    @foreach($courses as $course)
-                                        @foreach($sections as $section)
-                                            @if($section->course_id == $course->id)
-                                                <option value="{{$section->id}}" />{{$section->name}}<option>
-                                            @endif
-                                        @endforeach
-                                    @endforeach
-                                    <option>گردآوری داده ها</option>
-                                    <option>معیارهای گرایش به مرکز</option>
-                                    <option>معیارهای پراکندگی</option>
+                                <select id="choose_section" name="section" class="form-control"required>
                                 </select>
                             </div>
                             <div class="row">
@@ -480,7 +477,7 @@
                 <div class="col-md-1 col-sm-1"></div>
                 <div class="col-sm-10 col-md-10">
                     <h3 class="black">اطلاعات تمرین ها</h3>
-                    <h4>آمار سال دهم</h4>
+
                     <br>
                     <div class="row">
                         <div class="col-md-12">
@@ -507,15 +504,21 @@
                                 </div>
                             </div>
                             <hr>
+                            @if(count($exercises) > 0)
+                            @foreach($exercises as $exercise)
                             <div class="row dash-table-content chapter">
                                 <div class="col-md-3">
-                                    <p><a href="#">تمرین دهم 1</a></p>
+                                    <p><a href="exercise/{{$exercise->id}}">{{$exercise->name}}</a></p>
                                 </div>
                                 <div class="col-md-3">
-                                    <p>دهم 2</p>
+                                    @foreach($courses as $course)
+                                        @if($course->id == $exercise->course_id)
+                                            <p>دهم یک</p>
+                                        @endif
+                                    @endforeach
                                 </div>
                                 <div class="col-md-3">
-                                    <p>فرزانگان 3</p>
+                                    <p>علامه حلی</p>
                                 </div>
                                 <div class="col-md-2">
                                     <p>حل شده</p>
@@ -527,45 +530,8 @@
                                 </div>
                             </div>
                             <hr>
-                            <div class="row dash-table-content chapter">
-                                <div class="col-md-3">
-                                    <p><a href="#">تمرین گردآوری داده 1</a></p>
-                                </div>
-                                <div class="col-md-3">
-                                    <p>دهم 2</p>
-                                </div>
-                                <div class="col-md-3">
-                                    <p>علامه حلی 2</p>
-                                </div>
-                                <div class="col-md-2">
-                                    <p>در انتظار حل</p>
-                                </div>
-                                <div class="col-md-1">
-                                    <button class="btn-delete btn-sm delete-test" title="حذف تمرین">
-                                        <i class="fa fa-1x fa-times" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row dash-table-content chapter">
-                                <div class="col-md-3">
-                                    <p><a href="#">تمرین معیار پراکندگی 1</a></p>
-                                </div>
-                                <div class="col-md-3">
-                                    <p>دهم 2</p>
-                                </div>
-                                <div class="col-md-3">
-                                    <p>فرزانگان 3</p>
-                                </div>
-                                <div class="col-md-2">
-                                    <p>در انتظار حل</p>
-                                </div>
-                                <div class="col-md-1">
-                                    <button class="btn-delete btn-sm delete-test" title="حذف تمرین">
-                                        <i class="fa fa-1x fa-times" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                            </div>
+                            @endforeach
+                            @endif
                         </div>
                     </div>
                     <br>
@@ -828,22 +794,21 @@
                                 <div class="col-md-4 col-sm-12">
                                     <div class="form-group">
                                         <label >انتخاب کلاس:</label>
-                                        <select class="form-control" required>
-                                            @foreach($classes as $class)
-                                                <option value="{{$class->id}}">{{$class->name}}</option>
-                                            @endforeach
+                                        <select id="chooseClass" name="chooseClass" class="form-control" required>
+                                            <option value="">...</option>
+                                            @if(count($classes) > 0)
+                                                @foreach($classes as $class)
+                                                    <option value="{{$class->id}}">{{$class->name}}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-5 col-sm-12">
                                     <div class="form-group">
                                         <label>مدرسه:</label>
-
-                                        @foreach($schools as $school)
-                                            @if($school->id == $class->school_id)
-                                                <input class="form-control" type="text" value="{{$school->name}}" disabled>
-                                            @endif
-                                        @endforeach
+                                        <select id="selectSchool" name="selectSchool" class="form-control">
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -852,9 +817,12 @@
                             <div class="col-md-1 col-sm-1">
                                 <i class="fa fa-2x fa-pencil" aria-hidden="true"></i>&nbsp;:
                             </div>
+                            <form method="post" action="/DeleteClass/{{$class->id}}">
+                                <input type="hidden" name="_token" value={{ csrf_token()}}>
                             <div class="col-md-3 col-sm-5">
                                <button id="class-delete" class="btn btn-block btn-delete">حذف کلاس</button>
                             </div>
+                            </form>
                             <div class="col-md-3 col-sm-6">
                                <button id="class-rename" class="btn btn-block">تغییر نام</button>
                             </div>
@@ -904,6 +872,7 @@
                                     </div>
                                 </div>
                                 <hr>
+
                                 <div class="student-data-block">
                                     <div class="row dash-table-content chapter">
                                         <div class="col-md-5">
@@ -1033,32 +1002,25 @@
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-sm-10 col-md-10">
                         <h3 class="black">اطلاعات دانش آموزان</h3>
-                        <h4>آمار سال دهم</h4>
+
                         <br>
                         <div class="row">
                             <div class="col-md-3 col-sm-3 choose-class">
                                 <div class="form-group">
                                     <label>کلاس:</label>
-                                    <select class="form-control">
-                                        <option selected>دهم 1</option>
-                                        <option>دهم 2</option>
-                                        <option>دهم 3</option>
+                                    <select id="ch_class" class="form-control">
+                                        <option selected>...</option>
+                                        @foreach($classes as $class)
+                                            <option value="{{$class->id}}">{{$class->name}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group">
                                     <label>دانش آموز:</label>
-                                    <select class="form-control">
-                                        <option selected>زیبا نعمتی</option>
-                                        <option>هلیا هاشمی</option>
-                                        <option>نیلوفر جزایری</option>
-                                        <option>سمن عنایتی</option>
-                                        <option>لیلا رضایی</option>
-                                        <option>سیما بیات</option>
-                                        <option>هنگامه حبیبی</option>
-                                        <option>راحیل سروش</option>
-                                        <option>مینا علیزاده</option>
+                                    <select id="selectStudent" class="form-control">
+
                                     </select>
                                 </div>
                             </div>
@@ -1071,15 +1033,13 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
+                                <div id="st_name" class="form-group">
                                     <label>نام</label>
-                                    <input value="زیبا نعمتی" class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
+                                <div id="st_email" class="form-group">
                                     <label>ایمیل</label>
-                                    <input value="zib@gmail.com" class="form-control" disabled>
                                 </div>
                             </div>
                         </div>
@@ -1540,5 +1500,99 @@
 <script src="js/Gmap.JS"></script>
 <script src="js/google-map.js"></script>
 
+<script type="text/javascript">
+     $('#choose_course').on('change', function() {
+            var id = $("#choose_course option:selected").val();
+
+                $.ajax({
+                    url: '/section/ajax/'+id,
+                    type: "GET",
+                    dataType: "json",
+                    success:function(data) {
+                        $('#choose_section').empty();
+                        $.each(data, function(key, value) {
+                            $('#choose_section').append('<option value="'+ key +'">'+ value +'</option>');
+                        });
+                    }
+                });
+
+      });
+</script>
+
+<script type="text/javascript">
+     $('#ch_course').on('change', function() {
+            var id = $("#ch_course option:selected").val();
+
+                $.ajax({
+                    url: '/section/ajax/'+id,
+                    type: "GET",
+                    dataType: "json",
+                    success:function(data) {
+                        $('#choose_chapter').empty();
+                        $.each(data, function(key, value) {
+                            $('#choose_chapter').append('<option value="'+ key +'">'+ value +'</option>');
+                        });
+                    }
+                });
+      });
+</script>
+
+<script type="text/javascript">
+     $('#chooseClass').on('change', function() {
+            var id = $("#chooseClass option:selected").val();
+
+                $.ajax({
+                    url: '/school/ajax/'+id,
+                    type: "GET",
+                    dataType: "json",
+                    success:function(data) {
+                        $('#selectSchool').empty();
+                        $.each(data, function(key, value) {
+                            $('#selectSchool').append('<option value="'+ key +'">'+ value +'</option>');
+                        });
+                    }
+                });
+
+      });
+</script>
+
+<script type="text/javascript">
+     $('#ch_class').on('change', function() {
+            var id = $("#ch_class option:selected").val();
+
+                $.ajax({
+                    url: '/student/ajax/'+id,
+                    type: "GET",
+                    dataType: "json",
+                    success:function(data) {
+
+                        $('#selectStudent').empty();
+                        $.each(data, function(key, value) {
+                            $('#selectStudent').append('<option value="'+ key +'">'+ value +'</option>');
+                        });
+                    }
+                });
+      });
+</script>
+
+<script type="text/javascript">
+     $('#selectStudent').on('mouseover', function() {
+            var username = $("#selectStudent option:selected").val();
+
+                $.ajax({
+                    url: '/st/ajax/'+username,
+                    type: "GET",
+                    dataType: "json",
+                    success:function(data) {
+                        $('#st_name').empty();
+                        $('#st_email').empty();
+                        $.each(data, function(key, value) {
+                            $('#st_name').append('<input class="form-control" value="'+  value +'" disabled>' );
+                            $('#st_email').append('<input value="'+ key +'">');
+                        });
+                    }
+                });
+      });
+</script>
 </body>
 </html>

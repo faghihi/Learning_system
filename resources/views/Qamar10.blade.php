@@ -21,6 +21,13 @@
     <script src="{{URL::asset('js/html5shiv.js')}}"></script>
     <script src="{{URL::asset('js/respond.min.js')}}"></script>
     <![endif]-->
+    <!--for insert mathematics formula-->
+
+            <script type="text/javascript" async
+                    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+            </script>
+
+            <script src="ASCIIMathML.js"></script>
 </head>
 
 <body>
@@ -56,7 +63,7 @@
                 </div>
             </div>
             <br>
-            <input type="submit" form="test" formaction="/Q/Save" class="btn btn-success center-block" value="ذخیره و بازگشت به داشبورد">
+            <input type="submit" form="test" formaction="/Save/{{$exercise->id}}" class="btn btn-success center-block" value="ذخیره و بازگشت به داشبورد">
             <hr>
             <ol>
                 <?php
@@ -80,6 +87,29 @@
                         <br>
 
                         <div class="row answer">
+                        @if(count($saves) > 0)
+                            @foreach($saves as $save)
+                                @if($save->id == $question->id)
+                                @foreach($answers as $ans=>$answeri)
+                                    @if($ans == $question->id)
+                                        @foreach($answeri as $answer=>$value)
+
+                                            <div class="col-md-3">
+                                                <input name="n<?php echo $count?>" type="hidden" value="{{$question['id']}}" form="test">
+                                                <input name="a<?php echo $count?>" type="hidden" value="{{$question['answer']}}" form="test">
+                                                @if($save->answer == $answer)
+                                                    <label class="radio-inline"><input class="right" form="test" type="radio" name="q<?php echo $count?>" value="{{$answer}}" checked>{{$value}} </label>
+                                                @else
+                                                    <label class="radio-inline"><input class="right" form="test" type="radio" name="q<?php echo $count?>" value="{{$answer}}" >{{$value}} </label>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                                @endif
+                            @endforeach
+
+                        @else
                         @foreach($answers as $ans=>$answeri)
                         @if($ans == $question->id)
                         @foreach($answeri as $answer=>$value)
@@ -93,6 +123,7 @@
                         @endforeach
                         @endif
                         @endforeach
+                        @endif
                         </div>
 
                         <br>
@@ -107,7 +138,7 @@
                 @endforeach
             </ol>
             <br/>
-            <form id="test" method="post" action="/Q/Check" >
+            <form id="test" method="post" action="/Check/{{$exercise->id}}" >
                 <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
                 <input name="number" type="hidden" value="{{$count}}"/>
                 <input type="submit" class="btn btn-default" value="تصحیح">

@@ -6,6 +6,7 @@ use App\Course;
 use App\exercise;
 use App\questions;
 use App\Section;
+use App\tempanswer;
 use App\User;
 use App\School;
 use App\classes;
@@ -55,8 +56,12 @@ class ExerciseController extends Controller
     public function createquestion(){
 
         $id = Input::get('course');
-        $course_id = Course::find($id)->first();
+        $course = Course::where('id',$id)->first();
+
         $section_id = Input::get('section');
+
+        $exercise = exercise::where('course_id',$course->id)->where('section_id',$section_id)->first();
+
         $level = Input::get('difficulty');
         $content = Input::get('question');
         $option1 = Input::get('gozine1');
@@ -71,15 +76,20 @@ class ExerciseController extends Controller
         $user = User::where('username','=',$username)->first();
 
         $question = new questions();
-        $question->course_id = $course_id->id;
-        $question->exercise_id = $section_id;
+        $question->section_id = $section_id;
+        $question->course_id = $course->id;
+        if($exercise) {
+            $question->exercise_id = $exercise->id;
+        }else {
+            $question->exercise_id = 0;
+        }
         $question->level = $level;
         $question->content = $content;
         $question->options = $options;
         $question->answer = $answer;
         $question->solution = $solution;
-        $question->writer = 1;
-//        echo dd($question);
+        $question->writer = $user->name;
+//        dd($question);
         $question->save();
 
         return redirect('/');
@@ -92,11 +102,17 @@ class ExerciseController extends Controller
 
         $exercise = exercise::where('code','=',$code)->where('name','=',$name)->first();
 
-        $userexe = new userexercise();
-        $userexe->username = $username;
-        $userexe->exercise_id = $exercise->id;
-        $userexe->save();
+        if(count($exercise) > 0) {
+            $userexe = new userexercise();
+            $userexe->username = $username;
+            $userexe->exercise_id = $exercise->id;
 
+            try {
+                $userexe->save();
+            } catch (\Exception $e) {
+                return $e->getMessage('کد اشتباه است');
+            }
+        }
         return redirect('/Dashboard');
     }
 
@@ -104,18 +120,52 @@ class ExerciseController extends Controller
 
         $username = \Session::get('UserName');
         $courses = Course::all();
-        $questions = questions::where('exercise_id',$id)->get();
         $exercise = exercise::where('id','=',$id)->first();
+
+        $questions = questions::where('course_id',$exercise->course_id)->where('section_id',$exercise->section_id)->get();
+        try{
+            foreach($questions as $question){
+                $question->exercise_id = $id;
+                $question->update();
+            }
+        }catch (\Exception $e) {
+            return $e->getMessage();
+        }
         $course = Course::where('id','=',$exercise->course_id)->first();
         $section = Section::where('id','=',$exercise->section_id)->first();
         $user = User::where('username','=',$username)->first();
-        //$answers = array();
 
         foreach($questions as $question){
             $answers[$question->id] = json_decode($question->options);
 
         }
 
-        return view('Qamar10' ,compact('user','courses','questions','exercise','course','section','answers'));
+        $saves = tempanswer::where('username',$username)->where('exercise_id',$exercise->id)->get();
+
+        $user_exer = userexercise::where('username',$username)->where('exercise_id',$exercise->id)->first();
+
+        if($user_exer == null) {
+            $user_exercise = new userexercise();
+            $user_exercise->username = $username;
+            $user_exercise->exercise_id = $exercise->id;
+            $user_exercise->status = 0;
+            $user_exercise->save();
+        }
+        return view('Qamar10' ,compact('user','courses','questions','exercise','course','section','answers','saves'));
+    }
+
+    public function delete($id){
+
+        $username = Session::get('UserName');
+        $exercise = userexercise::where('exercise_id',$id)->where('username',$username)->first();
+
+        $tempanswers = tempanswer::where('exercise_id',$id)->where('username',$username)->get();
+        foreach($tempanswers as $temp){
+            $temp->delete();
+        }
+
+        $exercise->delete();
+
+        return redirect('/');
     }
 }

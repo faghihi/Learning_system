@@ -21,7 +21,6 @@ class CreateExerciseTable extends Migration
             $table->integer('medium_no');
             $table->integer('hard_no');
             $table->integer('code');
-            $table->integer('status')->default(0);
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->timestamps();

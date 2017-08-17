@@ -17,6 +17,7 @@ class TempAnswer extends Migration
             $table->integer('id')->unsigned()->index();
             $table->string('username');
             $table->integer('answer');
+            $table->integer('exercise_id');
             $table->timestamps();
             $table->primary(array('id','username'));
             $table->foreign('id')->references('id')->on('questions')->onDelete('cascade');
