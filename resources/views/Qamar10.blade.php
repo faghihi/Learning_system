@@ -70,7 +70,7 @@
                 <li>
                     <div class="question-box">
                         <p>{{$question['content']}}</p>
-                        <input name="t<?php echo $count?>" type="hidden" value="{{$question['content']}}" form="test">
+                        <input name="t<?php echo $count?>" data-questionid="{{$question->id}}" type="hidden" value="{{$question['content']}}" form="test">
                         @if($question->level == 0)
                             <div class="point">(نمره : <span>&nbsp;1&nbsp;</span>)</div>
                             <img src='/images/emoticon/32easy.png' title="{{$question['level']}}">
@@ -125,7 +125,7 @@
 
                         <br>
                         <button onclick="refresh('q<?php echo $count?>')" class="btn btn-default btn-xs" >پاک کردن جواب</button>
-                        <button data-toggle="modal" data-target="#problem-modal" class="btn btn-warning btn-xs" >اعلام مشکل در سوال.</button>
+                        <button data-toggle="modal" data-target="#problem-modal" class="btn btn-warning btn-xs btn-problem" >اعلام مشکل در سوال.</button>
                         <div id="problem-modal" class="modal fade" role="dialog">
                             <div class="modal-dialog">
                             <!-- Modal content-->
@@ -147,7 +147,7 @@
                                                             <input class="form-control" name="exercise_name" value="{{$exercise->name}}" disabled>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6 col-sm-6">
+                                                    <div class="col-md-6 col-sm-6" style="display: none;">
                                                         <div class="form-group">
                                                             <label>سوال :</label>
                                                             <select id="choose_question" name="question" class="form-control" required>
@@ -165,6 +165,7 @@
                                                     <div class="col-md-12 col-sm-12">
                                                         <label>مشکل چیه به نظرت؟</label>
                                                         <textarea name="problem" cols="60" rows="5">
+                                                            این سوال ایراد دارد لطفا بررسی کنید.
                                                         </textarea>
                                                     </div>
                                                 </div>
@@ -478,6 +479,14 @@
 <!-- Google Maps -->
 <script src="{{URL::asset('js/Gmap.JS')}}"></script>
 <script src="{{URL::asset('js/google-map.js')}}"></script>
+<script>
+    $(".btn-problem").click(function(event){
+       var qnumber=$(event.target).parent().children("input").eq(0).attr('data-questionid');
+       $("#choose_question").val(qnumber);
+       $("#choose_question").attr('disabled','true');
+       
+    });
+</script>
 
 
 </body>
