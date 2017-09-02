@@ -15,7 +15,7 @@ class CreateClassTable extends Migration
     {
         Schema::create('classes', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('school_id')->unsigned();
+            $table->integer('school_id')->unsigned()->nullable();
             $table->string('name');
             $table->timestamps();
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');

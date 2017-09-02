@@ -26,17 +26,10 @@ class Amar10Controller extends Controller
         $class = Classes::where('name',$classname)->where('school_id',$school_id)->first();
 
         if($class){
-            $students = Input::get('students');
-            if(count($students > 0)) {
-                foreach ($students as $student) {
-                    $user = User::where('email',$student)->first();
-                    $user->classes()->attach($class->id);
-                }
-            }
-
             $class = new classes();
             $class->name = $classname;
             $class->school_id = $school_id;
+            $class->Rstring=Input::get('join_code');
             $class->save();
 
         }
@@ -44,15 +37,8 @@ class Amar10Controller extends Controller
             $class = new classes();
             $class->name = $classname;
             $class->school_id = $school_id;
+            $class->Rstring=Input::get('join_code');
             $class->save();
-
-            $students = Input::get('students');
-            if(count($students > 0)) {
-                foreach ($students as $student) {
-                    $user = User::where('email',$student)->first();
-                    $user->classes()->attach($class->id);
-                }
-            }
         }
 
         return redirect('/TDashboard');
@@ -78,7 +64,7 @@ class Amar10Controller extends Controller
             }
         }
         $check = Course::where('name',$coursename)
-            ->where('grade',$grade)
+            ->where('grade_id',$grade)
             ->where('teacher_name',$teacher->name)->first();
 
         if($check){
@@ -92,12 +78,12 @@ class Amar10Controller extends Controller
 
                 $course = new Course();
                 $course->name = $coursename;
-                $course->grade = $grade;
+                $course->grade_id = $grade;
                 $course->teacher_name = $teacher->name;
                 $course->image = $image_path;
                 $course->save();
 
-                $course_id = Course::where('name', '=', $coursename)->where('grade',$grade)->first();
+                $course_id = Course::where('name', '=', $coursename)->where('grade_id',$grade)->first();
                 $section = new Section();
                 $section->course_id = $course_id->id;
                 $section->name = Input::get('section');

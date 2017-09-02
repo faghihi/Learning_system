@@ -63,8 +63,7 @@ class ProfileController extends Controller
         $user= User::where('email',$email)->first();
         $user->name = $request['name'];
         $user->phone = $request['phone'];
-        $user->school_id = $request['school'];
-        $user->update();
+        $user->save();
 
         return redirect()->back()->with('message', 'تغییرات با موفقیت ثبت شد');
     }

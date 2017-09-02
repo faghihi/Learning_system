@@ -10,7 +10,7 @@ use App\Section;
 use App\tempanswer;
 use App\User;
 use App\School;
-use App\classes;
+use App\Classes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;

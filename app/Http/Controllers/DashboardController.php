@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes;
 use App\ClassExercise;
 use App\Goal;
+use App\Grade;
 use App\Score;
 use App\Section;
 use App\tempanswer;
@@ -31,8 +32,8 @@ class DashboardController extends Controller
         $courses = Course::all();
         $sections = Section::all();
         $class_exercise = ClassExercise::all();
-
-        return view('Tdashboard', compact('schools','user','users','classes','courses','sections','exercises','class_exercise'));
+        $grades=Grade::all();
+        return view('Tdashboard', compact('schools','user','users','classes','courses','sections','exercises','class_exercise','grades'));
     }
 
     //show student dashboard

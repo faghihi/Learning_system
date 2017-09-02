@@ -8,16 +8,16 @@ $(document).ready(function () {
        $('li.active').removeAttr('class');
     });
 
-    $('[data-toggle="pill"]').on('click', function (e) {
-        var now_tab = e.target // activated tab
-
-        // get the div's id
-        var divid = $(now_tab).attr('href').substr(1);
-        console.log(divid);
-        $.getJSON('xxx.php').success(function(data){
-            $("#"+divid).text(data.msg);
-        });
-    })
+    // $('[data-toggle="pill"]').on('click', function (e) {
+    //     var now_tab = e.target // activated tab
+    //
+    //     // get the div's id
+    //     var divid = $(now_tab).attr('href').substr(1);
+    //     console.log(divid);
+    //     $.getJSON('xxx.php').success(function(data){
+    //         $("#"+divid).text(data.msg);
+    //     });
+    // })
 
 
     $('#co li').on('click' ,function(){

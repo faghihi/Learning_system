@@ -679,8 +679,8 @@
 <script src="{{URL::asset('js/dashboard.js')}}"></script>
 <script src="{{URL::asset('js/custom.js')}}"></script>
 <!-- Google Maps -->
-<script src="{{URL::asset('js/Gmap.JS')}}"></script>
-<script src="{{URL::asset('js/google-map.js')}}"></script>
+{{--<script src="{{URL::asset('js/Gmap.JS')}}"></script>--}}
+{{--<script src="{{URL::asset('js/google-map.js')}}"></script>--}}
 
 
 </body>

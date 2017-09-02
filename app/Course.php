@@ -8,6 +8,8 @@ class Course extends Model
 {
     protected $table = 'courses';
 
+    protected $with=['gradeId'];
+
     //relation to class User
     public function users()
     {
@@ -27,6 +29,11 @@ class Course extends Model
     public function section()
     {
         return $this->hasMany('App\Section');
+    }
+
+    public function gradeId()
+    {
+        return $this->belongsTo('App\Grade','grade_id');
     }
 
 }

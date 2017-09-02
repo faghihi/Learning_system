@@ -20,8 +20,6 @@ class CreateCoursesTable extends Migration
             $table->string('teacher_name');
             $table->string('image');
             $table->timestamps();
-
-            $table->foreign('grade_id')->references('id')->on('grades')->onDelete('cascade');
         });
     }
 

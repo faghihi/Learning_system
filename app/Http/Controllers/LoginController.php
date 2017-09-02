@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Course;
+use App\Grade;
 use App\Mail\ForgetPass;
 use App\School;
 use App\User;
@@ -19,7 +20,8 @@ class LoginController extends Controller
         }
         $schools = School::all();
         $courses = Course::all();
-        return view('login-register',compact('schools','courses'));
+        $grades=Grade::all();
+        return view('login-register')->with(['schools'=>$schools,'courses'=>$courses,'grades'=>$grades]);
     }
 
     //login
@@ -78,7 +80,7 @@ class LoginController extends Controller
             'name' => 'required|max:64', // make sure the name , max length 64 character and all character is alpha
             'email' => 'required|email|unique:users', // make sure the email is actual email
             'password' => 'required|min:6', // password has at least 6 character
-//            'repass' => 'required|same:password',// check password validation
+            'phone'=>'required|regex:/(09)[0-9]{9}/',
             'grade' => 'required'
         );
 
@@ -111,7 +113,7 @@ class LoginController extends Controller
             $user->password = $password;
             $user->phone = $phone;
             $user->type = $type;
-            $user->grade = $grade;
+            $user->grade_id = $grade;
             $user->school_id = $school;
             $user->save();
 

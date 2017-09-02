@@ -294,10 +294,11 @@
                             <div class="row">
                                 <div class="col-md-12 col-sm-12">
                                     <div class="form-group">
-                                        <label>انتخاب دانش آموزان:</label>
-                                        <select name="students[]" class="add-std" id="whole-student" multiple>
+                                        <label>کد عضویت در درس :</label>
+                                        <input name="join_code" class="form-control" type="text" placeholder="کد عضویت در درس">
+                                        {{--<select name="students[]" class="add-std" id="whole-student" multiple>--}}
 
-                                        </select>
+                                        {{--</select>--}}
                                     </div>
                                 </div>
                             </div>
@@ -328,7 +329,11 @@
                                 <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label>مقطع :</label>
-                                        <input name="grade" type="text" class="form-control" placeholder="مقطع">
+                                        <select name="grade" class="form-control">
+                                            @foreach($grades as $grade)
+                                                <option value="{{$grade->id}}">{{$grade->name}}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>

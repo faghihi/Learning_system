@@ -43,6 +43,9 @@
 					</div>
 					<div class="col-md-6">
 						<!-- Form Module-->
+						@if($errors->register->any())
+							<h4 style="color:red">{{$errors->register->first()}}</h4>
+						@endif
 						<div class="module form-module">
 							<div class="toggle " >
 								<i class="fa fa-times fa-pencil"></i>
@@ -63,9 +66,6 @@
 							</div>
 							<div class="form">
 								<h2>حساب کاربری جدید بساز :-)</h2>
-                                @if($errors->register->any())
-                                    <h4 style="color:red">{{$errors->register->first()}}</h4>
-                                @endif
 								<form action="/SignUp" method="post" onsubmit="return checklogin()">
 									<input name="_token" type="hidden" value="{{ csrf_token() }}"/>
 									<input type="checkbox" name="teacher"><label>معلم هستید؟</label>
@@ -74,14 +74,14 @@
 									<input type="password" id="repass" name="repassword" placeholder="تکرار گذر واژه"/>
 									<input type="email" name="email" placeholder="ایمیل"/>
 									<input type="tel" name="phone" placeholder="تلفن"/>
-                                    <label>مقطع :</label>
-                                    <select name="grade">
-                                        <option value="دهم" >دهم</option>
-                                        <option value="یازدهم" >یازدهم</option>
-                                        <option value="دوازدهم" >دوازدهم</option>
+                                    <label for="grade">مقطع :</label>
+                                    <select id="grade" name="grade">
+										@foreach($grades as $grade)
+                                        	<option value="{{$grade->id}}" >{{$grade->name}}</option>
+										@endforeach
                                     </select>
-									<label>مدرسه :</label>
-									<select name="school">
+									<label for="school">مدرسه :</label>
+									<select id="school" name="school">
 									    <option value="0" >مدرسه من در این مدارس نیست</option>
 									    @if(count($schools) > 0)
 									        @foreach($schools as $school)
@@ -376,8 +376,8 @@
 <script src="{{URL::asset('js/custom.js')}}"></script>
 
 <!-- Google Maps -->
-<script src="{{URL::asset('js/Gmap.JS')}}"></script>
-<script src="{{URL::asset('js/google-map.js')}}"></script>
+{{--<script src="{{URL::asset('js/Gmap.JS')}}"></script>--}}
+{{--<script src="{{URL::asset('js/google-map.js')}}"></script>--}}
 
 
 </body>

@@ -9,6 +9,8 @@ class User extends Authenticatable
 {
     protected $table='users';
 
+    protected $with=['gradeId'];
+
     public function Schools()
     {
         return $this->belongsToMany('App\School','schools_users','user_id','school_id');
@@ -39,5 +41,10 @@ class User extends Authenticatable
     public function score()
     {
         return $this->hasMany('App\Score');
+    }
+
+    public function gradeId()
+    {
+        return $this->belongsTo('App\Grade','grade_id');
     }
 }

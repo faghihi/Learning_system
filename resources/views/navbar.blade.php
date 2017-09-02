@@ -21,49 +21,18 @@
                         &nbsp;<b class="caret"></b></a>
                     <ul class="dropdown-menu dropdown-menu-right multi-column columns-3" >
                         <div class="row">
+                            @foreach(\App\Grade::all() as $grade)
                             <div class="col-sm-4">
                                 <ul class="multi-column-dropdown">
-                                    <li class="dropdown-header">دوره ی دهم</li>
-                                    @if(count($courses) > 0)
-                                        @foreach($courses as $course)
-                                            @if($course->grade == "دهم")
+                                    <li class="dropdown-header">{{$grade->name}}</li>
+                                    @if(count($grade->courses) > 0)
+                                        @foreach($grade->courses as $course)
                                                 <li><a href="/Courses/{{$course->id}}">{{$course->name}}</a></li>
-                                            @endif
                                         @endforeach
-                                    @else
-                                       هیچی
                                     @endif
                                 </ul>
                             </div>
-                            <div class="col-sm-4">
-                                <ul class="multi-column-dropdown">
-                                    <li class="dropdown-header">دوره ی یازدهم</li>
-                                    @if(count($courses) > 0)
-                                    @foreach($courses as $course)
-                                    @if($course->grade == "یازدهم")
-                                        <li><a href="/Courses/{{$course->id}}">{{$course->name}}</a></li>
-                                    @endif
-                                    @endforeach
-                                    @else
-                                        هیچی
-                                    @endif
-
-                                </ul>
-                            </div>
-                            <div class="col-sm-4">
-                                <ul class="multi-column-dropdown">
-                                    <li class="dropdown-header">دوره ی دوازدهم</li>
-                                    @if(count($courses) > 0)
-                                    @foreach($courses as $course)
-                                    @if($course->grade == "دوازدهم")
-                                        <li><a href="/Courses/{{$course->id}}">{{$course->name}}</a></li>
-                                    @endif
-                                    @endforeach
-                                    @else
-                                        هیچی
-                                    @endif
-                                </ul>
-                            </div>
+                            @endforeach
                         </div>
                     </ul>
                 </li>
