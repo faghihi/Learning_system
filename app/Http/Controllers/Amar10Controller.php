@@ -2,68 +2,81 @@
 
 namespace App\Http\Controllers;
 
-use App\exercise;
+use App\Exercise;
 use App\Score;
 use App\Section;
 use App\User;
 use App\School;
-use App\classes;
+use App\Classes;
 use App\Course;
-use App\courses;
-use App\userclass;
-use App\userexercise;
-use App\users;
-use App\questions;
+use App\Question;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use DB;
 use Illuminate\Support\Facades\Input;
 use Session;
 use App\tempanswer;
 
 class Amar10Controller extends Controller
 {
-    //
+    //create class
     public function index() {
         $classname = Input::get('classname');
         $school_id = Input::get('school');
+        $class = Classes::where('name',$classname)->where('school_id',$school_id)->first();
 
-        $class = new classes();
-        $class->name = $classname;
-        $class->school_id = $school_id;
-        $class->save();
+        if($class){
+            $students = Input::get('students');
+            if(count($students > 0)) {
+                foreach ($students as $student) {
+                    $user = User::where('email',$student)->first();
+                    $user->classes()->attach($class->id);
+                }
+            }
 
-        $students = Input::get('students');
-        if(count($students > 0)) {
-            foreach ($students as $student) {
+            $class = new classes();
+            $class->name = $classname;
+            $class->school_id = $school_id;
+            $class->save();
 
-                $userclass = new userclass();
-                $userclass->username = $student;
-                $class = classes::where('name', '=', $classname)->first();
-                $userclass->class_id = $class->id;
-                $userclass->save();
+        }
+        else{
+            $class = new classes();
+            $class->name = $classname;
+            $class->school_id = $school_id;
+            $class->save();
+
+            $students = Input::get('students');
+            if(count($students > 0)) {
+                foreach ($students as $student) {
+                    $user = User::where('email',$student)->first();
+                    $user->classes()->attach($class->id);
+                }
             }
         }
 
-        $schools = School::all();
-        $username = Session::get('UserName');
-        $user = User::where('username','=',$username)->first();
-
-        $users = User::all();
-        $classes = classes::all();
-        $courses = Course::all();
-        $sections = Section::all();
-        $exercises = exercise::all();
-        return view('TDashboard',compact('schools','user','users','classes','courses','sections','exercises'));
+        return redirect('/TDashboard');
     }
 
-    public function addcourse() {
+    //add course to database
+    public function addcourse(Request $request) {
+
         $coursename = Input::get('coursename');
         $grade = Input::get('grade');
-        $username = Session::get('UserName');
-        $teacher = users::where('username','=',$username)->first();
+        $email = Session::get('Email');
+        $teacher = User::where('email','=',$email)->first();
+        $upload = $request->file('image');
 
+        if($upload) {
+            $rand = rand(11, 99);
+            $upload->move(public_path() . '/uploads', $rand . $upload->getClientOriginalName());
+            $mim = $upload->getClientMimeType();
+            $type_name = explode('/',$mim);
+            $type_name = end($type_name);
+            if ($type_name == 'jpg' || 'jpeg' || 'png') {
+                $image_path = $rand . $upload->getClientOriginalName();
+            }
+        }
         $check = Course::where('name',$coursename)
             ->where('grade',$grade)
             ->where('teacher_name',$teacher->name)->first();
@@ -76,10 +89,12 @@ class Amar10Controller extends Controller
         }
         else {
             if ($coursename) {
+
                 $course = new Course();
                 $course->name = $coursename;
                 $course->grade = $grade;
                 $course->teacher_name = $teacher->name;
+                $course->image = $image_path;
                 $course->save();
 
                 $course_id = Course::where('name', '=', $coursename)->where('grade',$grade)->first();
@@ -89,20 +104,24 @@ class Amar10Controller extends Controller
                 $section->save();
             }
         }
-//        return view('TDashboard',compact('schools','user','users','classes','courses','sections'));
+
         return redirect('/TDashboard');
     }
+
 
     public function get($id){
         $check=0;
         if(Session::get('Login')=="True")
         {
-            $username = Session::get('UserName');
-            $user = users::where('username','=',$username)->first();
-            $courses=courses::where('username','=',$username)->where('course_id','=',$id)->first();
-            if(count($courses) > 0) {
-                foreach ($courses as $course) {
-                    if ($course != null)
+            $email= Session::get('Email');
+            $user = User::where('email','=',$email)->first();
+
+            $course = Course::find($id);
+            $users = $course->users;
+
+            if(count($users) > 0) {
+                foreach ($users as $u) {
+                    if ($u->id == $user->id)
                         $check = 1;
                 }
             }
@@ -112,7 +131,7 @@ class Amar10Controller extends Controller
         $courses = Course::all();
         $course = Course::where('id','=',$id)->first();
         $count_solved = 0;
-        $exercises = exercise::where('course_id',$id)->get();
+        $exercises = Exercise::where('course_id',$id)->get();
         foreach($exercises as $exercise){
             if($exercise->status == 2){
                 $count_solved ++;
@@ -158,40 +177,36 @@ class Amar10Controller extends Controller
         
     }
 
+    //add course to users_courses table
     public function add($id){
         if(Session::get('Login')!="True")
         {
             return redirect('/UserArea');
         }
 
-        $username = Session::get('UserName');
-        $courses=courses::where('username','=',$username)->where('course_id','=',$id)->first();
-        if(count($courses) > 0) {
-            foreach ($courses as $course) {
-                if ($course != null)
-                    return redirect('/Dashboard');
-            }
-        }
-        $Course=new courses();
-        $Course->username=$username;
-        $Course->course_id=$id;
-        $Course->score = 0;
-        $Course->save();
+        $email = Session::get('Email');
+
+        $user = User::where('email',$email)->first();
+        $user->courses()->attach($id);
+
         return redirect('/Dashboard');
     }
 
+    //save user answer to temp_answers
     public function save($id){
 
-        $username=Session::get('UserName');
-        $answers=tempanswer::where('username',$username)->where('exercise_id',$id)->get();
+        $email = Session::get('Email');
+        $user = User::where('email',$email)->first();
 
-            if($answers)
+        $answers = tempanswer::where('user_id',$user->id)->where('exercise_id',$id)->get();
+
+            if(count($answers) > 0)
             {
                 foreach($answers as $answer) {
                     $count = Input::get('number');
                     for ($i = 0; $i < $count; $i++) {
                         $answerid = Input::get('n' . $i);
-                        $temp = tempanswer::where('id', $answerid)->where('username', $username)->first();
+                        $temp = tempanswer::where('id', $answerid)->where('user_id', $user->id)->first();
 
                         if (Input::has('q' . $i)) {
                             $answercheck = Input::get('q' . $i);
@@ -212,10 +227,15 @@ class Amar10Controller extends Controller
                     $answerid = Input::get('n' . $i);
                     $temp = new tempanswer();
                     $temp->id = $answerid;
-                    $temp->username = $username;
+                    $temp->user_id = $user->id;
 
-                    $question = questions::where('id', $answerid)->first();
-                    $temp->exercise_id = $question->exercise_id;
+                    $question = Question::where('id', $answerid)->first();
+
+                    foreach($question->exercises as $q){
+                        if($q->id == $id){
+                            $temp->exercise_id = $q->id;
+                        }
+                    }
 
                     if (Input::has('q' . $i)) {
                         $answercheck = Input::get('q' . $i);
@@ -228,8 +248,14 @@ class Amar10Controller extends Controller
                 }
 
             }
+        $status = 1;
+        foreach($user->exercises as $exe){
+            if($exe->id == $id){
+                $user->exercises()->updateExistingPivot($id,compact('status'));
+            }
+        }
 
-        return redirect('/');
+        return redirect('/Dashboard');
     }
 
     public function check ($id){
@@ -252,8 +278,7 @@ class Amar10Controller extends Controller
             $question_array[$i]['answer']=Input::get('a'.$i);
             $question_array[$i]['content']=Input::get('t'.$i);
 
-            $thisquest = DB::select('select * from questions Where id="' . $question_array[$i]['id'] . '"');
-
+            $thisquest = Question::where('id',$question_array[$i]['id'])->get();
             foreach ($thisquest as $quest) {
 
                 $answers=json_decode($quest->options);
@@ -306,8 +331,9 @@ class Amar10Controller extends Controller
             }
         }
 
-        $username = Session::get('UserName');
-        $score = Score::where('username',$username)->where('exercise_id',$id)->first();
+        $email = Session::get('Email');
+        $user = User::where('email',$email)->first();
+        $score = Score::where('user_id',$user->id)->where('exercise_id',$id)->first();
 
         if($score){
             $score->c_count=$correct;
@@ -315,10 +341,11 @@ class Amar10Controller extends Controller
             $score->percent=($status_point / $total_point) * 100;
         }else {
             $score = new Score();
-            $exercise = exercise::where('id', $id)->first();
+            $exercise = Exercise::where('id', $id)->first();
             $score->course_id = $exercise->course_id;
-            $score->username = $username;
+            $score->user_id = $user->id;
             $score->exercise_id = $id;
+            $score->section_id = $exercise->section_id;
             $score->q_count = $count;
             $score->c_count = $correct;
             $score->st_point = $status_point;
@@ -331,9 +358,15 @@ class Amar10Controller extends Controller
                 return $e->getMessage();
             }
         }
-        $user_exercise = userexercise::where('username',$username)->where('exercise_id',$id)->first();
-        $user_exercise->status = 2;
-        $user_exercise->update();
+
+        //use to set status
+        $status = 2;
+        $user->exercises()->updateExistingPivot($id,compact('status'));
+
+        $temp = tempanswer::where('user_id',$user->id)->where('exercise_id',$id)->get();
+        foreach($temp as $t){
+            $t->delete();
+        }
 
         return view ('CorrectionAmar10',compact('score'))->with('questions',$question_array);
     }
@@ -377,17 +410,21 @@ class Amar10Controller extends Controller
     }
 
      public function delete($id){
-         $username = Session::get('UserName');
-
-         DB::table('courses')->where('course_id',$id)->where('username',$username)->delete();
+         $email = Session::get('Email');
+         $user = User::where('email',$email)->first();
+         $user->courses()->detach($id);
 
          return redirect('/Dashboard');
      }
 
+    //delete class
     public function deleteclass($id){
+        $class = Classes::find($id);
 
-        DB::table('user_class')->where('class_id',$id)->delete();
-        DB::table('classes')->where('id',$id)->delete();
+        //delete class's user
+        $class->users()->detach();
+        //delete class
+        $class->delete($id);
 
         return redirect('/TDashboard');
     }

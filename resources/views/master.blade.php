@@ -5,8 +5,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="free-educational-responsive-web-template-webEdu">
 	<meta name="author" content="webThemez.com">
-	<title>سایت آموزش آمار</title>
-	<link rel="favicon" href="{{URL::asset('images/favicon.png')}}">
+	<title>سایت آموزش آنلاین</title>
+	<link rel="favicon" href='/images/favicon.png'>
 	<link rel="stylesheet" href="{{URL::asset('css/bootstrap.min.css')}}">
 	<link rel="stylesheet" href="{{URL::asset('css/font-awesome.min.css')}}">
 	<link rel="stylesheet" href="{{URL::asset('css/bootstrap-theme.css')}}" media="screen">

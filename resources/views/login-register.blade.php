@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>login/register</title>
+	<title>ثبت نام | ورود</title>
 	<link rel="favicon" href="{{URL::asset('images/favicon.png')}}">
 	<!-- custome js just for login page -->
 	<link rel="stylesheet" href="{{URL::asset('css/login/css/reset.css')}}">
@@ -51,29 +51,38 @@
 							<div class="form">
 								<h2>وارد حساب کاربریت شو :-)</h2>
 								<form action="/Login" method="post">
-									@if( ! empty($valid))
-										<p style="color:red;">رمز و نام کاربری شما مطابقت ندارد</p>
-									@endif
-
-									<input type="text" name="username" placeholder="نام کاربری"/>
+								    <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
+								    <!--show error validation-->
+                                    @if($errors->any())
+                                        <h4 style="color:red">{{$errors->first()}}</h4>
+                                    @endif
+									<input type="email" name="email" placeholder="ایمیل"/>
 									<input type="password" name="password" placeholder="گذر واژه"/>
-									<input name="_token" type="hidden" value="{{ csrf_token() }}"/>
 									<input class="btn btn-default" type="submit" value="ورود">
 								</form>
 							</div>
 							<div class="form">
 								<h2>حساب کاربری جدید بساز :-)</h2>
+                                @if($errors->register->any())
+                                    <h4 style="color:red">{{$errors->register->first()}}</h4>
+                                @endif
 								<form action="/SignUp" method="post" onsubmit="return checklogin()">
+									<input name="_token" type="hidden" value="{{ csrf_token() }}"/>
 									<input type="checkbox" name="teacher"><label>معلم هستید؟</label>
 									<input type="text" name="name" placeholder="نام و نام خانوادگی"/>
-									<input type="text" name="username" placeholder="نام کاربری"/>
 									<input type="password" id="pass" name="password" placeholder="گذر واژه"/>
 									<input type="password" id="repass" name="repassword" placeholder="تکرار گذر واژه"/>
 									<input type="email" name="email" placeholder="ایمیل"/>
 									<input type="tel" name="phone" placeholder="تلفن"/>
-									<input name="_token" type="hidden" value="{{ csrf_token() }}"/>
-									<select style="display:none" name="school">
-									    <option value="0" selected>مدرسه من در این مدارس نیست</option>
+                                    <label>مقطع :</label>
+                                    <select name="grade">
+                                        <option value="دهم" >دهم</option>
+                                        <option value="یازدهم" >یازدهم</option>
+                                        <option value="دوازدهم" >دوازدهم</option>
+                                    </select>
+									<label>مدرسه :</label>
+									<select name="school">
+									    <option value="0" >مدرسه من در این مدارس نیست</option>
 									    @if(count($schools) > 0)
 									        @foreach($schools as $school)
 										        <option value={{$school->id}}>{{$school->name}}</option>
@@ -347,7 +356,7 @@
 				</div>
 				<div class="col-md-3 panel footer-col">
 					<p class="text-right">
-						Copyright &copy; 2016 example.com
+						Copyright &copy; 2017 example.com
 					</p>
 				</div>
 			</div>

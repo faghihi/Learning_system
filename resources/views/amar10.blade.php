@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>آمار سال دهم</title>
+    <title>{{$course->name}}-{{$course->grade}}</title>
     <link rel="favicon" href="{{URL::asset('images/favicon.png')}}">
     <!-- custome js just for login page -->
 
@@ -64,7 +64,7 @@
             </ul>
         </div>
         <div class="col-md-4">
-            <img src="{{URL::asset('images/amarBook.PNG')}}">
+            <img src="/uploads/{{$course->image}}">
         </div>
     </div>
     <br><br><br>

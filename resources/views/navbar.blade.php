@@ -17,7 +17,7 @@
                 <li><a href="/#AboutUs">درباره ی ما</a></li>
 
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">تمرین
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">دروس
                         &nbsp;<b class="caret"></b></a>
                     <ul class="dropdown-menu dropdown-menu-right multi-column columns-3" >
                         <div class="row">
@@ -31,7 +31,7 @@
                                             @endif
                                         @endforeach
                                     @else
-                                        فعلا درسی در سیستم وجود ندارد
+                                       هیچی
                                     @endif
                                 </ul>
                             </div>
@@ -68,7 +68,6 @@
                     </ul>
                 </li>
 
-
                 <li><a href="#">آموزش</a></li>
                 <li><a href="/Video">ویدئوها</a></li>
                 <li><a href="/Contact">ارتباط با ما</a></li>
@@ -77,7 +76,6 @@
                 if(Session::get('Login')=="True")
                 {
                 ?>
-
                 @if($user->type == 'student')
                 <li><a href="/Dashboard">داشبورد</a></li>
                 @else

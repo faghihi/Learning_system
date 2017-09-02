@@ -17,10 +17,10 @@ class ForgetPass extends Mailable
      *
      * @return void
      */
-    private $username;
-    public function __construct($username)
+    private $email;
+    public function __construct($email)
     {
-        $this->username = $username;
+        $this->email = $email;
     }
 
     /**
@@ -30,7 +30,7 @@ class ForgetPass extends Mailable
      */
     public function build()
     {
-        $user = User::where('username','=',$this->username)->first();
+        $user = User::where('email','=',$this->email)->first();
         $pass = $user->password;
 
         return $this->view('repass');

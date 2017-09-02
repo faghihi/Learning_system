@@ -43,8 +43,8 @@
 
 
             <div class="form-group">
-                <label>نام کاربری</label>
-                <input type="text" name="username" class="form-control">
+                <label>نام</label>
+                <input type="text" name="name" class="form-control">
             </div>
             <div class="form-group">
                 <label>ایمیل</label>

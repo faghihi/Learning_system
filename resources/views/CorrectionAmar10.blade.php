@@ -21,6 +21,12 @@
     <script src="{{URL::asset('js/html5shiv.js')}}"></script>
     <script src="{{URL::asset('js/respond.min.js')}}"></script>
     <![endif]-->
+    <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <script src="ASCIIMathML.js"></script>
+
 </head>
 
 <body>

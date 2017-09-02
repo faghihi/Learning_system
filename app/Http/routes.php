@@ -22,13 +22,9 @@ Route::get('/AddCourse/{id}','Amar10Controller@add');
 Route::post('/DeleteCourse/{id}' , 'Amar10Controller@delete');
 Route::post('/Check/{id}','Amar10Controller@check');
 Route::post('/Save/{id}','Amar10Controller@save');
-//Route::get('/Q/WarningSave','Amar10Controller@warning');
-//Route::get('/Q/Delete','Amar10Controller@delete');
 Route::get('/Q/Continue','Amar10Controller@continuethis');
 Route::get('/Dashboard/{id}', 'DashboardController@correct');
-//Route::get('/tashih',function (){
-//   return view('CorrectionAmar10');
-//});
+
 Route::get('/Profile','ProfileController@get');
 Route::get('/Profile/Check','ProfileController@check');
 Route::post('/Profile','ProfileController@change');
@@ -36,7 +32,6 @@ Route::post('/ChangePass','ProfileController@changepass');
 Route::get('/UserArea','LoginController@get');
 Route::post('/SignUp','LoginController@Signup');
 Route::post('/Login','LoginController@Login');
-Route::get('/SignUp/Check','LoginController@checkuser');
 Route::get('/Logout','LoginController@Logout');
 Route::post('/Contact','ContactController@post');
 
@@ -56,9 +51,13 @@ Route::post('/CreateCourse' , 'Amar10Controller@addcourse');
 
 Route::post('/CreateEx' , 'ExerciseController@create');
 
+Route::post('/CreateStuEx' , 'ExerciseController@createStuEx');
+
 Route::post('/CreateQuestion' , 'ExerciseController@createquestion');
 
 Route::post('/giveEx', 'ExerciseController@give');
+
+Route::post('/giveCl', 'ExerciseController@giveClass');
 
 Route::get('/exercise/{id}' , 'ExerciseController@show');
 
@@ -73,9 +72,28 @@ Route::get('/Video' , function(){
 Route::get('/guide' , 'HomeController@guide');
 
 Route::get('school/ajax/{id}','HomeController@schoolAjax');
-
 Route::get('section/ajax/{id}','HomeController@sectionAjax');
-
 Route::get('student/ajax/{id}','HomeController@studentAjax');
+Route::get('course/ajax/{id}','HomeController@courseAjax');
+Route::get('question/ajax/{id}','HomeController@questionAjax');
+Route::get('createClass/ajax/{id}' , 'HomeController@classAjax');
+Route::get('exercise/ajax/{id}','HomeController@exerciseAjax');
+Route::get('exercise_info/ajax/{id}', 'HomeController@exerciseInfoAjax');
 
-Route::get('st/ajax/{username}','HomeController@stAjax');
+
+Route::get('/calendar', function () {
+    $data = [
+        'page_title' => 'Home',
+    ];
+    return view('event/index', $data);
+});
+Route::resource('events', 'EventController');
+Route::get('/api', function () {
+    $events = DB::table('events')->select('id', 'name', 'title', 'start_time as start', 'end_time as end')->get();
+    foreach($events as $event)
+    {
+        $event->title = $event->title . ' - ' .$event->name;
+        $event->url = url('events/' . $event->id);
+    }
+    return $events;
+});

@@ -11,26 +11,11 @@
                             </a></h4>
                         <div class="menu-course">
                             <ul class="menu">
-                                <li><a href="#">
-                                        مریم رهبر زارع
-                                    </a>
-                                </li>
-                                <li><a href="#">
-                                        احمد بیات
-                                    </a>
-                                </li>
-                                <li><a href="#">
-                                        سهیلا مورچگانی
-                                    </a>
-                                </li>
-                                <li><a href="#">
-                                        میرهادی سرکارفرشی
-                                    </a>
-                                </li>
-                                <li><a href="#">
-                                        سپیده صاحب فصولی
-                                    </a>
-                                </li>
+                                @foreach($teachers as $teacher)
+                                    @if($teacher->type == 'teacher')
+                                        <li><a href="#">{{$teacher->name}}</a></li>
+                                    @endif
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -42,26 +27,9 @@
                             </a></h4>
                         <div class="menu-course">
                             <ul class="menu">
-                                <li> <a href="#">
-                                        فرزانگان 3 کرج
-                                    </a>
-                                </li>
-                                <li><a href="#">
-                                        علامه حلی 4 تهران
-                                    </a>
-                                </li>
-                                <li><a href="#">
-                                        شهدای کارگر
-                                    </a>
-                                </li>
-                                <li><a href="#">
-                                        ابوریحان
-                                    </a>
-                                </li>
-                                <li><a href="#">
-                                        سلام صادقیه
-                                    </a>
-                                </li>
+                                @foreach($schools as $school)
+                                    <li> <a href="#">{{$school->name}}</a></li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -73,18 +41,9 @@
                             </a></h4>
                         <div class="menu-course">
                             <ul class="menu">
-                                <li><a href="#">
-                                        آمار
-                                    </a>
-                                </li>
-                                <li> <a href="#">
-                                        ریاضی 2
-                                    </a>
-                                </li>
-                                <li><a href="#">
-                                        ریاضی 1
-                                    </a>
-                                </li>
+                                @foreach($courses as $course)
+                                    <li><a href="#">{{$course->name}}</a></li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -129,22 +88,18 @@
                     <div class="modal-body">
                         <p>جستجو در نام اساتید:</p>
                         <form>
-                            <input class="search-modal" type="text" name="search" placeholder="جستجو ...">
+                            <input class="search-modal" type="text" placeholder="جستجو ..."data-search>
                         </form>
                         <hr>
                         <div class="result-search">
-                            <div class="teacher-block">
-                                <img src="{{URL::asset('images/profile1.png')}}">
-                                <p>مریم رهبر زارع</p>
-                            </div>
-                            <div class="teacher-block">
-                                <img src="{{URL::asset('images/profile2.png')}}">
-                                <p>مریم رهبر زارع</p>
-                            </div>
-                            <div class="teacher-block">
-                                <img src="{{URL::asset('images/profile1.png')}}">
-                                <p>مریم رهبر زارع</p>
-                            </div>
+                            @foreach($teachers as $teacher)
+                            @if($teacher->type == 'teacher')
+                                <div class="teacher-block" data-filter-item data-filter-name="{{$teacher->name}}">
+                                    <img src='images/profile1.png'>
+                                    <p>{{$teacher->name}}</p>
+                                </div>
+                            @endif
+                            @endforeach
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -169,18 +124,16 @@
                     <div class="modal-body">
                         <p>جستجو در نام مدارس:</p>
                         <form>
-                            <input class="search-modal" type="text" name="search" placeholder="جستجو ...">
+                            <input class="search-modal" type="text" name="search" placeholder="جستجو ..."data-search>
                         </form>
                         <hr>
                         <div class="result-search">
-                            <div class="school-block">
-                                <p>فرزانگان 3</p>
-                                <p>کرج - بلوار امام رضا - اردلان 3</p>
-                            </div>
-                            <div class="school-block">
-                                <p>فرزانگان 3</p>
-                                <p>کرج - بلوار امام رضا - اردلان 3</p>
-                            </div>
+                            @foreach($schools as $school)
+                                <div class="school-block" data-filter-item data-filter-name="{{$school->name}}">
+                                    <p>{{$school->name}}</p>
+                                    <p>{{$school->address}}</p>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -205,22 +158,16 @@
                     <div class="modal-body">
                         <p>جستجو در نام دروس:</p>
                         <form>
-                            <input class="search-modal" type="text" name="search" placeholder="جستجو ...">
+                            <input class="search-modal" type="text" name="search" placeholder="جستجو ..."data-search>
                         </form>
                         <hr>
                         <div class="result-search">
-                            <div class="course-block">
-                                <p>آمار</p>
-                                <p>مقطع: &nbsp;<span>دهم</span></p>
-                            </div>
-                            <div class="course-block">
-                                <p>ریاضی</p>
-                                <p>مقطع: &nbsp;<span>دهم</span></p>
-                            </div>
-                            <div class="course-block">
-                                <p>آمار</p>
-                                <p>مقطع: &nbsp;<span>دهم</span></p>
-                            </div>
+                            @foreach($courses as $course)
+                                <div class="course-block" data-filter-item data-filter-name="{{$course->name}}">
+                                    <p>{{$course->name}}</p>
+                                    <p>مقطع: &nbsp;<span>{{$course->grade}}</span></p>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                     <div class="modal-footer">

@@ -25,13 +25,11 @@
         <script src="js/respond.min.js"></script>
         <!--[endif]-->
         <!--for insert mathematics formula-->
-
         <script type="text/javascript" async
                 src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
         </script>
 
         <script src="ASCIIMathML.js"></script>
-
 </head>
 <body>
 
@@ -173,9 +171,8 @@
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-sm-10 col-md-10">
                         <h3 class="black">اضافه کردن سوال</h3>
-
                         <br>
-                        <form action="/CreateQuestion" method="post">
+                        <form action="/CreateQuestion" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="_token" value={{ csrf_token() }}>
                             <div class="row">
                                 <div class="col-md-4 col-sm-4">
@@ -195,7 +192,6 @@
                                     <div class="form-group">
                                         <label for="chapter">فصل:</label>
                                         <select name="section" class="form-control" id="choose_chapter" required>
-
                                         </select>
                                     </div>
                                 </div>
@@ -214,7 +210,7 @@
                             <div class="form-group">
                                 <label>صورت سوال:</label>
                                 <p>برای اطلاعات بیشتر درباره ی نحوه ی وارد کردن عکس، فرمول های ریاضی و یا نمودارها در سوالات به قسمت <a href="/guide">راهنمایی</a> مراجعه کنید.</p>
-                                <textarea name="question" rows="4" class="form-control" placeholder="..." required>
+                                <textarea name="question" rows="4" class="form-control" required>
                                 </textarea>
                             </div>
                             <div class="form-group">
@@ -228,7 +224,6 @@
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
-
                                         <input name="gozine2" class="form-control " placeholder="گزینه 2">
                                     </div>
                                 </div>
@@ -255,7 +250,7 @@
                             </div>
                             <div class="form-group">
                                 <label>راه حل(اختیاری):</label>
-                                <textarea name="solution" rows="4" class="form-control" placeholder="..." required>
+                                <textarea name="solution" rows="4" class="form-control" required>
                                 </textarea>
                             </div>
                             <div class="form-group">
@@ -265,6 +260,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="add-class" class="tab-pane fade">
                 <div class="row">
                     <div class="col-md-1 col-sm-1"></div>
@@ -286,7 +282,7 @@
                                 <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label>نام مدرسه:</label>
-                                        <select name="school" class="form-control" required>
+                                        <select id="schoolID" name="school" class="form-control" required>
                                             <option selected value="0">...</option>
                                             @foreach($schools as $school)
                                                 <option value = {{$school->id}}>{{$school->name}}</option>
@@ -300,11 +296,7 @@
                                     <div class="form-group">
                                         <label>انتخاب دانش آموزان:</label>
                                         <select name="students[]" class="add-std" id="whole-student" multiple>
-                                            @foreach($users as $user)
-                                                @if($user->type == 'student')
-                                                <option value="{{$user->username}}">{{$user->name}}</option>
-                                                @endif
-                                            @endforeach
+
                                         </select>
                                     </div>
                                 </div>
@@ -321,9 +313,8 @@
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-sm-10 col-md-10">
                         <h3 class="black">اضافه کردن درس</h3>
-
                         <br>
-                        <form action="/CreateCourse" method="post">
+                        <form action="/CreateCourse" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="_token" value={{ csrf_token() }}>
                             <div class="row">
                                 <div class="col-md-4 col-sm-4">
@@ -338,6 +329,14 @@
                                     <div class="form-group">
                                         <label>مقطع :</label>
                                         <input name="grade" type="text" class="form-control" placeholder="مقطع">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label>تصویر درس :</label>
+                                        <input name="image" type="file" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -364,43 +363,14 @@
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-sm-10 col-md-10">
                         <h3 class="black">تعریف تمرین</h3>
-
                         <br>
                         <form action="/CreateEx"  method="post">
                             <div class="row">
-                                <div class="col-md-4 col-sm-4">
-                                    <div class="form-group">
-                                        <label>تعداد سوالات آسان:</label>
-                                        <input name="easy" class="form-control" type="number">
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-4">
-                                    <div class="form-group">
-                                        <label>تعداد سوالات متوسط:</label>
-                                        <input name="medium" class="form-control" type="number">
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-4">
-                                    <div class="form-group">
-                                        <label>تعداد سوالات سخت:</label>
-                                        <input name="hard" class="form-control" type="number">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 col-sm-4">
-                                    <div class="form-group">
-                                        <label>آزمون برای:</label>
-                                        <select class="form-control" id="choose-test-group" required>
-                                            <option selected value="1">یک کلاس</option>
-                                            <option value="2">تعدادی از دانش آموزان </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-4">
+                                <div class="col-md-6 col-sm-6">
                                     <div class="form-group">
                                         <label>کلاس:</label>
-                                        <select name="class" class="form-control" required>
+                                        <select id="s_class" name="class" class="form-control" required>
+                                            <option value=""></option>
                                             @if(count($classes) > 0)
                                                 @foreach($classes as $class)
                                                     <option value={{$class->id}}>{{$class->name}}</option>
@@ -409,38 +379,69 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4 col-sm-4">
+                                <div class="col-md-6 col-sm-6">
                                     <div class="form-group">
                                         <label>درس:</label>
                                         <select id="choose_course" name="course" class="form-control" required>
-                                            <option selected>...</option>
+                                            <option value=""></option>
                                             @if(count($courses) > 0)
                                                 @foreach($courses as $course)
-                                                    <option value={{$course->id}}>{{$course->name}}</option>
+                                                    <option value={{$course->id}}>{{$course->name}}-{{$course->grade}}</option>
                                                 @endforeach
                                             @endif
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12 stu-name" hidden>
-                                    <div class="form-group">
-                                        <label>انتخاب دانش آموزان:</label>
-                                        <ul class="add-std" id="studentTag"></ul>
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="form-group">
                                 <label >فصل:</label>
                                 <select id="choose_section" name="section" class="form-control"required>
                                 </select>
                             </div>
                             <div class="row">
+                                <div class="col-md-3 col-sm-3">
+                                    <div class="form-group">
+                                        <label>تعداد سوالات آسان:</label>
+                                        <input name="easy" class="form-control" type="number">
+                                    </div>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <div class="form-group">
+                                        <label>تعداد</label>
+                                        <input id="easy_no" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-3">
+                                    <div class="form-group">
+                                        <label>تعداد سوالات متوسط:</label>
+                                        <input name="medium" class="form-control" type="number">
+                                    </div>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <div class="form-group">
+                                        <label>تعداد</label>
+                                        <input id="medium_no" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-3">
+                                    <div class="form-group">
+                                        <label>تعداد سوالات سخت:</label>
+                                        <input name="hard" class="form-control" type="number">
+                                    </div>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <div class="form-group">
+                                        <label>تعداد</label>
+                                        <input id="hard_no" class="form-control" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-6 col-sm-6">
                                     <div class="form-group">
                                         <label>نام تمرین:</label>
-                                        <input name="nameEx" class="form-control" placeholder="test">
+                                        <input name="nameEx" class="form-control" placeholder="تمرین">
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-6">
@@ -477,7 +478,6 @@
                 <div class="col-md-1 col-sm-1"></div>
                 <div class="col-sm-10 col-md-10">
                     <h3 class="black">اطلاعات تمرین ها</h3>
-
                     <br>
                     <div class="row">
                         <div class="col-md-12">
@@ -508,17 +508,27 @@
                             @foreach($exercises as $exercise)
                             <div class="row dash-table-content chapter">
                                 <div class="col-md-3">
-                                    <p><a href="exercise/{{$exercise->id}}">{{$exercise->name}}</a></p>
+                                    <button class="btn btn-default which_ex" value="{{$exercise->id}}">{{$exercise->name}}</button>
                                 </div>
                                 <div class="col-md-3">
-                                    @foreach($courses as $course)
-                                        @if($course->id == $exercise->course_id)
-                                            <p>دهم یک</p>
+                                @if(count($class_exercise) > 0)
+                                    @foreach($class_exercise as $cl_ex)
+                                        @if($cl_ex->name == $exercise->name)
+                                            @foreach($classes as $class)
+                                                @if($cl_ex->class_id == $class->id)
+                                                    <p>{{$class->name}}</p>
+                                                @endif
+                                            @endforeach
                                         @endif
                                     @endforeach
+                                @endif
                                 </div>
                                 <div class="col-md-3">
-                                    <p>علامه حلی</p>
+                                        @foreach($schools as $school)
+                                            @if($school->id == 1)
+                                                <p>{{$school->name}}</p>
+                                            @endif
+                                        @endforeach
                                 </div>
                                 <div class="col-md-2">
                                     <p>حل شده</p>
@@ -540,27 +550,19 @@
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
                                     <label>نام</label>
-                                    <input type="text" class="form-control editable" value="" disabled>
+                                    <input id="ex_name" type="text" class="form-control" value="" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-sm-12">
-                                <div class="form-group">
-                                    <label>کلاس</label>
-                                    <input type="text" class="form-control" value="" disabled>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-sm-12">
-                                <div class="form-group">
-                                    <label>مدرسه</label>
-                                    <input type="text" class="form-control" value="" disabled>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
                                     <label>رمز</label>
-                                    <input type="text" class="form-control editable" value="" disabled>
+                                    <input id="ex_code" type="text" class="form-control" value="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="form-group">
+                                    <label>درس</label>
+                                    <input id="ex_course" type="text" class="form-control" value="" disabled>
                                 </div>
                             </div>
                         </div>
@@ -568,12 +570,7 @@
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <label>فصل</label>
-                                    <select class="form-control editable" disabled>
-                                        <option selected>فصل گردآوری داده</option>
-                                        <option>معیار گرایش به مرکز</option>
-                                        <option>معیار پراکندگی 1</option>
-                                        <option>معیار پراکندگی 2</option>
-                                    </select>
+                                    <input id="ex_section" type="text" class="form-control" value="" disabled>
                                 </div>
                             </div>
                         </div>
@@ -581,13 +578,13 @@
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
                                     <label>تاریخ شروع</label>
-                                    <input type="date" class="form-control editable" value="" disabled>
+                                    <input id="ex_start" type="date" class="form-control editable" value="" disabled>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
                                     <label>تاریخ پایان</label>
-                                    <input type="date" class="form-control editable" value="" disabled>
+                                    <input id="ex_end" type="date" class="form-control editable" value="" disabled>
                                 </div>
                             </div>
                         </div>
@@ -605,7 +602,7 @@
                                 </div>
                                 <div class="col-md-2 col-sm-8">
                                     <div class="form-group">
-                                        <input type="number" class="form-control editable" value="" disabled>
+                                        <input id="ex_easy" type="number" class="form-control editable" value="" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-1 col-sm-4">
@@ -615,7 +612,7 @@
                                 </div>
                                 <div class="col-md-2 col-sm-8">
                                     <div class="form-group">
-                                        <input type="number" class="form-control editable" value="" disabled>
+                                        <input id="ex_medium" type="number" class="form-control editable" value="" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-1 col-sm-4">
@@ -625,7 +622,7 @@
                                 </div>
                                 <div class="col-md-2 col-sm-8">
                                     <div class="form-group">
-                                        <input type="number" class="form-control editable" value="" disabled>
+                                        <input id="ex_hard" type="number" class="form-control editable" value="" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -634,7 +631,7 @@
                             <div class="col-md-12 col-sm-12">
                                 <div class="form-group">
                                     <label>دانش آموزان</label>
-                                    <input id="testDataStu" class="form-control" disabled>
+                                    <input id="testDataStu" class="form-control" value="" disabled>
                                 </div>
                                 <div class="form-group" hidden>
                                     <label>دانش آموزان</label>
@@ -678,24 +675,23 @@
                 <div class="col-md-1 col-sm-1"></div>
                 <div class="col-sm-10 col-md-10">
                     <h3 class="black">نمایش تمرین ها</h3>
-                    <h4>آمار سال دهم</h4>
                     <br>
                     <div class="row">
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label>تمرین:</label>
-                                <select class="form-control">
-                                    <option selected>تمرین گردآوری داده 3</option>
-                                    <option>معیار گرایش به مرکز</option>
-                                    <option>معیار پراکندگی 1</option>
-                                    <option>معیار پراکندگی 2</option>
+                                <select id="selectExercise" class="form-control">
+                                    <option selected>...</option>
+                                    @foreach($exercises as $exercise)
+                                        <option value="{{$exercise->id}}">{{$exercise->name}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label>فصل</label>
-                                <input class="form-control" type="text" value="گردآوری داده" disabled>
+                                <input id="sect" class="form-control" type="text" value="" disabled>
                             </div>
                         </div>
                     </div>
@@ -733,49 +729,8 @@
                             </div>
                             <hr>
                             <div class="row dash-table-content chapter">
-                                <div class="col-md-4">
-                                    <p class="black">مینا علیزاده</p>
-                                </div>
-                                <div class="col-md-3">
-                                    <p><span class="stuPoint">8</span>/<span class="totalPoint">10</span></p>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-striped" role="progressbar">
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                             <hr>
-                            <div class="row dash-table-content chapter">
-                                <div class="col-md-4">
-                                    <p class="black">زیبا نعمتی</p>
-                                </div>
-                                <div class="col-md-3">
-                                    <p><span class="stuPoint">5</span>/<span class="totalPoint">10</span></p>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-striped" role="progressbar">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row dash-table-content chapter">
-                                <div class="col-md-4">
-                                    <p class="black">نیلوفر جزایری</p>
-                                </div>
-                                <div class="col-md-3">
-                                    <p><span class="stuPoint">2</span>/<span class="totalPoint">10</span></p>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-striped" role="progressbar">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <br>
@@ -787,27 +742,26 @@
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-sm-10 col-md-10">
                         <h3 class="black">اطلاعات کلاس ها</h3>
-
                         <br>
                         <form >
                             <div class="row">
                                 <div class="col-md-4 col-sm-12">
                                     <div class="form-group">
-                                        <label >انتخاب کلاس:</label>
-                                        <select id="chooseClass" name="chooseClass" class="form-control" required>
-                                            <option value="">...</option>
-                                            @if(count($classes) > 0)
-                                                @foreach($classes as $class)
-                                                    <option value="{{$class->id}}">{{$class->name}}</option>
+                                        <label>مدرسه:</label>
+                                            <select id="selectSchool" name="selectSchool" class="form-control">
+                                            <option value=""></option>
+                                            @if(count($schools) > 0)
+                                                @foreach($schools as $school)
+                                                    <option value="{{$school->id}}">{{$school->name}}</option>
                                                 @endforeach
                                             @endif
-                                        </select>
+                                            </select>
                                     </div>
                                 </div>
                                 <div class="col-md-5 col-sm-12">
                                     <div class="form-group">
-                                        <label>مدرسه:</label>
-                                        <select id="selectSchool" name="selectSchool" class="form-control">
+                                        <label >انتخاب کلاس:</label>
+                                        <select id="chooseClass" name="chooseClass" class="form-control">
                                         </select>
                                     </div>
                                 </div>
@@ -817,12 +771,14 @@
                             <div class="col-md-1 col-sm-1">
                                 <i class="fa fa-2x fa-pencil" aria-hidden="true"></i>&nbsp;:
                             </div>
+                            @if(count($classes) > 0)
                             <form method="post" action="/DeleteClass/{{$class->id}}">
                                 <input type="hidden" name="_token" value={{ csrf_token()}}>
                             <div class="col-md-3 col-sm-5">
                                <button id="class-delete" class="btn btn-block btn-delete">حذف کلاس</button>
                             </div>
                             </form>
+                            @endif
                             <div class="col-md-3 col-sm-6">
                                <button id="class-rename" class="btn btn-block">تغییر نام</button>
                             </div>
@@ -872,126 +828,9 @@
                                     </div>
                                 </div>
                                 <hr>
-
-                                <div class="student-data-block">
-                                    <div class="row dash-table-content chapter">
-                                        <div class="col-md-5">
-                                            <p class="black">مینا علیزاده</p>
-                                        </div>
-                                        <div class="col-md-6"></div>
-                                        <div class="col-md-1">
-                                            <button class="btn-delete btn-sm delete-student" title="حذف دانش آموز">
-                                                <i class="fa fa-1x fa-user-times" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="row dash-table-content dash-section">
-                                        <div class="col-md-5">
-                                            <p>گردآوری داده</p>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <p><span class="stuPoint">8</span>/<span class="totalPoint">10</span></p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-striped" role="progressbar">
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="row dash-table-content dash-section">
-                                        <div class="col-md-5">
-                                            <p>معیارهای گرایش به مرکز</p>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <p><span class="stuPoint">5</span>/<span class="totalPoint">10</span></p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-striped" role="progressbar">
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="row dash-table-content dash-section">
-                                        <div class="col-md-5">
-                                            <p>معیار پراکندگی</p>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <p><span class="stuPoint">2</span>/<span class="totalPoint">8</span></p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-striped" role="progressbar">
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="student-data-block">
-                                    <div class="row dash-table-content chapter">
-                                        <div class="col-md-5">
-                                            <p class="black">زیبا نعمتی</p>
-                                        </div>
-                                        <div class="col-md-6"></div>
-                                        <div class="col-md-1">
-                                            <button class="btn-delete btn-sm delete-student" title="حذف دانش آموز">
-                                                <i class="fa fa-1x fa-user-times" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="row dash-table-content dash-section">
-                                        <div class="col-md-5">
-                                            <p>گردآوری داده</p>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <p><span class="stuPoint">3</span>/<span class="totalPoint">10</span></p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-striped" role="progressbar">
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="row dash-table-content dash-section">
-                                        <div class="col-md-5">
-                                            <p>معیارهای گرایش به مرکز</p>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <p><span class="stuPoint">9</span>/<span class="totalPoint">10</span></p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-striped" role="progressbar">
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="row dash-table-content dash-section">
-                                        <div class="col-md-5">
-                                            <p>معیار پراکندگی</p>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <p><span class="stuPoint">7</span>/<span class="totalPoint">8</span></p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-striped" role="progressbar">
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
+                                <div id="stud_info" class="student-data-block">
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -1002,10 +841,9 @@
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-sm-10 col-md-10">
                         <h3 class="black">اطلاعات دانش آموزان</h3>
-
                         <br>
                         <div class="row">
-                            <div class="col-md-3 col-sm-3 choose-class">
+                            <div class="col-md-4 col-sm-4 choose-class">
                                 <div class="form-group">
                                     <label>کلاس:</label>
                                     <select id="ch_class" class="form-control">
@@ -1020,7 +858,6 @@
                                 <div class="form-group">
                                     <label>دانش آموز:</label>
                                     <select id="selectStudent" class="form-control">
-
                                     </select>
                                 </div>
                             </div>
@@ -1033,14 +870,12 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
-                                <div id="st_name" class="form-group">
-                                    <label>نام</label>
-                                </div>
+                                <label>نام</label>
+                                <input id="stu_name" class="form-control" disabled>
                             </div>
                             <div class="col-md-6 col-sm-12">
-                                <div id="st_email" class="form-group">
-                                    <label>ایمیل</label>
-                                </div>
+                                <label>ایمیل</label>
+                                <input id="stu_email" class="form-control" disabled>
                             </div>
                         </div>
                         <br><br>
@@ -1073,103 +908,10 @@
                                 <div class="student-data-block">
                                     <div class="row dash-table-content chapter">
                                         <div class="col-md-5">
-                                            <p class="black">فصلی</p>
+                                            <p class="black">نام تمرین</p>
                                         </div>
                                     </div>
-                                    <div class="row dash-table-content dash-section">
-                                        <div class="col-md-5">
-                                            <p>گردآوری داده</p>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <p><span class="stuPoint">8</span>/<span class="totalPoint">10</span></p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-striped" role="progressbar">
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="row dash-table-content dash-section">
-                                        <div class="col-md-5">
-                                            <p>معیارهای گرایش به مرکز</p>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <p><span class="stuPoint">5</span>/<span class="totalPoint">10</span></p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-striped" role="progressbar">
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="row dash-table-content dash-section">
-                                        <div class="col-md-5">
-                                            <p>معیار پراکندگی</p>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <p><span class="stuPoint">2</span>/<span class="totalPoint">8</span></p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-striped" role="progressbar">
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="student-data-block">
-                                    <div class="row dash-table-content chapter">
-                                        <div class="col-md-5">
-                                            <p class="black">تمرینی</p>
-                                        </div>
-                                    </div>
-                                    <div class="row dash-table-content dash-section">
-                                        <div class="col-md-5">
-                                            <p>گردآوری داده 1</p>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <p><span class="stuPoint">3</span>/<span class="totalPoint">10</span></p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-striped" role="progressbar">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row dash-table-content dash-section">
-                                        <div class="col-md-5">
-                                            <p>معیارهای گرایش به مرکز 1</p>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <p><span class="stuPoint">9</span>/<span class="totalPoint">10</span></p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-striped" role="progressbar">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row dash-table-content dash-section">
-                                        <div class="col-md-5">
-                                            <p>تمرین 10</p>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <p><span class="stuPoint">7</span>/<span class="totalPoint">8</span></p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-striped" role="progressbar">
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div id="exercise_info" class="row dash-table-content">
                                     </div>
                                 </div>
                             </div>
@@ -1500,7 +1242,29 @@
 <script src="js/Gmap.JS"></script>
 <script src="js/google-map.js"></script>
 
+<!--when choose a school , show student's of the school-->
 <script type="text/javascript">
+     $('#schoolID').on('change', function() {
+            var id = $("#schoolID option:selected").val();
+                $.ajax({
+                    url: '/createClass/ajax/'+id,
+                    type: "GET",
+                    dataType: "json",
+                    success:function(data) {
+                        $('#whole-student').empty();
+                        $.each(data, function(key, value) {
+                            $('#whole-student').append('<option value="'+ key +'">'+ value +'</option>');
+                        });
+                    }
+                });
+     });
+</script>
+
+<!--for exercise creation -->
+<script type="text/javascript">
+     $('#s_class').on('change',function(){
+        alert('با کلیک بروی هر فصل تعداد سوالات موجود در سیستم برای آن موضوع نمایش داده می شود');
+     });
      $('#choose_course').on('change', function() {
             var id = $("#choose_course option:selected").val();
 
@@ -1511,7 +1275,16 @@
                     success:function(data) {
                         $('#choose_section').empty();
                         $.each(data, function(key, value) {
-                            $('#choose_section').append('<option value="'+ key +'">'+ value +'</option>');
+                            $('#choose_section').append('<option value="'+ key +'">'+ value.name +'</option>');
+                            $('#choose_section').on('click' , function(){
+                                var sec = $('#choose_section option:selected').val();
+                                if(key == sec){
+                                    $('#easy_no').val(value.easy);
+                                    $('#medium_no').val(value.medium);
+                                    $('#hard_no').val(value.hard);
+                                }
+                            });
+
                         });
                     }
                 });
@@ -1524,75 +1297,26 @@
             var id = $("#ch_course option:selected").val();
 
                 $.ajax({
-                    url: '/section/ajax/'+id,
+                    url: '/question/ajax/'+id,
                     type: "GET",
                     dataType: "json",
                     success:function(data) {
                         $('#choose_chapter').empty();
                         $.each(data, function(key, value) {
-                            $('#choose_chapter').append('<option value="'+ key +'">'+ value +'</option>');
+
+                                $('#choose_chapter').append('<option value="'+ key +'">'+ value +'</option>');
+
                         });
                     }
                 });
       });
 </script>
 
-<script type="text/javascript">
-     $('#chooseClass').on('change', function() {
-            var id = $("#chooseClass option:selected").val();
-
-                $.ajax({
-                    url: '/school/ajax/'+id,
-                    type: "GET",
-                    dataType: "json",
-                    success:function(data) {
-                        $('#selectSchool').empty();
-                        $.each(data, function(key, value) {
-                            $('#selectSchool').append('<option value="'+ key +'">'+ value +'</option>');
-                        });
-                    }
-                });
-
-      });
-</script>
-
-<script type="text/javascript">
-     $('#ch_class').on('change', function() {
-            var id = $("#ch_class option:selected").val();
-
-                $.ajax({
-                    url: '/student/ajax/'+id,
-                    type: "GET",
-                    dataType: "json",
-                    success:function(data) {
-
-                        $('#selectStudent').empty();
-                        $.each(data, function(key, value) {
-                            $('#selectStudent').append('<option value="'+ key +'">'+ value +'</option>');
-                        });
-                    }
-                });
-      });
-</script>
-
-<script type="text/javascript">
-     $('#selectStudent').on('mouseover', function() {
-            var username = $("#selectStudent option:selected").val();
-
-                $.ajax({
-                    url: '/st/ajax/'+username,
-                    type: "GET",
-                    dataType: "json",
-                    success:function(data) {
-                        $('#st_name').empty();
-                        $('#st_email').empty();
-                        $.each(data, function(key, value) {
-                            $('#st_name').append('<input class="form-control" value="'+  value +'" disabled>' );
-                            $('#st_email').append('<input value="'+ key +'">');
-                        });
-                    }
-                });
-      });
-</script>
+{{--<script>--}}
+    {{--CKEDITOR.config.image_previewText = 'در اینجا می توانید پیش نمایش عکس را مشاهده کنید';--}}
+    {{--CKEDITOR.config.contentsLangDirection = 'rtl';--}}
+    {{--CKEDITOR.replace( 'editor1' );--}}
+    {{--CKEDITOR.config.mathJaxLib = '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML';--}}
+{{--</script>--}}
 </body>
 </html>

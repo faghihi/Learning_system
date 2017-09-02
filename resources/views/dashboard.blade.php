@@ -35,7 +35,6 @@
     </div>
 </header>
 
-
 <!-- container -->
 <div class="container">
     <br>
@@ -58,6 +57,27 @@
             <br>
             <div class="row">
                 <div class="col-md-12 col-sm-12 activity">
+                    <h4 class="section-title black">کلاس های فعال :</h4>
+                    <ul class="nav nav-pills nav-stacked">
+                        <li ><a data-toggle="pill" href="#get-class">گرفتن کلاس جدید</a></li>
+                            @if(count($user_classes) > 0)
+                                @foreach($user->classes as $cl)
+                                    @foreach($classes as $class)
+                                        @if($cl->id == $class->id && $cl->pivot->status == 2)
+                                            <li value="{{$class->id}}"><a data-toggle="pill" href="#class1"><span class="user_class">{{$class->name}}</span></a></li>
+                                        @endif
+                                    @endforeach
+                                @endforeach
+                            @else
+                                فعلا هیچی
+                            @endif
+                    </ul>
+                    <br>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 activity">
                     <h4 class="section-title black">تمرین ها:</h4>
                     <ul class="nav nav-pills nav-stacked">
                         <li ><a data-toggle="pill" href="#new-test">تمرین های جدید</a></li>
@@ -72,15 +92,15 @@
             <div class="row">
                 <div class="col-md-12 col-sm-12 activity">
                     <h4 class="section-title black">درس های فعال:</h4>
-                    <ul class="nav nav-pills nav-stacked">
+                    <ul class="nav nav-pills nav-stacked" id="co">
                         @if(count($user_course) > 0)
-                        @foreach($user_course as $co)
-                        @foreach($courses as $course)
-                        @if($co->course_id == $course->id && $co->username == $user->username)
-                            <li><a data-toggle="pill" href="#class1"><span class="course">{{$course->name}}</span>&nbsp;-&nbsp;<span class="teacher">{{$course->teacher_name}}</span></a></li>
-                        @endif
-                        @endforeach
-                        @endforeach
+                            @foreach($user_course as $co)
+                                @foreach($courses as $course)
+                                    @if($co->id == $course->id)
+                                        <li value="{{$course->id}}"><a data-toggle="pill" href="#class{{$course->id}}"><span class="course">{{$course->name}}</span>&nbsp;-&nbsp;<span class="teacher">{{$course->teacher_name}}</span></a></li>
+                                    @endif
+                                @endforeach
+                            @endforeach
                         @else
                             فعلا هیچی
                         @endif
@@ -95,6 +115,12 @@
             <br>
             <div id="first-page" class="tab-pane fade in active">
                 <h2 class="black">به داشبورد خوش اومدی.</h2>
+                <br>
+                @if(session()->has('message'))
+                    <div class="alert alert-success">
+                        {{ session()->get('message') }}
+                    </div>
+                @endif
                 <br>
                 <div class="row">
                     <div class="col-md-8 activity situation">
@@ -119,11 +145,13 @@
                     <div class="row">
                         @if(count($exercises) > 0)
                             @foreach($exercises as $exercise)
-                                @foreach($user_course as $co)
-                                    @if($co->course_id == $exercise->course_id)
-                                        <p>{{$exercise->name}}</p>
-                                    @endif
-                                @endforeach
+                                @if(count($user_exercise) > 0)
+                                    @foreach($user_exercise as $ue)
+                                        @if($ue->exercise_id == $exercise->id && $ue->status == 0)
+                                            <p>{{$exercise->name}}</p>
+                                        @endif
+                                    @endforeach
+                                @endif
                             @endforeach
                         @else
                             تمرینی در سیستم وجود ندارد!
@@ -136,11 +164,13 @@
                     <div class="row">
                         @if(count($exercises) > 0)
                             @foreach($exercises as $exercise)
-                                @foreach($user_exercise as $exe)
-                                    @if($exe->status == 0 && $exe->exercise_id == $exercise->id)
-                                        <button class="btn course-button btn-md">{{$exercise->name}}</button>
-                                    @endif
-                                @endforeach
+                                @if(count($user_exercise) > 0)
+                                    @foreach($user_exercise as $exe)
+                                        @if($exe->status == 0 && $exe->exercise_id == $exercise->id)
+                                            <button class="btn course-button btn-md">{{$exercise->name}}</button>
+                                        @endif
+                                    @endforeach
+                                @endif
                             @endforeach
                         @endif
                     </div>
@@ -187,6 +217,7 @@
                 </div>
                 <!--End message part-->
             </div>
+
             <div id="goal" class="tab-pane fade">
                 <h3 class="black">تعیین هدف</h3>
                 <br><br>
@@ -216,52 +247,133 @@
                 </form>
                 <br>
             </div>
+
             <div id="new-test" class="tab-pane fade">
                 <h3 class="black">تمرین جدید</h3>
                 <p>برای شروع به حل تمرین مورد نظر روی گزینه ی شروع کلیک کنید.</p>
+                <a  data-toggle="modal" data-target="#test-modal" class="btn btn-default" >تعریف تمرین جدید</a>
+
+                <div id="test-modal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                                <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <br/>
+                                <h4 class="modal-title">تعریف تمرین :</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-1 col-sm-1"></div>
+                                    <div class="col-sm-10 col-md-10">
+                                        <form action="/CreateStuEx"  method="post">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label>درس:</label>
+                                                        <select id="choose_course" name="course" class="form-control" required>
+                                                            <option value=""></option>
+                                                            @if(count($courses) > 0)
+                                                                @foreach($courses as $course)
+                                                                    <option value={{$course->id}}>{{$course->name}}-{{$course->grade}}</option>
+                                                                @endforeach
+                                                            @endif
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label >فصل:</label>
+                                                        <select id="choose_section" name="section" class="form-control"required></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-5 col-sm-5">
+                                                    <div class="form-group">
+                                                        <label>تعداد سوالات آسان:</label>
+                                                        <input name="easy" class="form-control" type="number">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-5 col-sm-5">
+                                                    <div class="form-group">
+                                                        <label>تعداد سوالات متوسط:</label>
+                                                        <input name="medium" class="form-control" type="number">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-5 col-sm-5">
+                                                    <div class="form-group">
+                                                        <label>تعداد سوالات سخت:</label>
+                                                        <input name="hard" class="form-control" type="number">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>نام تمرین:</label>
+                                                        <input name="nameEx" class="form-control" placeholder="تمرین">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="_token" value={{ csrf_token() }}>
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-default btn-lg">ثبت</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">ببندش!</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="dash-table">
                         <div class="row dash-table-title">
                             <div class="col-md-4">
                                 <h4>نام تمرین</h4>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <h4>آموزگار</h4>
-                            </div>
-                            <div class="col-md-3">
-                                <h4>نام درس</h4>
                             </div>
                             <div class="col-md-2">
                                 <h4>حل</h4>
+                            </div>
+                            <div class="col-md-2">
+                                <h4>حذف</h4>
                             </div>
                         </div>
                         <hr>
                         @if(count($exercises) > 0)
                             @foreach($exercises as $exercise)
-                                @if(count($user_course) > 0)
-                                @foreach($user_course as $co)
-                                    @if($exercise->course_id == $co->course_id)
-
+                                @if(count($user_exercise) > 0)
+                                @foreach($user->exercises as $use)
+                                    @if($exercise->id == $use->id && $use->pivot->status == 0)
                                         <div class="row dash-table-content chapter">
                                             <div class="col-md-4">
                                                 <p>{{$exercise->name}}</p>
                                             </div>
-                                            <div class="col-md-3">
-                                                @foreach($courses as $course)
-                                                    @if($course->id == $co->course_id)
-                                                        <p>{{$course->teacher_name}}</p>
-                                                    @endif
-                                                @endforeach
-                                            </div>
-                                            <div class="col-md-3">
-                                                @foreach($courses as $course)
-                                                    @if($course->id == $co->course_id)
-                                                        <p>{{$course->name}}</p>
-                                                    @endif
-                                                @endforeach
+                                            <div class="col-md-4">
+                                                @if(count($user_course) > 0)
+                                                    @foreach($user->exercises as $co)
+                                                        @foreach($courses as $course)
+                                                            @if($course->id == $co->course_id)
+                                                                <p></p>
+                                                            @endif
+                                                        @endforeach
+                                                    @endforeach
+                                                @endif
                                             </div>
                                             <div class="col-md-2">
-                                                <a href="#get-test"><button class="btn btn-success btn-sm">شروع</button></a>
+                                                <a href="/exercise/{{$exercise->id}}"><button class="btn btn-success btn-sm">شروع</button></a>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <a href="/delete/{{$exercise->id}}"><button class="btn btn-delete btn-sm">حذف</button></a>
                                             </div>
                                         </div>
                                         <br>
@@ -276,6 +388,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="solving-test" class="tab-pane fade">
                 <h3 class="black">تمرین در انتظار حل</h3>
                 <p>برای ادامه حل تمرین مورد نظر روی گزینه ی ادامه کلیک کنید.</p>
@@ -298,15 +411,16 @@
                         <hr>
                         @if(count($exercises) > 0)
                             @foreach($exercises as $exercise)
-                            @foreach($user_exercise as $exe)
-                            @if($exe->status == 0 && $exe->exercise_id == $exercise->id)
+                            @if(count($user_exercise) > 0)
+                            @foreach($user->exercises as $exe)
+                            @if($exe->id == $exercise->id && $exe->pivot->status == 1)
                             <div class="row dash-table-content chapter">
                                 <div class="col-md-4">
                                     <p>{{$exercise->name}}</p>
                                 </div>
                                 <div class="col-md-4">
                                     @foreach($courses as $course)
-                                        @if($course->id == $co->course_id)
+                                        @if($course->id == $exe->course_id)
                                             <p>{{$course->teacher_name}}</p>
                                         @endif
                                     @endforeach
@@ -322,7 +436,7 @@
 
                             @endif
                             @endforeach
-
+                            @endif
                             @endforeach
                         @else
                                 برو حال کن ، تمرین نداری
@@ -352,15 +466,16 @@
                         <hr>
                         @if(count($exercises) > 0)
                             @foreach($exercises as $exercise)
-                            @foreach($user_exercise as $exe)
-                            @if($exe->status == 2 && $exe->exercise_id == $exercise->id)
+                            @if(count($user_exercise) > 0)
+                            @foreach($user->exercises as $exe)
+                            @if($exe->id == $exercise->id && $exe->pivot->status == 2)
                         <div class="row dash-table-content chapter">
                             <div class="col-md-3">
                                 <p class="black">{{$exercise->name}}</p>
                             </div>
                             <div class="col-md-3">
                                 @foreach($courses as $course)
-                                    @if($course->id == $co->course_id)
+                                    @if($course->id == $exe->course_id)
                                         <p>{{$course->teacher_name}}</p>
                                     @endif
                                 @endforeach
@@ -374,20 +489,34 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="progress">
-                                    <div class="progress-bar progress-bar-striped" role="progressbar">
+                                    <div class="progress-bar progress-bar-striped" style="width:'{{$score->percent}}%'">
+                                        {{$score->percent}}%
                                     </div>
                                 </div>
                             </div>
                         </div>
                         @endif
                         @endforeach
+                        @endif
                         @endforeach
                         @endif
                     </div>
                 </div>
             </div>
+
             <div id="get-test" class="tab-pane fade">
                 <h3 class="black">گرفتن تمرین</h3>
+                <br>
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        {{$errors->first()}}
+                    </div>
+                @endif
+                @if(session()->has('msg'))
+                    <div class="alert alert-danger">
+                        {{ session()->get('msg') }}
+                    </div>
+                @endif
                 <br>
                 <h4>گرفتن تمرینی که آموزگار تعریف کرده است</h4><br>
                 <p>برای گرفتن تمرینی که آموزگارتان تعریف کرده است نام تمرین و پسورد آن را از آموزگارتان بگیرید و آن را در قسمت زیر وارد کنید.</p>
@@ -418,10 +547,52 @@
                 <h4>گرفتن تمرین از سایت</h4><br>
                 <p>برای گرفتن تمرین از سایت از قسمت منو بر روی درس مورد نظر کلیک کنید تا وارد قسمت تمرین های مربوطه شوید.</p>
             </div>
+
+            <div id="get-class" class="tab-pane fade">
+                <h3 class="black">گرفتن کلاس</h3>
+                <br>
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        {{$errors->first()}}
+                    </div>
+                @endif
+                @if(session()->has('msg'))
+                    <div class="alert alert-danger">
+                        {{ session()->get('msg') }}
+                    </div>
+                @endif
+                <br>
+                <h4>گرفتن کلاسی که آموزگار معرفی کرده است</h4><br>
+                <br>
+                <form class="form-inline" action="/giveCl" method="post">
+                    <input type="hidden" name="_token" value={{ csrf_token()}}>
+                        <div class="row">
+                            <div class="col-md-5 col-sm-12">
+                                <div class="form-group">
+                                    <label>نام کلاس :</label>
+                                    <input class="form-control" name="className">
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="form-group">
+                                    <label>کد :</label>
+                                    <input class="form-control" name="classPass">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-12">
+                                <div class="form-group">
+                                    <button class="btn btn-default btn-md">ثبت</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <br>
+            </div>
+            <div id="ajax-content"></div>
             <div id="class1" class="tab-pane fade">
                 <h3 class="black">اطلاعات کلاس</h3>
-                <h4><span class="course">{{$course->name}}</span>&nbsp;-&nbsp;<span class="teacher">{{$course->teacher_name}}</span></h4>
-                <br><br>
+                    <h4 id="h4"></h4>
+                    <br><br>
                 <div class="row" >
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-md-10 col-sm-10">
@@ -438,7 +609,7 @@
                     <div class="dash-table">
                         <div class="row dash-table-title">
                             <div class="col-md-5">
-                                <h4>فصل</h4>
+                                <h4>تمرین</h4>
                             </div>
                             <div class="col-md-3">
                                 <h4>امتیاز</h4>
@@ -449,47 +620,9 @@
                         </div>
                         <hr>
                         <div class="row dash-table-content chapter">
-                            <div class="col-md-5">
-                                <p>گردآوری داده</p>
-                            </div>
-                            <div class="col-md-3">
-                                <p><span class="stuPoint">8</span>/<span class="totalPoint">10</span></p>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="progress">
-                                    <div class="progress-bar progress-bar-striped" role="progressbar">
-                                    </div>
-                                </div>
-                            </div>
+                            <div id="info"></div>
                         </div>
-                        <div class="row dash-table-content dash-section">
-                            <div class="col-md-5">
-                                <p>انواع متغیر</p>
-                            </div>
-                            <div class="col-md-3">
-                                <p><span class="stuPoint">2</span>/<span class="totalPoint">10</span></p>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="progress">
-                                    <div class="progress-bar progress-bar-striped" role="progressbar">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row dash-table-content dash-section">
-                            <div class="col-md-5">
-                                <p>مقیاس های اندازه گیری</p>
-                            </div>
-                            <div class="col-md-3">
-                                <p><span class="stuPoint">5</span>/<span class="totalPoint">10</span></p>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="progress">
-                                    <div class="progress-bar progress-bar-striped" role="progressbar">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
                 <br>

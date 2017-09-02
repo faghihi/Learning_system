@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>amar 10</title>
+    <title>{{$course->name}}-{{$course->grade}}</title>
     <link rel="favicon" href="{{URL::asset('images/favicon.png')}}">
     <!-- custome js just for login page -->
 
@@ -22,12 +22,10 @@
     <script src="{{URL::asset('js/respond.min.js')}}"></script>
     <![endif]-->
     <!--for insert mathematics formula-->
-
-            <script type="text/javascript" async
-                    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
-            </script>
-
-            <script src="ASCIIMathML.js"></script>
+    <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <script src="ASCIIMathML.js"></script>
 </head>
 
 <body>
@@ -39,7 +37,6 @@
         <p></p>
     </div>
 </header>
-
 
 <!-- container -->
 <section class="container black">
@@ -76,13 +73,13 @@
                         <input name="t<?php echo $count?>" type="hidden" value="{{$question['content']}}" form="test">
                         @if($question->level == 0)
                             <div class="point">(نمره : <span>&nbsp;1&nbsp;</span>)</div>
-                            <img src="{{URL::asset('images/emoticon/32easy.png')}}" title="{{$question['level']}}">
+                            <img src='/images/emoticon/32easy.png' title="{{$question['level']}}">
                         @elseif($question->level == 1)
                             <div class="point">(نمره : <span>&nbsp;2&nbsp;</span>)</div>
-                            <img src="{{URL::asset('images/emoticon/32normal.png')}}" title="{{$question['level']}}">
+                            <img src='/images/emoticon/32normal.png' title="{{$question['level']}}">
                         @else
                             <div class="point">(نمره : <span>&nbsp;3&nbsp;</span>)</div>
-                            <img src="{{URL::asset('images/emoticon/32hard.png')}}" title="{{$question['level']}}">
+                            <img src='/images/emoticon/32hard.png' title="{{$question['level']}}">
                         @endif
                         <br>
 
@@ -128,7 +125,63 @@
 
                         <br>
                         <button onclick="refresh('q<?php echo $count?>')" class="btn btn-default btn-xs" >پاک کردن جواب</button>
-                        <button class="btn btn-warning btn-xs" >اعلام مشکل در سوال.</button>
+                        <button data-toggle="modal" data-target="#problem-modal" class="btn btn-warning btn-xs" >اعلام مشکل در سوال.</button>
+                        <div id="problem-modal" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                            <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <br/>
+                                        <h4 class="modal-title">اعلام مشکل :</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-1 col-sm-1"></div>
+                                            <div class="col-sm-10 col-md-10">
+                                                <form action="/CreateWarning"  method="post">
+                                                <div class="row">
+                                                    <div class="col-md-6 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>نام تمرین :</label>
+                                                            <input class="form-control" name="exercise_name" value="{{$exercise->name}}" disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>سوال :</label>
+                                                            <select id="choose_question" name="question" class="form-control" required>
+                                                                <option value=""></option>
+                                                                @if(count($questions) > 0)
+                                                                    @foreach($exercise->questions as $ex)
+                                                                        <option value={{$ex->id}}>{{'t'.$count}}</option>
+                                                                    @endforeach
+                                                                @endif
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        <label>مشکل چیه به نظرت؟</label>
+                                                        <textarea name="problem" cols="60" rows="5">
+                                                        </textarea>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="_token" value={{ csrf_token() }}>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-default btn-lg">ثبت</button>
+                                                </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">ببندش!</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <hr>
                 </li>
@@ -425,7 +478,6 @@
 <!-- Google Maps -->
 <script src="{{URL::asset('js/Gmap.JS')}}"></script>
 <script src="{{URL::asset('js/google-map.js')}}"></script>
-
 
 
 </body>

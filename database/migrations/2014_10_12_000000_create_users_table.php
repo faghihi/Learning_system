@@ -13,16 +13,18 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->string('username');
+            $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
             $table->string('phone');
             $table->string('type');
+            $table->integer('grade_id')->nullable();
             $table->integer('school_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
-            $table->primary('username');
+
+            $table->foreign('grade_id')->references('id')->on('grades')->onDelete('cascade');
         });
     }
 

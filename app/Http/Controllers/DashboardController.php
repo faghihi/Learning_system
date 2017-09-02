@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\classes;
+use App\Classes;
+use App\ClassExercise;
+use App\Goal;
 use App\Score;
 use App\Section;
+use App\tempanswer;
 use App\User;
 use App\Course;
-use App\courses;
-use App\exercise;
+use App\Exercise;
 use App\School;
-use App\userexercise;
-use App\users;
 use Request;
 use Illuminate\Support\Facades\Input;
 use Session;
@@ -19,86 +19,108 @@ use DB;
 
 class DashboardController extends Controller
 {
-    //
+    //show teacher dashboard
     public function index() {
         $schools = School::all();
-        $username = Session::get('UserName');
-        $user = User::where('username','=',$username)->first();
+        $email = Session::get('Email');
+        $user = User::where('email','=',$email)->first();
 
         $users = User::all();
-        $classes = classes::all();
+        $exercises =  Exercise::all();
+        $classes = Classes::all();
         $courses = Course::all();
         $sections = Section::all();
-        $exercises =  exercise::all();
-        return view('Tdashboard', compact('schools','user','users','classes','courses','sections','exercises'));
+        $class_exercise = ClassExercise::all();
+
+        return view('Tdashboard', compact('schools','user','users','classes','courses','sections','exercises','class_exercise'));
     }
 
+    //show student dashboard
     public function get(){
         if(Session::get('Login')!="True"){
             return redirect('/');
         }
-        $username=Session::get('UserName');
-        $users=DB::select('Select * From goal where username="'.$username."\"");
+        $email=Session::get('Email');
+        $user = User::where('email','=',$email)->first();
+
+        $users = Goal::where('user_id',$user->id)->get();
         $info=array();
         $info['exam']=0;
         $info['questions']=0;
-        foreach ($users as $user){
-            $info['exam']=$user->ex_count;
-            $info['questions']=$user->q_count;
+        foreach ($users as $us){
+            $info['exam']=$us->ex_count;
+            $info['questions']=$us->q_count;
         }
         $courses = Course::all();
-        $exercises = exercise::all();
-        $user_course = courses::where('username','=',$username)->get();
-        $user = User::where('username','=',$username)->first();
-        $user_exercise = userexercise::where('username','=',$username)->get();
+        $exercises = Exercise::all();
+        $classes = Classes::all();
+        $user_course = $user->courses;
+        $user_exercise = $user->exercises;
 
         $count_solve = 0;
         $count_answer = 0;
-        foreach($user_exercise as $us_ex){
-            $exam = Score::where('exercise_id',$us_ex->exercise_id)->where('username',$username)->first();
+        if(count($user_exercise) > 0) {
+            foreach ($user_exercise as $us_ex) {
+                $exam = Score::where('exercise_id', $us_ex->id)->where('user_id', $user->id)->first();
+                $temp = tempanswer::where('exercise_id', $us_ex->id)->where('user_id', $user->id)->get();
 
-            if($us_ex->status == 2){
-                $count_solve ++;
+                $smp = DB::table('users_exercises')->where('exercise_id',$us_ex->id)
+                    ->where('user_id',$user->id)->first();
+
+                if ($smp->status == 2) {
+                    $count_solve++;
+                }
+                if (count($temp) > 0) {
+                    foreach ($temp as $t) {
+                        if ($t->answer > 0) {
+                            $count_answer++;
+                        }
+                    }
+                }
+
+                if ($exam) {
+                    $count_answer += $exam->q_count;
+                } else {
+                    $exam = [];
+                }
             }
-            if($exam) {
-                $count_answer += $exam->q_count;
-            }else{
-                $count_answer = 0;
-            }
+
         }
-
-        $user_scores = Score::where('username',$username)->get();
-
+        $user_scores = Score::where('user_id',$user->id)->get();
+        $user_classes = $user->classes;
+        $teachers = User::all();
+        $schools = School::all();
         return view('dashboard')->with(['info'=>$info,'courses'=>$courses,'exercises'=>$exercises,'user_course'=>$user_course,'user'=>$user,'user_exercise'=>$user_exercise,
-            'count'=>$count_solve,'user_scores'=>$user_scores,'answer_count'=>$count_answer]);
+            'count'=>$count_solve,'user_scores'=>$user_scores,'answer_count'=>$count_answer,'user_classes'=>$user_classes,
+        'classes'=>$classes,'teachers'=>$teachers,'schools'=>$schools]);
     }
 
     public function SetGoal(){
         $exams=(int) Input::get('exam');
         $questions=(int) Input::get('questions');
-        $username=Session::get('UserName');
-        $users=DB::select('select * from goal Where username="'.$username.'"');
+        $email=Session::get('Email');
+        $user=User::where('email',$email)->first();
+        $users=Goal::where('user_id',$user->id)->get();
         $check=0;
 
         $date = new \DateTime('now');
         foreach ($users as $user){
             $check=1;
-            DB::table('goal')
-                ->where('username',"$username")
+            DB::table('goals')
+                ->where('user_id',$user->id)
                 ->update(['ex_count'=>$exams,
                     'q_count'=>$questions,
                     'start_date'=> $date->format('Y/m/d'),
                     'end_date'=> $date->add(new \DateInterval('P7D'))]);
         }
         if(!$check){
-            DB::table('goal')->insert(
+            DB::table('goals')->insert(
               [
-                  'username'=>$username,
+                  'user_id'=>$user->id,
                   'ex_count'=>$exams,
                   'q_count'=>$questions,
                   'start_date'=> $date->format('Y/m/d'),
-                  'end_date'=> $date->add(new \DateInterval('P7D')),
-                  'score'=> 0
+                  'end_date'=> $date->add(new \DateInterval('P7D'))
               ]
             );
         }

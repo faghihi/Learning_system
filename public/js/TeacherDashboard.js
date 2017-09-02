@@ -23,185 +23,7 @@ $(document).ready(function(){
         availableTags: sampleTags
     });
     $('#whole-student').tagit({
-        availableTags: sampleTags,
-    });
-    $('#testDataStuEdit').tagit({
-        availableTags: sampleTags,
-        singleField: true ,
-        singleFieldNode: $('#testDataStu')
-    });
-    //set in input value in test-data part in dashboard
-    for(var x in sampleTags)
-    {
-        $('#testDataStuEdit').tagit('createTag',sampleTags[x]);
-    }
-    /*--- class report chart ----*/
-    var classBar = document.getElementById("class-bar");
-    var ClassBar = new Chart(classBar, {
-        type: 'bar',
-        data: {
-            labels: sampleTags,
-            datasets: [{
-                label: 'نمره',
-                data: [70, 30, 55, 100, 55, 66, 78, 20, 99],
-                backgroundColor: [
-                    randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2),
-                    randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2)
-                ],
-                borderColor: [
-                    randomColor(1),randomColor(1),randomColor(1),randomColor(1),randomColor(1),
-                    randomColor(1),randomColor(1),randomColor(1),randomColor(1)
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-
-            defaultFontFamily: "IRANSans",
-            title: {
-                display: true,
-                text: 'نمرات در کل تمرین های کلاس',
-                position: 'top',
-                fontSize: 16,
-                fontFamily: "IRANSans"
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true,
-                        max:100,
-                        min:0
-                    }
-                }]
-            }
-        }
-
-    });
-    /*--- test report chart ----*/
-    var testBar = document.getElementById("test-bar");
-    var TestBar = new Chart(testBar, {
-        type: 'bar',
-        data: {
-            labels: sampleTags,
-            datasets: [{
-                label: 'نمره',
-                data: [70, 30, 55, 100, 55, 66, 78, 20, 99],
-                backgroundColor: [
-                    randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2),
-                    randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2)
-                ],
-                borderColor: [
-                    randomColor(1),randomColor(1),randomColor(1),randomColor(1),randomColor(1),
-                    randomColor(1),randomColor(1),randomColor(1),randomColor(1)
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            title: {
-                display: true,
-                text: 'نمرات تمرین',
-                position: 'top',
-                fontSize: 16,
-                fontFamily: "IRANSans"
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true,
-                        max:100,
-                        min:0
-                    }
-                }]
-            }
-        }
-
-    });
-    /*--- test point report chart ----*/
-    var testPie = document.getElementById("test-pie");
-    var TestPie = new Chart(testPie, {
-        type: 'pie',
-        data: {
-            labels: [
-                "خوب (66-100%)",
-                "متوسط (33-66%)",
-                "بد (0-33%)"
-            ],
-            datasets: [
-                {
-                    data: [4, 3, 2],
-                    backgroundColor: [
-
-                        'rgba(54, 162, 235, 0.8)',
-                        'rgba(255, 206, 86, 0.8)',
-                        'rgba(255, 99, 132, 0.8)'
-                    ],
-                    hoverBackgroundColor: [
-                        "#36A2EB",
-                        "#FFCE56" ,
-                        "#FF6384"
-                    ]
-                }]
-        },
-        options: {
-            title: {
-                display: true,
-                text: 'وضعیت پاسخگویی در این تمرین',
-                position: 'top',
-                fontSize: 16,
-                fontFamily: "IRANSans"
-            }
-        }
-    });
-    /*--- test point report chart ----*/
-    var stuLine = document.getElementById("student-line");
-    var StuLine = new Chart(stuLine, {
-        type: 'line',
-        data: {
-            labels: ["تمرین 1", "تمرین 2", "تمرین 3", "تمرین 4"],
-            datasets: [
-                {
-                    label: "نمره",
-                    fill: false,
-                    lineTension: 0.1,
-                    backgroundColor: "rgba(75,192,192,0.4)",
-                    borderColor: "rgba(75,192,192,1)",
-                    borderCapStyle: 'butt',
-                    borderDash: [],
-                    borderDashOffset: 0.0,
-                    borderJoinStyle: 'miter',
-                    pointBorderColor: "rgba(255, 102, 102, 1)",
-                    pointBackgroundColor: "#fff",
-                    pointBorderWidth: 5,
-                    pointHoverRadius: 7,
-                    pointHoverBackgroundColor: "rgba(255, 102, 102, 1)",
-                    pointHoverBorderColor: "rgba(220,220,220,1)",
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 1,
-                    pointHitRadius: 10,
-                    data: [65, 59, 80, 78],
-                    spanGaps: false,
-                }
-            ]},
-            options: {
-                responsive: true,
-                title:{
-                    display:true,
-                    text:'نمودار پیشرفت وضعیت دانش آموز',
-                    position: 'top',
-                    fontSize: 16,
-                    fontFamily: "IRANSans"
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            max:100,
-                            min:0,
-                            stepSize: 10
-                        }
-                    }]
-                }
-            }
+        availableTags: sampleTags
     });
 
     /*$(".choose-class").show();
@@ -303,3 +125,323 @@ var randomColorFactor = function() {
 var randomColor = function(opa) {
     return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() +','+ opa + ')';
 };
+
+//student info
+$('#ch_class').on('change', function() {
+    //get selected id
+    var id = $("#ch_class option:selected").val();
+    // <canvas id='student-line'>
+    var stuLine = document.getElementById("student-line");
+
+    $.ajax({
+        url: '/student/ajax/'+id,
+        type: "GET",
+        dataType: "json",
+        success:function(data) {
+            $('#selectStudent').empty(); // with change class,remove student info
+            $.each(data, function(key, value) {
+
+                $('#selectStudent').append('<option value="'+ key +'">'+ value.name +'</option>');
+                $('#selectStudent').on('click', function(){
+                    var st = $("#selectStudent option:selected").val();
+                    if(key == st){
+                        $('#stu_name').val(value.name);
+                        $('#stu_email').val(value.email);
+                        //create a chart, labels and data get array
+                        var StuLine = new Chart(stuLine, {
+                            type: 'line',
+                            data: {
+                                labels: value.labels,
+                                datasets: [
+                                    {
+                                        label: "نمره",
+                                        fill: false,
+                                        lineTension: 0.1,
+                                        backgroundColor: "rgba(75,192,192,0.4)",
+                                        borderColor: "rgba(75,192,192,1)",
+                                        borderCapStyle: 'butt',
+                                        borderDash: [],
+                                        borderDashOffset: 0.0,
+                                        borderJoinStyle: 'miter',
+                                        pointBorderColor: "rgba(255, 102, 102, 1)",
+                                        pointBackgroundColor: "#fff",
+                                        pointBorderWidth: 5,
+                                        pointHoverRadius: 7,
+                                        pointHoverBackgroundColor: "rgba(255, 102, 102, 1)",
+                                        pointHoverBorderColor: "rgba(220,220,220,1)",
+                                        pointHoverBorderWidth: 2,
+                                        pointRadius: 1,
+                                        pointHitRadius: 10,
+                                        data: value.data,
+                                        spanGaps: false
+                                    }
+                                ]},
+                            options: {
+                                responsive: true,
+                                title:{
+                                    display:true,
+                                    text:'نمودار پیشرفت وضعیت دانش آموز',
+                                    position: 'top',
+                                    fontSize: 16,
+                                    fontFamily: "IRANSans"
+                                },
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            max:100,
+                                            min:0,
+                                            stepSize: 10
+                                        }
+                                    }]
+                                }
+                            }
+                        });
+
+                        $('#exercise_info').empty()
+                        $.each(value.score , function(i,val){
+                            $('#exercise_info').append(
+                                '<div class="col-md-5"><p>'+val.exercise_name+'</p></div><div class="col-md-3">' +
+                                '<p><span class="stuPoint">'+val.exercise_st_point+'</span>/<span class="totalPoint">'+val.exercise_t_point+'</span></p></div>'+
+                                '<div class="col-md-4"><div class="progress">'+
+                                '<div class="progress-bar progress-bar-striped" style="width:'+val.exercise_percent+'%'+'">'+val.exercise_percent+'%'+'</div></div></div>'
+                            );
+                        });
+                    }
+                });
+            });
+        }
+    });
+});
+
+<!--when user choose school,show class name & student info-->
+$('#selectSchool').on('change', function() {
+    var id = $("#selectSchool option:selected").val();
+    var classBar = document.getElementById("class-bar");
+    $.ajax({
+        url: '/school/ajax/'+id,
+        type: "GET",
+        dataType: "json",
+        success:function(data) {
+            $('#chooseClass').empty();
+            $.each(data, function(key,value){
+                $('#chooseClass').append('<option value="'+ key +'">'+ value.class_name +'</option>');
+                $('#chooseClass').on('click',function(){
+                    var cl = $("#chooseClass option:selected").val();
+                    if(key == cl){
+
+                        var ClassBar = new Chart(classBar, {
+                            type: 'bar',
+                            data: {
+                                labels: value.labels,
+                                datasets: [{
+                                    label: 'نمره',
+                                    data: value.data,
+                                    backgroundColor: [
+                                        randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2),
+                                        randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2)
+                                    ],
+                                    borderColor: [
+                                        randomColor(1),randomColor(1),randomColor(1),randomColor(1),randomColor(1),
+                                        randomColor(1),randomColor(1),randomColor(1),randomColor(1)
+                                    ],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+
+                                defaultFontFamily: "IRANSans",
+                                title: {
+                                    display: true,
+                                    text: 'نمرات در کل تمرین های کلاس',
+                                    position: 'top',
+                                    fontSize: 16,
+                                    fontFamily: "IRANSans"
+                                },
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero:true,
+                                            max:100,
+                                            min:0
+                                        }
+                                    }]
+                                }
+                            }
+
+                        });
+                        $('#stud_info').empty();
+                        $.each(value.user , function(i,val){
+                            $('#stud_info').append(
+                                '<div class="row dash-table-content chapter"><div class="col-md-5">'+
+                                '<p class="black">'+val.stud_name+'</p></div><div class="col-md-6"></div><div class="col-md-1">'+
+                                '<button class="btn-delete btn-sm delete-student" title="حذف دانش آموز"><i class="fa fa-1x fa-user-times"></i></button></div></div>');
+
+                            $.each(val.section , function(j,v){
+                                $.each(v , function(x,y){
+                                    $('#stud_info').append(
+                                        '<div class="row dash-table-content dash-section">'+
+                                        '<div class="col-md-5"><p>'+y.section_name+'</p></div>'+
+                                        '<div class="col-md-2"><p><span class="stuPoint">'+y.status+'</span>/<span class="totalPoint">'+
+                                        y.total+'</span></p></div>'+'<div class="col-md-4"><div class="progress">'+
+                                        '<div class="progress-bar progress-bar-striped" style="width:'+y.progress+'%'+'">'+y.progress+'%'+'</div></div></div></div>');
+                                });
+
+                            });
+
+                            $('#stud_info').append('<hr/>');
+                        });
+                    }
+                });
+
+            });
+        }
+    });
+});
+
+//test chart info-circle
+$('#selectExercise').on('change',function(){
+    var ID = $(this).val();
+    var testPie = document.getElementById("test-pie");
+    var testBar = document.getElementById("test-bar");
+
+    $.ajax({
+        url: '/exercise_info/ajax/'+ID,
+        type: "GET",
+        dataType: "json",
+        success:function(data) {
+            $.each(data, function(key,value){
+                $('#sect').val(value.section_name);
+
+                var TestPie = new Chart(testPie, {
+                    type: 'pie',
+                    data: {
+                        labels: [
+                            "خوب (66-100%)",
+                            "متوسط (33-66%)",
+                            "بد (0-33%)"
+                        ],
+                        datasets: [
+                            {
+                                data: value.data,
+                                backgroundColor: [
+
+                                    'rgba(54, 162, 235, 0.8)',
+                                    'rgba(255, 206, 86, 0.8)',
+                                    'rgba(255, 99, 132, 0.8)'
+                                ],
+                                hoverBackgroundColor: [
+                                    "#36A2EB",
+                                    "#FFCE56" ,
+                                    "#FF6384"
+                                ]
+                            }]
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'وضعیت پاسخگویی در این تمرین',
+                            position: 'top',
+                            fontSize: 16,
+                            fontFamily: "IRANSans"
+                        }
+                    }
+                });
+
+                var TestBar = new Chart(testBar, {
+                    type: 'bar',
+                    data: {
+                        labels: value.labels,
+                        datasets: [{
+                            label: 'نمره',
+                            data: value.udata,
+                            backgroundColor: [
+                                randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2),
+                                randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2)
+                            ],
+                            borderColor: [
+                                randomColor(1),randomColor(1),randomColor(1),randomColor(1),randomColor(1),
+                                randomColor(1),randomColor(1),randomColor(1),randomColor(1)
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'نمرات تمرین',
+                            position: 'top',
+                            fontSize: 16,
+                            fontFamily: "IRANSans"
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero:true,
+                                    max:100,
+                                    min:0
+                                }
+                            }]
+                        }
+                    }
+                });
+
+                $('.chapter').empty();
+                $.each(value.exercise, function(j,val){
+                    $.each(val.score, function(k,v){
+                        $('.chapter').append(
+                            '<div class="col-md-4"><p class="black">'+val.name+'</p></div>'+
+                            '<div class="col-md-3"><p><span class="stuPoint">'+ v.exercise_st_point+'</span>/<span class="totalPoint">'+
+                            v.exercise_t_point+'</span></p></div><div class="col-md-5"><div class="progress">'+
+                            '<div class="progress-bar progress-bar-striped" style="width:'+v.exercise_percent+'%'+'">'+v.exercise_percent+'%'+'</div></div></div>'
+                        );
+                    });
+                });
+            });
+        }
+    });
+});
+
+
+$('.which_ex').on('click',function(){
+    var ID = $(this).val();
+
+    $.ajax({
+        url: '/exercise/ajax/'+ID,
+        type: "GET",
+        dataType: "json",
+        success:function(data) {
+            $('#ex_name').val(data.name);
+            $('#ex_code').val(data.code);
+            $('#ex_course').val(data.course_name);
+            $('#ex_section').val(data.section_name);
+            $('#ex_start').val(data.start);
+            $('#ex_end').val(data.end);
+            $('#ex_easy').val(data.easy);
+            $('#ex_medium').val(data.medium);
+            $('#ex_hard').val(data.hard);
+            $("#testDataStuEdit").tagit("removeAll");
+            console.log('1');
+            $.each(data.user , function(){
+                $('#testDataStuEdit').tagit({
+                    availableTags: data.user,
+                    singleField: true ,
+                    singleFieldNode: $('#testDataStu')
+                });
+                //set in input value in test-data part in dashboard
+                for(var x in data.user)
+                {
+                    //$("#testDataStuEdit").tagit({
+                    //    beforeTagAdded: function() {
+                    //        $('#testDataStuEdit').tagit('remove',data.user[x]);
+                    //    }
+                    //});
+
+                    $('#testDataStuEdit').tagit('createTag',data.user[x]);
+                }
+            });
+
+
+        }
+    });
+});
+

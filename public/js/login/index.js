@@ -11,13 +11,13 @@ $('.toggle').click(function(){
     opacity: "toggle"
   }, "slow");
 });
-var index=0;
-$("[type='checkbox']").on('change',function(){
-
-    if (this.checked) {
-        $("select").css('display','block');
-    }
-    else{
-        $("select").css('display','none');
-    }
-});
+//var index=0;
+//$("[type='checkbox']").on('change',function(){
+//
+//    if (this.checked) {
+//        $("select").css('display','block');
+//    }
+//    else{
+//        $("select").css('display','none');
+//    }
+//});

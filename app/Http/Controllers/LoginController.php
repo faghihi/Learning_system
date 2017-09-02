@@ -5,12 +5,8 @@ namespace App\Http\Controllers;
 use App\Course;
 use App\Mail\ForgetPass;
 use App\School;
-use App\users;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cookie;
+use App\User;
 use Session;
-use Requests;
-use Illuminate\Cookie\CookieJar;
 use Illuminate\Support\Facades\Input;
 
 class LoginController extends Controller
@@ -25,101 +21,140 @@ class LoginController extends Controller
         $courses = Course::all();
         return view('login-register',compact('schools','courses'));
     }
+
+    //login
     public function Login(){
-        $username=Input::get('username');
-        $password=Input::get('password');
-        $sampuser=users::where('username', $username)->get();
-        if(! $sampuser->isEmpty() ) {
-            foreach ($sampuser as $thisuser) {
-                $pass=$thisuser->password;
-                $name=$thisuser->name;
-            }
-            if($pass==$password){
-                Session::put('Login', 'True');
-                Session::put('Name', "$name");
-                Session::put('UserName',"$username");
-                return redirect('/');
-            }
-            else {
-                return view('login-register')->with('valid','none');
-            }
-        }
-        return view('login-register')->with('valid','none');
-    }
+        //set rules for validation
+        $rules = array(
+            'email' => 'required|email', // make sure the email is an actual email
+            'password' => 'required'
+        );
 
-    public function Signup(){
+        $messages = [
+            'required' => 'لطفا همه فیلد ها را پر کنید'
+        ];
 
-        $name=Input::get('name');
-        $username=Input::get('username');
-        $teacher=Input::get('teacher');
-
-        if($teacher){
-            $type = 'teacher';
-            $school=Input::get('school');
-        }else{
-            $type = 'student';
-            $school = null;
-        }
-        $user= new users();
-        $user->name=$name;
-        $user->username=$username;
-        $user->email=Input::get('email');
-        $user->password=Input::get('password');
-        $user->phone=Input::get('phone');
-        $user->type = $type;
-        $user->school_id = $school;
-        $user->save();
-        Session::put('Login', 'True');
-        Session::put('Name', $name);
-        Session::put('UserName',$username);
-
-        return redirect('/');
-    }
-
-    public function checkuser(){
-        $input=Input::get('user');
-        $input1=Input::get('mail');
-        $userinfo=users::where('username',$input)->get();
-        if(! $userinfo->isEmpty() ){
-            echo 0;
+        $validator = \Validator::make(Input::all() , $rules , $messages);
+        if($validator->fails()){
+            return \Redirect::to('UserArea')->withErrors($validator); // send back all errors to the login form
         }
         else {
-            $userinfo=users::where('email',$input1)->get();
-            if(! $userinfo->isEmpty() ){
-                echo 0;
-            }
-            else {
-                echo 1;
-            }
-        }
+            $email = Input::get('email');
+            $password = Input::get('password');
 
+            //which user login
+            $sampuser = User::where('email', $email)->first();
+            if (isset($sampuser)) {
+                $pass = $sampuser->password;
+                $name = $sampuser->name;
+
+                //check password is correct
+                if ($pass == $password) {
+                    Session::put('Login', 'True');
+                    Session::put('Name', $name);
+                    Session::put('Email', $email);
+
+                    return redirect('/');
+                } else {
+                    return \Redirect::to('UserArea')->withErrors(['رمز شما نادرست است']);
+                }
+            }
+            return \Redirect::to('UserArea')->withErrors(['چنین فردی در سیستم وجود ندارد']);
+        }
     }
 
+    //user register
+    public function Signup(){
+        //when user fill register form , form's value assign to variable
+        $name=Input::get('name');
+        $email = Input::get('email');
+        $password = Input::get('password');
+        $repass = Input::get('repassword');
+        $phone = Input::get('phone');
+        $grade = Input::get('grade');
+
+        //set rules for validation
+        $rules = array(
+            'name' => 'required|max:64', // make sure the name , max length 64 character and all character is alpha
+            'email' => 'required|email|unique:users', // make sure the email is actual email
+            'password' => 'required|min:6', // password has at least 6 character
+//            'repass' => 'required|same:password',// check password validation
+            'grade' => 'required'
+        );
+
+        $messages = [
+            'required' => 'لطفا همه فیلد ها را پر کنید',
+            'min' => 'رمز شما باید حداقل 6 کاراکترداشته باشد',
+            'unique' => 'قبلا یک نفر از این ایمیل استفاده کرده است',
+        ];
+
+        $validator = \Validator::make(Input::all() , $rules , $messages);
+        if($validator->fails()){
+            return \Redirect::to('UserArea')->withInput()->withErrors($validator,'register'); // send back all errors to the login form
+        }
+        else {
+
+            $teacher = Input::get('teacher');
+            //check user, is a teacher or student?
+            if ($teacher) {
+                $type = 'teacher';
+                $school = Input::get('school');
+            } else {
+                $type = 'student';
+                $school = Input::get('school');
+            }
+
+            //add to user table
+            $user = new User();
+            $user->name = $name;
+            $user->email = $email;
+            $user->password = $password;
+            $user->phone = $phone;
+            $user->type = $type;
+            $user->grade = $grade;
+            $user->school_id = $school;
+            $user->save();
+
+            //if user teach another school too
+            if($user->type == 'teacher'){
+                if($user->school_id > 0) {
+                    $s = School::find($user->school_id);
+                    $s->users()->attach($user->id);
+                }
+            }
+
+            Session::put('Login', 'True');
+            Session::put('Name', $name);
+            Session::put('Email',$email);
+
+            return redirect('/');
+        }
+    }
+
+    //when user forget password
     public function forget(){
         $email=Input::get('email');
-        $username=Input::get('username');
+        $name=Input::get('name');
 
-        $msg = new ForgetPass($username);
+        $msg = new ForgetPass($email);
 
         \Mail::to($email)->send($msg);
 
-        Session::put('UserName',$username);
+        Session::put('Email',$email);
 
         return redirect('https://mailtrap.io/inboxes/235913/messages');
     }
 
+    //reset password
     public function reset(){
         $pass = Input::get('password');
-        $username = Session::get('UserName');
+        $email = Session::get('Email');
 
-        $update=\DB::table('users')
-            ->where('username','=',$username)
-            ->update(['password' => $pass
-            ]);
-
+        $update=User::where('email',$email)->first();
+        $update->password = $pass;
+        $update->update();
 
         return redirect('/');
-
     }
 
     public function Logout(){
