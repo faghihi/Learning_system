@@ -33,8 +33,9 @@ class HomeController extends Controller
         $courses = Course::all();
 
         $user = User::where('email','=',$email)->first();
-
-        return view('guide' ,compact('user','courses'));
+        $teachers = User::where('type','teacher')->get();
+        $schools = School::all();
+        return view('guide' ,compact('user','courses','teachers','schools'));
     }
 
     public function classAjax($id){
@@ -196,7 +197,7 @@ class HomeController extends Controller
         $course = Course::find($id);
         $user = User::where('email',$email)->first();
         $sections = Section::where('course_id',$id)->get();
-        $scores = Score::where('user_id',$user->id)->get();
+        $scores = Score::where('user_id',$user->id)->where('course_id',$id)->get();
         $exercises = Exercise::all();
 
         $info['course_grade'] = $course->name.' '.$course->grade;
@@ -221,6 +222,8 @@ class HomeController extends Controller
                 $info['score'][0]['st_point'] = 0;
                 $info['score'][0]['t_point'] = 0;
                 $info['score'][0]['percent'] = 0;
+                $labels[] = 'فعلا هیچی';
+                $data[] = 0;
             }
 
 

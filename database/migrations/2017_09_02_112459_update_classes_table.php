@@ -13,13 +13,13 @@ class UpdateClassesTable extends Migration
      */
     public function up()
     {
-        Schema::table('classes', function (Blueprint $table) {
-            $table->dropForeign('classes_school_id_foreign');
-            $table->dropColumn('school_id');
-        });
-        Schema::table('classes', function (Blueprint $table) {
-            $table->unsignedInteger('school_id')->nullable();
-        });
+//        Schema::table('classes', function (Blueprint $table) {
+//            $table->dropForeign('classes_school_id_foreign');
+//            $table->dropColumn('school_id');
+//        });
+//        Schema::table('classes', function (Blueprint $table) {
+//            $table->unsignedInteger('school_id')->nullable();
+//        });
     }
 
     /**

@@ -64,7 +64,7 @@
                                 @foreach($user->classes as $cl)
                                     @foreach($classes as $class)
                                         @if($cl->id == $class->id && $cl->pivot->status == 2)
-                                            <li value="{{$class->id}}"><a data-toggle="pill" href="#class1"><span class="user_class">{{$class->name}}</span></a></li>
+                                            <li value="{{$class->id}}"><a data-toggle="pill" href="#class2"><span class="user_class">{{$class->name}}</span></a></li>
                                         @endif
                                     @endforeach
                                 @endforeach
@@ -97,7 +97,7 @@
                             @foreach($user_course as $co)
                                 @foreach($courses as $course)
                                     @if($co->id == $course->id)
-                                        <li value="{{$course->id}}"><a data-toggle="pill" href="#class{{$course->id}}"><span class="course">{{$course->name}}</span>&nbsp;-&nbsp;<span class="teacher">{{$course->teacher_name}}</span></a></li>
+                                        <li><a rel="{{$course->id}}" data-toggle="pill" href="#class1"><span class="course">{{$course->name}}</span>&nbsp;-&nbsp;<span class="teacher">{{$course->teacher_name}}</span></a></li>
                                     @endif
                                 @endforeach
                             @endforeach
@@ -622,7 +622,6 @@
                         <div class="row dash-table-content chapter">
                             <div id="info"></div>
                         </div>
-
                     </div>
                 </div>
                 <br>
@@ -681,7 +680,6 @@
 <!-- Google Maps -->
 {{--<script src="{{URL::asset('js/Gmap.JS')}}"></script>--}}
 {{--<script src="{{URL::asset('js/google-map.js')}}"></script>--}}
-
 
 </body>
 </html>

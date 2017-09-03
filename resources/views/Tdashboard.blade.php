@@ -555,7 +555,7 @@
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
                                     <label>نام</label>
-                                    <input id="ex_name" type="text" class="form-control" value="" disabled>
+                                    <input id="ex_name" type="text" class="form-control editable" value="" >
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">

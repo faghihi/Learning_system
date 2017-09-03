@@ -8,28 +8,22 @@ $(document).ready(function () {
        $('li.active').removeAttr('class');
     });
 
-    // $('[data-toggle="pill"]').on('click', function (e) {
-    //     var now_tab = e.target // activated tab
-    //
-    //     // get the div's id
-    //     var divid = $(now_tab).attr('href').substr(1);
-    //     console.log(divid);
-    //     $.getJSON('xxx.php').success(function(data){
-    //         $("#"+divid).text(data.msg);
-    //     });
-    // })
-
-
-    $('#co li').on('click' ,function(){
-        var course = $('#co li').val();
+    $('#co a').on('click' ,function(){
+        var course = $(this).attr('rel');
         console.log(course);
         $.ajax({
             url: '/course/ajax/'+course,
             type: "GET",
             dataType: "json",
             success:function(data) {
-                $('#h4').html('<span>'+data['course_grade']+'</span>' +'&nbsp;-&nbsp;'+
-                '<span>' +data['teacher']+'</span>');
+                $('#class1').html('<div class="tab-pane fade"></div><h3 class="black">اطلاعات کلاس</h3>'+
+                '<h4><span>'+data['course_grade']+'</span>' +'&nbsp;-&nbsp;'+
+                '<span>' +data['teacher']+'</span></h4><br><br>'+
+                '<div class="row" ><div class="col-md-1 col-sm-1"></div><div class="col-md-10 col-sm-10"><canvas id="student-line"></canvas></div></div><br>'+
+                '<div class="row"><div class="col-md-12"><h4><i class="fa fa-2x fa-file-text" aria-hidden="true"></i>&nbsp;گزارش وضعیت</h4></div></div>'+
+                '<div class="row"><div class="dash-table"><div class="row dash-table-title"><div class="col-md-5"><h4>تمرین</h4></div><div class="col-md-3"><h4>امتیاز</h4></div>'+
+                '<div class="col-md-4"><h4>مهارت</h4></div></div><hr><div class="row dash-table-content chapter"><div id="info"></div></div></div></div>');
+
                 $('#info').empty()
                 var stuLine = document.getElementById("student-line");
                 var StuLine = new Chart(stuLine, {
@@ -89,6 +83,7 @@ $(document).ready(function () {
             }
         });
     });
+
     //create exercise
     $('#choose_course').on('change', function() {
         var id = $("#choose_course option:selected").val();

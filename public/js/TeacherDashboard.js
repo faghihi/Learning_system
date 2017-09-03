@@ -404,7 +404,6 @@ $('#selectExercise').on('change',function(){
 
 $('.which_ex').on('click',function(){
     var ID = $(this).val();
-
     $.ajax({
         url: '/exercise/ajax/'+ID,
         type: "GET",
@@ -419,25 +418,16 @@ $('.which_ex').on('click',function(){
             $('#ex_easy').val(data.easy);
             $('#ex_medium').val(data.medium);
             $('#ex_hard').val(data.hard);
-            $("#testDataStuEdit").tagit("removeAll");
-            console.log('1');
-            $.each(data.user , function(){
-                $('#testDataStuEdit').tagit({
-                    availableTags: data.user,
-                    singleField: true ,
-                    singleFieldNode: $('#testDataStu')
-                });
-                //set in input value in test-data part in dashboard
-                for(var x in data.user)
-                {
-                    //$("#testDataStuEdit").tagit({
-                    //    beforeTagAdded: function() {
-                    //        $('#testDataStuEdit').tagit('remove',data.user[x]);
-                    //    }
-                    //});
 
-                    $('#testDataStuEdit').tagit('createTag',data.user[x]);
-                }
+            $('#testDataStuEdit').tagit({
+                //availableTags: data.user,
+                singleField: true ,
+                singleFieldNode: $('#testDataStu')
+            });
+            $("#testDataStuEdit").tagit('removeAll');
+
+            $.each(data.user , function(key,value){
+                $('#testDataStuEdit').tagit('createTag',value);
             });
 
 
