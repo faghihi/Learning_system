@@ -20,13 +20,18 @@
 @section('js')
 
 <script src="{{ url('_asset/fullcalendar') }}/fullcalendar.min.js"></script>
+<script src="{{ url('_asset/fullcalendar/lang') }}/fa.js"></script>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		var base_url = '{{ url('/') }}';
 		$('#calendar').fullCalendar({
+			isJalaali : true,
+			isRTL: true,
+			lang: 'fa',
 			weekends: true,
 			header: {
-				left: 'prev,next today',
+				left: 'next,prev today',
 				center: 'title',
 				right: 'month,agendaWeek,agendaDay'
 			},
