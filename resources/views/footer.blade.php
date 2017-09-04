@@ -201,7 +201,7 @@
                 </div>
                 <div class="col-md-3 panel footer-col">
                     <p class="text-right">
-                        Copyright &copy; 2016 example.com
+                        Copyright &copy; 2017 example.com
                     </p>
                 </div>
             </div>

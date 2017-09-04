@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes;
 use App\ClassExercise;
+use App\Category;
 use App\Goal;
 use App\Grade;
 use App\Score;
@@ -13,6 +14,7 @@ use App\User;
 use App\Course;
 use App\Exercise;
 use App\School;
+use App\Ticket;
 use Request;
 use Illuminate\Support\Facades\Input;
 use Session;
@@ -33,7 +35,10 @@ class DashboardController extends Controller
         $sections = Section::all();
         $class_exercise = ClassExercise::all();
         $grades=Grade::all();
-        return view('Tdashboard', compact('schools','user','users','classes','courses','sections','exercises','class_exercise','grades'));
+        $tickets = Ticket::all();
+        $categories = Category::all();
+        return view('Tdashboard', compact('schools','user','users','classes','courses','sections','exercises',
+            'class_exercise','grades','tickets','categories'));
     }
 
     //show student dashboard
@@ -91,9 +96,11 @@ class DashboardController extends Controller
         $user_classes = $user->classes;
         $teachers = User::all();
         $schools = School::all();
+        $categories = Category::all();
+        $tickets = Ticket::where('user_id', $user->id)->paginate(10);
         return view('dashboard')->with(['info'=>$info,'courses'=>$courses,'exercises'=>$exercises,'user_course'=>$user_course,'user'=>$user,'user_exercise'=>$user_exercise,
             'count'=>$count_solve,'user_scores'=>$user_scores,'answer_count'=>$count_answer,'user_classes'=>$user_classes,
-        'classes'=>$classes,'teachers'=>$teachers,'schools'=>$schools]);
+        'classes'=>$classes,'teachers'=>$teachers,'schools'=>$schools,'categories'=>$categories,'tickets'=>$tickets]);
     }
 
     public function SetGoal(){

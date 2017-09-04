@@ -129,42 +129,54 @@
                         <h3>پیام ها</h3>
                     </div>
                 </div>
+                @if ($tickets->isEmpty())
+                    <p>فعلا پیامی نداری</p>
+                @else
                 <div class="row">
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-md-10 col-sm-10 message">
                         <div class="row message-title">
-                            <div class="col-md-3 col-sm-3"><b>فرستنده</b></div>
-                            <div class="col-md-2 col-sm-2"><b>موضوع</b></div>
-                            <div class="col-md-5 col-sm-5"><b>پیام</b></div>
-                            <div class="col-md-2 col-sm-2"><b>پاسخ</b></div>
+                            <div class="col-md-2 col-sm-2"><b>دسته</b></div>
+                            <div class="col-md-3 col-sm-3"><b>موضوع</b></div>
+                            <div class="col-md-2 col-sm-2"><b>وضعیت</b></div>
+                            <div class="col-md-3 col-sm-3"><b>آخرین بروزرسانی</b></div>
+                            <div class="col-md-2 col-sm-2"><b>عملیات</b></div>
                         </div>
-                        <div class="row message-part">
-                            <div class="col-md-3 col-sm-3"><p>ادمین</p></div>
-                            <div class="col-md-2 col-sm-2"><p>ثبت درخواست</p></div>
-                            <div class="col-md-5 col-sm-5"><p>
-                                <a href="#" data-toggle="modal" data-target="#message-modal">درخواست شما در حال بررسی.</a>
-                            </p></div>
-                            <div class="col-md-2 col-sm-2"><button class="btn btn-primary btn-sm" disabled>
-                                <i class="fa fa-lg fa-pencil-square-o" aria-hidden="true"></i></button></div>
+                        @foreach ($tickets as $ticket)
+                            <div class="row message-part">
+                                @foreach ($categories as $category)
+                                    @if ($category->id === $ticket->category_id)
+                                        <div class="col-md-2 col-sm-2"><p>{{ $category->name }}</p></div>
+                                    @endif
+                                @endforeach
+                                <div class="col-md-3 col-sm-3">
+                                    <a href="{{ url('tickets/'. $ticket->ticket_id) }}">
+                                        #{{ $ticket->ticket_id }} - {{ $ticket->title }}
+                                    </a>
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    @if ($ticket->status === 'Open')
+                                        <span class="label label-success">{{ $ticket->status }}</span>
+                                    @else
+                                    	<span class="label label-danger">{{ $ticket->status }}</span>
+                                    @endif
+                                </div>
+                                <div class="col-md-3 col-sm-3">
+                                    {{ $ticket->updated_at }}
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    <form action="{{ url('close_ticket/' . $ticket->ticket_id) }}" method="POST">
+                                        {!! csrf_field() !!}
+                                    	<button type="submit" class="btn btn-default">Close</button>
+                                    </form>
+                                </div>
                         </div>
-                        <div class="row message-part">
-                            <div class="col-md-3 col-sm-3"><p>ادمین</p></div>
-                            <div class="col-md-2 col-sm-2"><p>تمرین دوم</p></div>
-                            <div class="col-md-5 col-sm-5"><p>در قسمت اول سوال مشکلی وجود دارد.</p></div>
-                            <div class="col-md-2 col-sm-2"><button class="btn btn-primary btn-sm" disabled>
-                                <i class="fa fa-lg fa-pencil-square-o" aria-hidden="true"></i></button></div>
-                        </div>
-                        <div class="row message-part">
-                            <div class="col-md-3 col-sm-3"><p>ادمین</p></div>
-                            <div class="col-md-2 col-sm-2"><p>مدرسه</p></div>
-                            <div class="col-md-5 col-sm-5"><p>درخواست شما برای ثبت مدرسه در حال پیگیری است.</p></div>
-                            <div class="col-md-2 col-sm-2"><button class="btn btn-primary btn-sm" disabled>
-                                <i class="fa fa-lg fa-pencil-square-o" aria-hidden="true"></i></button></div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
                 <!--End message part-->
                 <br><br>
+                @endif
             </div>
             <div id="add-question" class="tab-pane fade">
                 <div class="row">

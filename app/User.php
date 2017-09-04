@@ -47,4 +47,26 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Grade','grade_id');
     }
+
+    public function tickets()
+    {
+        return $this->hasMany('App\Ticket');
+    }
+
+    /**
+     * A user can have many comments
+     */
+    public function comments()
+    {
+        return $this->hasMany('App\Comment');
+    }
+
+    /**
+     * Get the user that created ticket
+     * @param  User  $user_id
+     */
+    public static function getTicketOwner($user_id)
+    {
+        return static::where('id', $user_id)->firstOrFail();
+    }
 }

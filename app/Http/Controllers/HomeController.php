@@ -18,14 +18,18 @@ use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
-    //
+    //show first page
     public function get(){
         $email = Session::get('Email');
-        $courses = Course::all();
-
         $user = User::where('email','=',$email)->first();
+        $courses = Course::all();
+        $teachers = User::where('type','teacher')->get();
+        $schools = School::all();
 
-        return view('index' ,compact('user','courses'));
+        //show 3 course in random order
+        $new_course = Course::orderBy('created_at','desc')->take(3)->get();
+
+        return view('index' ,compact('user','courses','teachers','schools','new_course'));
     }
 
     public function guide(){

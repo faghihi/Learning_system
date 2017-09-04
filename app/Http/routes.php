@@ -12,6 +12,7 @@
 */
 
 Route::get('/', array('as' => 'home_route', 'uses' => 'HomeController@get'));
+
 Route::get('/Dashboard','DashboardController@get');
 Route::get('/TDashboard','DashboardController@index');
 Route::get('/Dashboard/SetGoal','DashboardController@SetGoal');
@@ -65,9 +66,7 @@ Route::get('/delete/{id}' , 'ExerciseController@delete');
 
 Route::post('/DeleteClass/{id}' , 'Amar10Controller@deleteclass');
 
-Route::get('/Video' , function(){
-   return view('video');
-});
+Route::get('/Video' , 'VideoController@index');
 
 Route::get('/guide' , 'HomeController@guide');
 
@@ -97,3 +96,14 @@ Route::get('/api', function () {
     }
     return $events;
 });
+
+
+//Route::get('new_ticket', 'TicketsController@create');
+Route::post('new_ticket', 'TicketsController@store');
+Route::get('tickets/{ticket_id}', 'TicketsController@show');
+Route::get('my_tickets', 'TicketsController@userTickets');
+
+Route::get('tickets', 'TicketsController@index');
+Route::post('close_ticket/{ticket_id}', 'TicketsController@close');
+
+Route::post('comment', 'CommentsController@postComment');

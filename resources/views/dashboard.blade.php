@@ -60,17 +60,7 @@
                     <h4 class="section-title black">کلاس های فعال :</h4>
                     <ul class="nav nav-pills nav-stacked">
                         <li ><a data-toggle="pill" href="#get-class">گرفتن کلاس جدید</a></li>
-                            @if(count($user_classes) > 0)
-                                @foreach($user->classes as $cl)
-                                    @foreach($classes as $class)
-                                        @if($cl->id == $class->id && $cl->pivot->status == 2)
-                                            <li value="{{$class->id}}"><a data-toggle="pill" href="#class2"><span class="user_class">{{$class->name}}</span></a></li>
-                                        @endif
-                                    @endforeach
-                                @endforeach
-                            @else
-                                فعلا هیچی
-                            @endif
+                        <li ><a data-toggle="pill" href="#show-class">مشاهده کلاس ها</a></li>
                     </ul>
                     <br>
                 </div>
@@ -104,6 +94,17 @@
                         @else
                             فعلا هیچی
                         @endif
+                    </ul>
+                    <br>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 activity">
+                    <h4 class="section-title black">پیام ها :</h4>
+                    <ul class="nav nav-pills nav-stacked">
+                        <li ><a data-toggle="pill" href="#new-message">ایجاد پیام</a></li>
+                        <li ><a data-toggle="pill" href="#sent-box">مشاهده پیام ها</a></li>
                     </ul>
                     <br>
                 </div>
@@ -146,9 +147,9 @@
                         @if(count($exercises) > 0)
                             @foreach($exercises as $exercise)
                                 @if(count($user_exercise) > 0)
-                                    @foreach($user_exercise as $ue)
-                                        @if($ue->exercise_id == $exercise->id && $ue->status == 0)
-                                            <p>{{$exercise->name}}</p>
+                                    @foreach($user->exercises as $use)
+                                        @if($exercise->id == $use->id && $use->pivot->status == 0)
+                                            <button class="btn course-button btn-md">{{$exercise->name}}</button>
                                         @endif
                                     @endforeach
                                 @endif
@@ -165,8 +166,8 @@
                         @if(count($exercises) > 0)
                             @foreach($exercises as $exercise)
                                 @if(count($user_exercise) > 0)
-                                    @foreach($user_exercise as $exe)
-                                        @if($exe->status == 0 && $exe->exercise_id == $exercise->id)
+                                    @foreach($user->exercises as $exe)
+                                        @if($exe->id == $exercise->id && $exe->pivot->status == 1)
                                             <button class="btn course-button btn-md">{{$exercise->name}}</button>
                                         @endif
                                     @endforeach
@@ -182,40 +183,47 @@
                         <h3>پیام ها</h3>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12 col-sm-12 message">
-                        <div class="row message-title">
-                            <div class="col-md-3 col-sm-3"><b>فرستنده</b></div>
-                            <div class="col-md-2 col-sm-2"><b>موضوع</b></div>
-                            <div class="col-md-5 col-sm-5"><b>پیام</b></div>
-                            <div class="col-md-2 col-sm-2"><b>پاسخ</b></div>
-                        </div>
-                        <div class="row message-part">
-                            <div class="col-md-3 col-sm-3"><p>ادمین</p></div>
-                            <div class="col-md-2 col-sm-2"><p>ثبت درخواست</p></div>
-                            <div class="col-md-5 col-sm-5"><p>
-                                    <a href="#" data-toggle="modal" data-target="#message-modal">درخواست شما در حال بررسی.</a>
-                                </p></div>
-                            <div class="col-md-2 col-sm-2"><button class="btn btn-primary btn-sm" disabled>
-                                    <i class="fa fa-lg fa-pencil-square-o" aria-hidden="true"></i></button></div>
-                        </div>
-                        <div class="row message-part">
-                            <div class="col-md-3 col-sm-3"><p>ادمین</p></div>
-                            <div class="col-md-2 col-sm-2"><p>تمرین دوم</p></div>
-                            <div class="col-md-5 col-sm-5"><p>در قسمت اول سوال مشکلی وجود دارد.</p></div>
-                            <div class="col-md-2 col-sm-2"><button class="btn btn-primary btn-sm" disabled>
-                                    <i class="fa fa-lg fa-pencil-square-o" aria-hidden="true"></i></button></div>
-                        </div>
-                        <div class="row message-part">
-                            <div class="col-md-3 col-sm-3"><p>ادمین</p></div>
-                            <div class="col-md-2 col-sm-2"><p>مدرسه</p></div>
-                            <div class="col-md-5 col-sm-5"><p>درخواست شما برای ثبت مدرسه در حال پیگیری است.</p></div>
-                            <div class="col-md-2 col-sm-2"><button class="btn btn-primary btn-sm" disabled>
-                                    <i class="fa fa-lg fa-pencil-square-o" aria-hidden="true"></i></button></div>
-                        </div>
+                @if ($tickets->isEmpty())
+                    <p>فعلا پیامی نداری</p>
+                @else
+                    <div class="row">
+
+                            <div class="col-md-12 col-sm-12 message">
+                                <div class="row message-title">
+                                    <div class="col-md-2 col-sm-2"><b>دسته</b></div>
+                                    <div class="col-md-4 col-sm-4"><b>موضوع</b></div>
+                                    <div class="col-md-2 col-sm-2"><b>وضعیت</b></div>
+                                    <div class="col-md-4 col-sm-4"><b>آخرین بروزرسانی</b></div>
+                                </div>
+                                @foreach ($tickets as $ticket)
+                                    <div class="row message-part">
+                                        @foreach ($categories as $category)
+                                            @if ($category->id === $ticket->category_id)
+                                                <div class="col-md-2 col-sm-2"><p>{{ $category->name }}</p></div>
+                                            @endif
+                                        @endforeach
+                                        <div class="col-md-4 col-sm-4">
+                                            <a href="{{ url('tickets/'. $ticket->ticket_id) }}">
+                                                #{{ $ticket->ticket_id }} - {{ $ticket->title }}
+                                            </a>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2">
+                                            @if ($ticket->status === 'Open')
+                                                <span class="label label-success">{{ $ticket->status }}</span>
+                                            @else
+                                                <span class="label label-danger">{{ $ticket->status }}</span>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            {{ $ticket->updated_at }}
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
                     </div>
-                </div>
-                <!--End message part-->
+                    <!--End message part-->
+                <br><br>
+                @endif
             </div>
 
             <div id="goal" class="tab-pane fade">
@@ -248,6 +256,179 @@
                 <br>
             </div>
 
+            <div id="show-class" class="tab-pane fade">
+                <h3 class="black">کلاس های من</h3>
+                    @if($user_classes->isEmpty())
+                        <p>فعلا در کلاس مشخصی حضور ندارید</p>
+                    @else
+                        <div class="row">
+                            <div class="dash-table">
+                                <div class="row dash-table-title">
+                                    <div class="col-md-4">
+                                        <h4>نام کلاس</h4>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4>مدرسه</h4>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <h4>وضعیت</h4>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <h4>حذف</h4>
+                                    </div>
+                                </div>
+                                <hr>
+                                @foreach($user->classes as $cl)
+                                @foreach($classes as $class)
+                                @if($cl->id == $class->id && $cl->pivot->status == 2)
+                                    <div class="row dash-table-content chapter">
+                                        <div class="col-md-4">
+                                            {{$cl->name}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            @foreach($schools as $school)
+                                                @if($school->id == $cl->school_id)
+                                                    {{$school->name}}
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                        <div class="col-md-2">
+                                            @if ($cl->pivot->status == 2)
+                                                <span class="label label-success">Open</span>
+                                            @elseif($cl->pivot->status == 1)
+                                                    <span class="label label-danger">pending</span>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-2">
+                                            <a href="/DeleteClass/{{$cl->id}}">حذف</a>
+                                        </div>
+                                    </div>
+                                <hr>
+                                @endif
+                                @endforeach
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+            </div>
+            <!-- create a ticket -->
+            <div id="new-message" class="tab-pane fade">
+                <h3 class="black">پیام جدید :</h3>
+                <p>میتوانید یک پیام جدید ایجاد کنید.</p>
+                <hr>
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        {{$errors->first()}}
+                    </div>
+                @endif
+                @if(session()->has('status'))
+                    <div class="alert alert-success">
+                        {{ session()->get('status') }}
+                    </div>
+                @endif
+                <form class="form-horizontal" method="POST" action="{{ url('/new_ticket') }}">
+                    {!! csrf_field() !!}
+                    <div class="form-group">
+                        <label for="title" class="col-md-2 control-label">موضوع</label>
+                        <div class="col-md-6">
+                            <input id="title" type="text" class="form-control" name="title" value="{{ old('title') }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="category" class="col-md-2 control-label">دسته</label>
+                        <div class="col-md-6">
+                            <select id="category" type="category" class="form-control" name="category">
+                                <option value="">...</option>
+                                    @if(count($categories) > 0)
+                                        @foreach ($categories as $category)
+                						    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    @endif
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="priority" class="col-md-2 control-label">اولویت</label>
+                        <div class="col-md-6">
+                            <select id="priority" type="" class="form-control" name="priority">
+                                <option value="">...</option>
+                                <option value="low">کم</option>
+                                <option value="medium">متوسط</option>
+                                <option value="high">زیاد</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message" class="col-md-2 control-label">متن پیام</label>
+                        <div class="col-md-6">
+                            <textarea rows="6" id="message" class="form-control" name="message"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-4">
+                            <button type="submit" class="btn btn-default">
+                                <i class="fa fa-btn fa-ticket"></i> ایجاد پیام
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="sent-box" class="tab-pane fade">
+                <h3 class="black">پیام های من</h3>
+                @if ($tickets->isEmpty())
+                    <p>تا کنون پیامی ایجاد نکردید.</p>
+                @else
+                    <div class="row">
+                        <div class="dash-table">
+                            <div class="row dash-table-title">
+                                <div class="col-md-3">
+                                    <h4>نام دسته</h4>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4>موضوع</h4>
+                                </div>
+                                <div class="col-md-2">
+                                    <h4>وضعیت</h4>
+                                </div>
+                                <div class="col-md-3">
+                                    <h4>آخرین به روزرسانی</h4>
+                                </div>
+                            </div>
+                            <hr>
+                            @foreach($tickets as $ticket)
+                                <div class="row dash-table-content chapter">
+                                    <div class="col-md-3">
+                                    @foreach($categories as $cat)
+                                        @if ($cat->id === $ticket->category_id)
+                                            <p>{{$cat->name}}</p>
+                                        @endif
+                                    @endforeach
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a href="{{ url('tickets/'. $ticket->ticket_id) }}">
+                                            #{{ $ticket->ticket_id }} - {{ $ticket->title }}
+                                        </a>
+                                    </div>
+                                    <div class="col-md-2">
+                                        @if ($ticket->status === 'Open')
+                                            <span class="label label-success">{{ $ticket->status }}</span>
+                                        @else
+                                        	<span class="label label-danger">{{ $ticket->status }}</span>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-3">
+                                        {{ $ticket->updated_at }}
+                                    </div>
+                                </div>
+                                <br>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            </div>
             <div id="new-test" class="tab-pane fade">
                 <h3 class="black">تمرین جدید</h3>
                 <p>برای شروع به حل تمرین مورد نظر روی گزینه ی شروع کلیک کنید.</p>

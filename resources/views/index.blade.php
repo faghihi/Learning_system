@@ -30,7 +30,15 @@
                             </div><!--icon box top -->
                             <h4>داشبورد</h4>
                             <p>اطلاعات کارهایی که تا الان انجام داده اید را مشاهده کنید.</p>
-                            <p><a href="/Dashboard"><em>اطلاعات بیشتر →</em></a></p>
+                            @if(Session::get('Login') == 'True')
+                                @if($user->type == 'student')
+                                    <p><a href="/Dashboard"><em>اطلاعات بیشتر →</em></a></p>
+                                @else
+                                    <p><a href="/TDashboard"><em>اطلاعات بیشتر →</em></a></p>
+                                @endif
+                            @else
+                                <p><a href="/UserArea"><em>اطلاعات بیشتر →</em></a></p>
+                            @endif
                         </div><!--grey box -->
                     </div><!--/span3-->
                     <div class="col-md-3">
@@ -49,57 +57,26 @@
           <div class="container">
               <h2><span>دروس جدید</span></h2>
               <div class="row">
-                  <div class="col-lg-4 col-md-4 col-sm-12">
-                      <div class="newsBox">
-                          <a href="#">
-                          <div class="thumbnail">
-                              <figure><img src="images/news4.jpg" alt=""></figure>
-                              <div class="caption maxheight2">
-                              <div class="box_inner">
-                                          <div class="box">
-                                              <p class="title"><h5>ریاضی</h5></p>
-                                              <p>توضیحات مرتبط. توضیحات مرتبط. توضیحات مرتبط. توضیحات مرتبط.</p>
-                                          </div>
-                                  </div>
-                              </div>
-                          </div>
-                          </a>
-                      </div>
-                  </div>
-                  <div class="col-lg-4 col-md-4 col-sm-12">
-                      <div class="newsBox">
-                          <a href="#">
-                          <div class="thumbnail">
-                              <figure><img src="images/news5.jpg" alt=""></figure>
-                              <div class="caption maxheight2">
-                              <div class="box_inner">
-                                          <div class="box">
-                                              <p class="title"><h5>هندسه</h5></p>
-                                              <p>توضیحات مرتبط. توضیحات مرتبط. توضیحات مرتبط. توضیحات مرتبط.</p>
-                                          </div>
-                                  </div>
-                              </div>
-                          </div>
-                          </a>
-                      </div>
-                  </div>
-                  <div class="col-lg-4 col-md-4 col-sm-12">
-                      <div class="newsBox">
-                          <a href="#">
-                          <div class="thumbnail">
-                              <figure><img src="images/news6.jpg" alt=""></figure>
-                              <div class="caption maxheight2">
-                             <div class="box_inner">
-                                          <div class="box">
-                                              <p class="title"><h5>جبر</h5></p>
-                                              <p>توضیحات مرتبط. توضیحات مرتبط. توضیحات مرتبط. توضیحات مرتبط.</p>
-                                          </div>
-                                  </div>
-                              </div>
-                          </div>
-                          </a>
-                      </div>
-                  </div>
+                  @if(count($new_course) > 0)
+                    @foreach($new_course as $nc)
+                        <div class="col-lg-4 col-md-4 col-sm-12">
+                            <div class="newsBox">
+                                <a href="/Courses/{{$nc->id}}">
+                                <div class="thumbnail">
+                                    <figure><img src="uploads/{{$nc->image}}" alt=""></figure>
+                                    <div class="caption maxheight2">
+                                        <div class="box_inner">
+                                            <div class="box">
+                                                <p class="title"><h5>{{$nc->name}}</h5></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                  @endif
               </div>
           </div>
       </section>
@@ -111,7 +88,7 @@
                   <h2><i class="fa fa-video-camera" aria-hidden="true"></i>&nbsp;ویدئوهای آموزشی</h2>
               </div>
                   <p>در این قسمت می توانید ویدئوهای آموزشی که برای بهبود سطح یادگیری و یا حل تمرین های شما درست شده است را مشاهده کنید.</p>
-                  <p><a href="videos.html"><em>→ اطلاعات بیشتر </em></a></p>
+                  <p><a href="/Video"><em>→ اطلاعات بیشتر </em></a></p>
               </div>
           </div>
       </section>
@@ -129,6 +106,7 @@
             </div>
   </section>
 
+@include('footer')
 	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
 	<script src="{{URL::asset('js/modernizr-latest.js')}}"></script>
 	<script type='text/javascript' src="{{URL::asset('js/jquery.min.js')}}"></script>
