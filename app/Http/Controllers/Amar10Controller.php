@@ -414,4 +414,19 @@ class Amar10Controller extends Controller
 
         return redirect()->back();
     }
+
+
+    public function checkrepetetive(Request $request)
+    {
+        $code=$request->get('code');
+        $class=Classes::where('Rstring',$code)->first();
+        if($class){
+            return 0;
+        }
+        else{
+            return 1;
+        }
+//        $data=['data'=>'ok'];
+//        return $data;
+    }
 }

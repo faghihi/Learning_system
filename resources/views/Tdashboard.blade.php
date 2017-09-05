@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>داشبورد</title>
         <link rel="favicon" href="images/favicon.png">
@@ -306,8 +307,8 @@
                             <div class="row">
                                 <div class="col-md-12 col-sm-12">
                                     <div class="form-group">
-                                        <label>کد عضویت در درس :</label>
-                                        <input name="join_code" class="form-control" type="text" placeholder="کد عضویت در درس">
+                                        <label>کد عضویت در درس :</label><span id="error_code" style="margin-right: 20px; color: red;display: none;">کد نا قبلا استفاده شده است.</span>
+                                        <input id="join_code" name="join_code" class="form-control" type="text" placeholder="کد عضویت در درس">
                                         {{--<select name="students[]" class="add-std" id="whole-student" multiple>--}}
 
                                         {{--</select>--}}
@@ -1256,8 +1257,8 @@
 <!-- custome js just for login page -->
 <script src="js/custom.js"></script>
 <!-- Google Maps -->
-<script src="js/Gmap.JS"></script>
-<script src="js/google-map.js"></script>
+{{--<script src="js/Gmap.JS"></script>--}}
+{{--<script src="js/google-map.js"></script>--}}
 
 <!--when choose a school , show student's of the school-->
 <script type="text/javascript">
@@ -1327,6 +1328,35 @@
                     }
                 });
       });
+     $("#join_code").on('change',function(){
+         var code=$("#join_code").val();
+         console.log(code);
+         $.ajax({
+             "async": false,
+             "crossDomain": true,
+             "url": "http://localhost:8000/checkcode",
+             "method": "POST",
+             headers: {
+                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+             },
+             "data":{
+                 "code":code
+             },
+             success:function (response) {
+                 console.log(response);
+                 if(response!=1){
+                    $("#error_code").show()
+                 }
+                 else{
+                     $("#error_code").hide()
+                 }
+             },
+             error:function (xhr, ajaxOptions, thrownError){
+                  alert('error');
+
+             }
+         });
+     })
 </script>
 
 {{--<script>--}}
