@@ -11,6 +11,7 @@ use App\tempanswer;
 use App\User;
 use App\School;
 use App\Classes;
+use App\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
@@ -46,6 +47,21 @@ class ExerciseController extends Controller
             $exercise->start_date = $start;
             $exercise->end_date = $end;
             $exercise->save();
+
+            $cl = Classes::find($class_id);
+            foreach($cl->users as $user){
+                $ticket = new Ticket([
+                    'title'     => $name,
+                    'user_id'   => $user->id,
+                    'ticket_id' => strtoupper(str_random(10)),
+                    'category_id'  => 3,
+                    'priority'  => 'کم',
+                    'message'   => 'نام تمرین : '.$name. ' کد : '.$code,
+                    'status'    => "Open",
+                ]);
+
+                $ticket->save();
+            }
 
             $exercise = new exercise();
             $exercise->name = $name;
@@ -119,6 +135,8 @@ class ExerciseController extends Controller
             $exercise->end_date = $end;
             $exercise->save();
         }
+
+        //$user = User::where('email',Session::get('Email'))->first();
 
         return redirect('/');
     }

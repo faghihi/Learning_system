@@ -37,8 +37,9 @@ class DashboardController extends Controller
         $grades=Grade::all();
         $tickets = Ticket::all();
         $categories = Category::all();
+        $teachers = User::where('type','teacher')->get();
         return view('Tdashboard', compact('schools','user','users','classes','courses','sections','exercises',
-            'class_exercise','grades','tickets','categories'));
+            'class_exercise','grades','tickets','categories','teachers'));
     }
 
     //show student dashboard

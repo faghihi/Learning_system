@@ -21,17 +21,28 @@ class Amar10Controller extends Controller
 {
     //create class
     public function index() {
+        //set rules for validation
+        $rules = array(
+            'classname' => 'required|max:64',
+            'join_code' => 'required'
+        );
+
+        $messages = [
+            'required' => 'لطفا همه فیلد ها را پر کنید',
+//            'unique' => 'این کد قبلا استفاده شده است',
+        ];
+
+        $validator = \Validator::make(Input::all() , $rules , $messages);
+
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator,'create_class');
+        }
         $classname = Input::get('classname');
         $school_id = Input::get('school');
         $class = Classes::where('name',$classname)->where('school_id',$school_id)->first();
 
         if($class){
-            $class = new classes();
-            $class->name = $classname;
-            $class->school_id = $school_id;
-            $class->Rstring=Input::get('join_code');
-            $class->save();
-
+            return redirect()->back()->with('error','قبلا از این اسم برای کلاس استفاده شده است');
         }
         else{
             $class = new classes();
@@ -41,7 +52,7 @@ class Amar10Controller extends Controller
             $class->save();
         }
 
-        return redirect('/TDashboard');
+        return redirect('/TDashboard')->with('message','کلاس جدید ایجاد شد');
     }
 
     //add course to database
@@ -426,7 +437,39 @@ class Amar10Controller extends Controller
         else{
             return 1;
         }
-//        $data=['data'=>'ok'];
-//        return $data;
+    }
+
+    public function checknum(Request $request)
+    {
+        $course = $request->get('course');
+        $section = $request->get('section');
+        $num_easy = $request->get('num_easy');
+        $num_medium = $request->get('num_medium');
+        $num_hard = $request->get('num_hard');
+
+        $q_easy = Question::where('course_id',$course)->where('section_id',$section)->where('level',0)->get();
+        $q_medium = Question::where('course_id',$course)->where('section_id',$section)->where('level',1)->get();
+        $q_hard = Question::where('course_id',$course)->where('section_id',$section)->where('level',2)->get();
+
+        if($num_easy > count($q_easy)){
+            return 0;
+        }
+        else{
+            return 1;
+        }
+
+        if($num_medium > count($q_medium)){
+            return 0;
+        }
+        else{
+            return 1;
+        }
+
+        if($num_hard > count($q_hard)){
+            return 0;
+        }
+        else{
+            return 1;
+        }
     }
 }

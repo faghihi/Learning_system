@@ -447,7 +447,7 @@
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 <br/>
-                                <h4 class="modal-title">تعریف تمرین :</h4>
+                                <h4 class="modal-title">تعریف تمرین :</h4><span id="error_code" style="margin-right: 20px; color: red;display: none;">کد نا قبلا استفاده شده است.</span>
                             </div>
                             <div class="modal-body">
                                 <div class="row">
@@ -462,7 +462,7 @@
                                                             <option value=""></option>
                                                             @if(count($courses) > 0)
                                                                 @foreach($courses as $course)
-                                                                    <option value={{$course->id}}>{{$course->name}}-{{$course->grade}}</option>
+                                                                    <option value={{$course->id}}>{{$course->name}}-{{$course->grade_id}}</option>
                                                                 @endforeach
                                                             @endif
                                                         </select>
@@ -479,19 +479,19 @@
                                                 <div class="col-md-5 col-sm-5">
                                                     <div class="form-group">
                                                         <label>تعداد سوالات آسان:</label>
-                                                        <input name="easy" class="form-control" type="number">
+                                                        <input name="easy" class="form-control checkeasy" type="number">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-5 col-sm-5">
                                                     <div class="form-group">
                                                         <label>تعداد سوالات متوسط:</label>
-                                                        <input name="medium" class="form-control" type="number">
+                                                        <input name="medium" class="form-control checkmedium" type="number">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-5 col-sm-5">
                                                     <div class="form-group">
                                                         <label>تعداد سوالات سخت:</label>
-                                                        <input name="hard" class="form-control" type="number">
+                                                        <input name="hard" class="form-control checkhard" type="number">
                                                     </div>
                                                 </div>
                                             </div>
@@ -546,15 +546,15 @@
                                                 <p>{{$exercise->name}}</p>
                                             </div>
                                             <div class="col-md-4">
-                                                @if(count($user_course) > 0)
-                                                    @foreach($user->exercises as $co)
+                                                    @if($use->code != 0)
                                                         @foreach($courses as $course)
-                                                            @if($course->id == $co->course_id)
-                                                                <p></p>
+                                                            @if($course->id == $use->course_id)
+                                                                <p>{{$course->teacher_name}}</p>
                                                             @endif
                                                         @endforeach
-                                                    @endforeach
-                                                @endif
+                                                    @else
+                                                        .....
+                                                    @endif
                                             </div>
                                             <div class="col-md-2">
                                                 <a href="/exercise/{{$exercise->id}}"><button class="btn btn-success btn-sm">شروع</button></a>
@@ -824,6 +824,44 @@
 <!-- Google Maps -->
 {{--<script src="{{URL::asset('js/Gmap.JS')}}"></script>--}}
 {{--<script src="{{URL::asset('js/google-map.js')}}"></script>--}}
+
+<script>
+ $("#choose_section").on('change',function(){
+
+         var course = $('#choose_course').val();
+         var section = $('#choose_section').val();
+         var num_easy = $(".checkeasy").val();
+         var num_medium = $(".checkmedium").val();
+         var num_hard = $(".checkhard").val();
+
+         $.ajax({
+             "async": false,
+             "crossDomain": true,
+             "url": "http://localhost:8000/checknum",
+             "method": "post",
+             headers: {
+                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+             },
+             "data":{
+                 "num_easy": num_easy,
+                 "num_medium": num_medium,
+                 "num_hard": num_hard
+             },
+             success:function (response) {
+                 if(response != 1){
+                    $("#error_code").show()
+                 }
+                 else{
+                     $("#error_code").hide()
+                 }
+             },
+             error:function (xhr, ajaxOptions, thrownError){
+                  alert('error');
+
+             }
+         });
+     })
+</script>
 
 </body>
 </html>
