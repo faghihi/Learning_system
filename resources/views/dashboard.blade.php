@@ -826,34 +826,27 @@
 {{--<script src="{{URL::asset('js/google-map.js')}}"></script>--}}
 
 <script>
- $("#choose_section").on('change',function(){
+ $("#choose_section").on('click',function(){
 
          var course = $('#choose_course').val();
          var section = $('#choose_section').val();
-         var num_easy = $(".checkeasy").val();
-         var num_medium = $(".checkmedium").val();
-         var num_hard = $(".checkhard").val();
 
          $.ajax({
              "async": false,
              "crossDomain": true,
-             "url": "http://localhost:8000/checknum",
+             "url": "/checknum",
              "method": "post",
              headers: {
                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
              },
              "data":{
-                 "num_easy": num_easy,
-                 "num_medium": num_medium,
-                 "num_hard": num_hard
+                 "course": course,
+                 "section": section
              },
              success:function (response) {
-                 if(response != 1){
-                    $("#error_code").show()
-                 }
-                 else{
-                     $("#error_code").hide()
-                 }
+                 $('input[name="easy"]').attr('max', response['easy']);
+                 $('input[name="medium"]').attr('max', response['medium']);
+                 $('input[name="hard"]').attr('max', response['hard']);
              },
              error:function (xhr, ajaxOptions, thrownError){
                   alert('error');

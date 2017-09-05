@@ -443,33 +443,12 @@ class Amar10Controller extends Controller
     {
         $course = $request->get('course');
         $section = $request->get('section');
-        $num_easy = $request->get('num_easy');
-        $num_medium = $request->get('num_medium');
-        $num_hard = $request->get('num_hard');
 
         $q_easy = Question::where('course_id',$course)->where('section_id',$section)->where('level',0)->get();
         $q_medium = Question::where('course_id',$course)->where('section_id',$section)->where('level',1)->get();
         $q_hard = Question::where('course_id',$course)->where('section_id',$section)->where('level',2)->get();
 
-        if($num_easy > count($q_easy)){
-            return 0;
-        }
-        else{
-            return 1;
-        }
-
-        if($num_medium > count($q_medium)){
-            return 0;
-        }
-        else{
-            return 1;
-        }
-
-        if($num_hard > count($q_hard)){
-            return 0;
-        }
-        else{
-            return 1;
-        }
+        return ['easy' => count($q_easy), 'medium' => count($q_medium), 'hard' => count($q_hard)];
+//        return $q_easy;
     }
 }
