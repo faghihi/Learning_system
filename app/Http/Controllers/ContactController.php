@@ -16,8 +16,8 @@ class ContactController extends Controller
         $teachers = User::where('type','teacher')->get();
         $schools = School::all();
         $courses = Course::all();
-
-        return view('contact',compact('teachers','schools','courses'));
+        $user = User::where('email',\Session::get('Email'))->first();
+        return view('contact',compact('teachers','schools','courses','user'));
     }
 
     public function post(){
