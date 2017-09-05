@@ -107,6 +107,7 @@
   </section>
 
 @include('footer')
+
 	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
 	<script src="{{URL::asset('js/modernizr-latest.js')}}"></script>
 	<script type='text/javascript' src="{{URL::asset('js/jquery.min.js')}}"></script>
@@ -116,6 +117,7 @@
     <script type='text/javascript' src="{{URL::asset('js/jquery.easing.1.3.js')}}"></script>
     <script type='text/javascript' src="{{URL::asset('js/camera.min.js')}}"></script>
     <script src="{{URL::asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{URL::asset('js/dashboard.js')}}"></script>
 	<script src="{{URL::asset('js/custom.js')}}"></script>
     <script>
 		jQuery(function(){

@@ -140,4 +140,12 @@ class DashboardController extends Controller
 
         return redirect('/Dashboard');
     }
+
+    public function deletecourse($id){
+        $email = Session::get('Email');
+        $user = User::where('email',$email)->first();
+        $user->courses()->detach($id);
+
+        return redirect()->back();
+    }
 }

@@ -400,7 +400,7 @@ class Amar10Controller extends Controller
          $user = User::where('email',$email)->first();
          $user->courses()->detach($id);
 
-         return redirect('/Dashboard');
+         return redirect()->back();
      }
 
     //delete class
@@ -412,6 +412,6 @@ class Amar10Controller extends Controller
         //delete class
         $class->delete($id);
 
-        return redirect('/TDashboard');
+        return redirect()->back();
     }
 }

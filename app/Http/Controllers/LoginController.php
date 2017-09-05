@@ -21,7 +21,9 @@ class LoginController extends Controller
         $schools = School::all();
         $courses = Course::all();
         $grades=Grade::all();
-        return view('login-register')->with(['schools'=>$schools,'courses'=>$courses,'grades'=>$grades]);
+        $teachers = User::where('type','teacher')->get();
+
+        return view('login-register')->with(['schools'=>$schools,'courses'=>$courses,'grades'=>$grades,'teachers'=>$teachers]);
     }
 
     //login

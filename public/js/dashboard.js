@@ -22,7 +22,10 @@ $(document).ready(function () {
                 '<div class="row" ><div class="col-md-1 col-sm-1"></div><div class="col-md-10 col-sm-10"><canvas id="student-line"></canvas></div></div><br>'+
                 '<div class="row"><div class="col-md-12"><h4><i class="fa fa-2x fa-file-text" aria-hidden="true"></i>&nbsp;گزارش وضعیت</h4></div></div>'+
                 '<div class="row"><div class="dash-table"><div class="row dash-table-title"><div class="col-md-5"><h4>تمرین</h4></div><div class="col-md-3"><h4>امتیاز</h4></div>'+
-                '<div class="col-md-4"><h4>مهارت</h4></div></div><hr><div class="row dash-table-content chapter"><div id="info"></div></div></div></div>');
+                '<div class="col-md-4"><h4>مهارت</h4></div></div><hr><div class="row dash-table-content chapter"><div id="info"></div></div></div></div>'+
+                '<form method="post" action="/DeleteCourse/"+course+>'+
+                '<p>برای حذف درس کلیک کنید.</p><div class="form-group"><button class="btn btn-delete btn-sm">حذف درس</button>'+
+                '</div></form>');
 
                 $('#info').empty()
                 var stuLine = document.getElementById("student-line");
@@ -188,15 +191,3 @@ var randomColor = function(opa) {
     return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() +','+ opa + ')';
 };
 
-
-$('[data-search]').on('keyup', function() {
-    var searchVal = $(this).val();
-    var filterItems = $('[data-filter-item]');
-
-    if ( searchVal != '' ) {
-        filterItems.addClass('hidden');
-        $('[data-filter-item][data-filter-name*="' + searchVal.toLowerCase() + '"]').removeClass('hidden');
-    } else {
-        filterItems.removeClass('hidden');
-    }
-});

@@ -21,6 +21,7 @@ Route::get('/Courses/{id}','Amar10Controller@get');
 Route::get('/Q/Courses/{name}','Amar10Controller@quest');
 Route::get('/AddCourse/{id}','Amar10Controller@add');
 Route::post('/DeleteCourse/{id}' , 'Amar10Controller@delete');
+Route::get('/DeleteCourse/{id}', 'DashboardController@deletecourse');
 Route::post('/Check/{id}','Amar10Controller@check');
 Route::post('/Save/{id}','Amar10Controller@save');
 Route::get('/Q/Continue','Amar10Controller@continuethis');

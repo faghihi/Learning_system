@@ -299,9 +299,14 @@
                                                     <span class="label label-danger">pending</span>
                                             @endif
                                         </div>
-                                        <div class="col-md-2">
-                                            <a href="/DeleteClass/{{$cl->id}}">حذف</a>
-                                        </div>
+
+                                        <form method="post" action="/DeleteClass/{{$cl->id}}">
+                                            <input type="hidden" name="_token" value={{ csrf_token()}}>
+                                            <div class="col-md-2">
+                                                <button class="btn btn-block btn-delete">حذف</button>
+                                            </div>
+                                        </form>
+
                                     </div>
                                 <hr>
                                 @endif
@@ -769,52 +774,9 @@
                     </form>
                     <br>
             </div>
-            <div id="ajax-content"></div>
+
             <div id="class1" class="tab-pane fade">
-                <h3 class="black">اطلاعات کلاس</h3>
-                    <h4 id="h4"></h4>
-                    <br><br>
-                <div class="row" >
-                    <div class="col-md-1 col-sm-1"></div>
-                    <div class="col-md-10 col-sm-10">
-                        <canvas id="student-line"></canvas>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h4><i class="fa fa-2x fa-file-text" aria-hidden="true"></i>&nbsp;گزارش وضعیت</h4>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="dash-table">
-                        <div class="row dash-table-title">
-                            <div class="col-md-5">
-                                <h4>تمرین</h4>
-                            </div>
-                            <div class="col-md-3">
-                                <h4>امتیاز</h4>
-                            </div>
-                            <div class="col-md-4">
-                                <h4>مهارت</h4>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row dash-table-content chapter">
-                            <div id="info"></div>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                @if(count($user_course) > 0)
-                <form method="post" action="/DeleteCourse/{{$course->id}}">
-                    <input type="hidden" name="_token" value={{ csrf_token()}}>
-                    <p>برای حذف درس کلیک کنید.</p>
-                    <div class="form-group">
-                        <button class="btn btn-delete btn-lg">حذف درس</button>
-                    </div>
-                </form>
-                @endif
+
             </div>
             <br><br>
         </article>
