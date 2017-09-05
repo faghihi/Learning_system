@@ -51,6 +51,8 @@ Route::post('/CreateClass' , 'Amar10Controller@index');
 
 Route::post('/CreateCourse' , 'Amar10Controller@addcourse');
 
+Route::post('/checkcode' , 'Amar10Controller@checkrepetetive');
+
 Route::post('/CreateEx' , 'ExerciseController@create');
 
 Route::post('/CreateStuEx' , 'ExerciseController@createStuEx');

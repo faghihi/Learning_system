@@ -294,9 +294,9 @@
                                         </div>
                                         <div class="col-md-2">
                                             @if ($cl->pivot->status == 2)
-                                                <span class="label label-success">Open</span>
+                                                <span class="label label-success">عضو شده اید</span>
                                             @elseif($cl->pivot->status == 1)
-                                                    <span class="label label-danger">pending</span>
+                                                    <span class="label label-danger">منتظر تایید</span>
                                             @endif
                                         </div>
 
