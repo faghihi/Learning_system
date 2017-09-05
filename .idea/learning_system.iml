@@ -2,38 +2,9 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/vendor/erusev/parsedown" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/kordy/ticketit" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/laravelcollective/html" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/league/fractal" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/ramsey/uuid" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/tijsverkoyen/css-to-inline-styles" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/yajra/laravel-datatables-oracle" />
+      <sourceFolder url="file://$MODULE_DIR$/app" isTestSource="false" packagePrefix="App\" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library name="PHP">
-        <CLASSES>
-          <root url="file://$MODULE_DIR$/vendor/kordy/ticketit" />
-          <root url="file://$MODULE_DIR$/vendor/laravelcollective/html" />
-          <root url="file://$MODULE_DIR$/vendor/yajra/laravel-datatables-oracle" />
-          <root url="file://$MODULE_DIR$/vendor/erusev/parsedown" />
-          <root url="file://$MODULE_DIR$/vendor/tijsverkoyen/css-to-inline-styles" />
-          <root url="file://$MODULE_DIR$/vendor/ramsey/uuid" />
-          <root url="file://$MODULE_DIR$/vendor/league/fractal" />
-        </CLASSES>
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/vendor/kordy/ticketit" />
-          <root url="file://$MODULE_DIR$/vendor/laravelcollective/html" />
-          <root url="file://$MODULE_DIR$/vendor/yajra/laravel-datatables-oracle" />
-          <root url="file://$MODULE_DIR$/vendor/erusev/parsedown" />
-          <root url="file://$MODULE_DIR$/vendor/tijsverkoyen/css-to-inline-styles" />
-          <root url="file://$MODULE_DIR$/vendor/ramsey/uuid" />
-          <root url="file://$MODULE_DIR$/vendor/league/fractal" />
-        </SOURCES>
-      </library>
-    </orderEntry>
   </component>
 </module>
-
