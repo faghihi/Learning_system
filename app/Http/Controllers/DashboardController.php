@@ -15,7 +15,8 @@ use App\Course;
 use App\Exercise;
 use App\School;
 use App\Ticket;
-use Request;
+use App\Question;
+
 use Illuminate\Support\Facades\Input;
 use Session;
 use DB;
@@ -38,8 +39,10 @@ class DashboardController extends Controller
         $tickets = Ticket::all();
         $categories = Category::all();
         $teachers = User::where('type','teacher')->get();
+        $user_questions = Question::where('writer',$user->name)->get();
+
         return view('Tdashboard', compact('schools','user','users','classes','courses','sections','exercises',
-            'class_exercise','grades','tickets','categories','teachers'));
+            'class_exercise','grades','tickets','categories','teachers','user_questions'));
     }
 
     //show student dashboard

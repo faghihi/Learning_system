@@ -435,3 +435,53 @@ $('.which_ex').on('click',function(){
     });
 });
 
+
+$('.whichQ').on('click',function(){
+    var ID = $(this).val();
+    $.ajax({
+        url: '/Q/ajax/'+ID,
+        type: "GET",
+        dataType: "json",
+        success:function(data) {
+            //$('#q_course').val(data.course);
+            //$('#q_section').val(data.section);
+            //$('#q_level').val(data.level);
+            //$('#q_content').val(data.content);
+            //$('#q_gozine1').val(data.gozine1);
+            //$('#q_gozine2').val(data.gozine2);
+            //$('#q_gozine3').val(data.gozine3);
+            //$('#q_gozine4').val(data.gozine4);
+            //$('#q_correct').val(data.gozine_correct);
+            //$('#q_solution').val(data.solution);
+
+            $('#show-question').empty();
+
+            $('#show-question').append(
+                '<div class="row"><div class="col-md-1 col-sm-1"></div><div class="col-sm-10 col-md-10">'+
+                '<h3 class="black">اضافه کردن سوال</h3><br><form action="/CreateQuestion" method="post" enctype="multipart/form-data"><input type="hidden" name="_token" value={{ csrf_token() }}>'+
+                '<div class="row"><div class="col-md-4 col-sm-4"><div class="form-group"><label for="chapter">درس :</label>'+
+                '<select name="course" class="form-control" id="ch_course" required>'+
+                '<option value='+ID+' selected>'+data.course+'</option>');
+
+
+                $.each(data.courses, function(key,value){
+                    $('#show-question').append('<option value='+key+'>'+value+'</option>')
+                });
+
+                $('#show-question').append('</select></div></div><div class="col-md-4 col-sm-4"><div class="form-group"><label for="chapter">فصل:</label>'+
+                '<select name="section" class="form-control" id="choose_chapter" required><option value='+data.section_id+'>'+data.section+'</option></select></div></div>'+
+                '<div class="col-md-4 col-sm-4"><div class="form-group"><label for="difficulty">میزان سختی سوال:</label><select name="difficulty" class="form-control " id="difficulty" required>'+
+                '<option value="+data.level+" selected>...</option><option value="0">آسان (1نمره)</option><option value="1">متوسط (2نمره)</option><option value="2">سخت (3نمره)</option></select></div></div></div>'+
+                '<div class="form-group"><label>صورت سوال:</label><textarea name="question" rows="4" class="form-control" required>'+data.content+'</textarea></div>'+
+                ' <div class="form-group"><label>گزینه ها:</label></div><div class="row"><div class="col-md-6 col-sm-12"><div class="form-group">'+
+                '<input name="gozine1" class="form-control " value="" placeholder="گزینه 1"></div></div><div class="col-md-6 col-sm-12"><div class="form-group">'+
+                '<input name="gozine2" class="form-control " placeholder="گزینه 2"> </div></div></div><div class="row"><div class="col-md-6 col-sm-12"><div class="form-group">'+
+                '<input name="gozine3" class="form-control " placeholder="گزینه 3"> </div></div><div class="col-md-6 col-sm-12"><div class="form-group">'+
+                '<input name="gozine4" class="form-control " placeholder="گزینه 4"> </div></div></div><div class="row"><div class="col-md-6 col-sm-12">'+
+                '<div class="form-group"><label>گزینه درست:</label><input name="answer" class="form-control " type="number" placeholder="عدد گزینه صحیح"> </div></div></div>'+
+                '<div class="form-group"><label>راه حل(اختیاری):</label><textarea name="solution" rows="4" class="form-control" required>'+data.solution+'</textarea></div><div class="form-group">'+
+                '<button type="submit" class="btn btn-default btn-lg">ثبت</button></div></form></div></div>'
+            );
+        }
+    });
+});

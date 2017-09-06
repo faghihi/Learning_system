@@ -57,6 +57,24 @@ class Amar10Controller extends Controller
 
     //add course to database
     public function addcourse(Request $request) {
+        //set rules for validation
+        $rules = array(
+            'coursename' => 'required|max:64',
+            'grade' => 'required',
+            'section' => 'required',
+            'image' => 'required'
+        );
+
+        $messages = [
+            'required' => 'لطفا همه فیلد ها را پر کنید',
+//            'unique' => 'این کد قبلا استفاده شده است',
+        ];
+
+        $validator = \Validator::make(Input::all() , $rules , $messages);
+
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator,'create_course');
+        }
 
         $coursename = Input::get('coursename');
         $grade = Input::get('grade');
@@ -70,10 +88,13 @@ class Amar10Controller extends Controller
             $mim = $upload->getClientMimeType();
             $type_name = explode('/',$mim);
             $type_name = end($type_name);
-            if ($type_name == 'jpg' || 'jpeg' || 'png') {
+            if ($type_name == 'jpg' || $type_name == 'jpeg' || $type_name == 'png') {
                 $image_path = $rand . $upload->getClientOriginalName();
+            }else{
+                return redirect()->back()->with('error','فایل وارد شده مورد تایید نیست.');
             }
         }
+        //check course exist
         $check = Course::where('name',$coursename)
             ->where('grade_id',$grade)
             ->where('teacher_name',$teacher->name)->first();
@@ -101,8 +122,7 @@ class Amar10Controller extends Controller
                 $section->save();
             }
         }
-
-        return redirect('/TDashboard');
+        return redirect('/TDashboard')->with('message','درس با موفقیت ثبت شد.');
     }
 
 

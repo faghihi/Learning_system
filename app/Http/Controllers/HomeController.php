@@ -196,6 +196,36 @@ class HomeController extends Controller
         return json_encode($sec);
     }
 
+    public function quAjax($id){
+        $question = Question::find($id);
+        $course = Course::where('id',$question->course_id)->first();
+        $section = Section::where('id',$question->section_id)->first();
+
+        $q_info['course'] = $course->name;
+        $q_info['section'] = $section->name;
+        $q_info['section_id'] = $section->id;
+        $q_info['level'] = $question->level;
+        $q_info['content'] = $question->content;
+        $q_info['gozine1'] = $question->options;
+        $q_info['gozine2'] = $question->options;
+        $q_info['gozine3'] = $question->options;
+        $q_info['gozine4'] = $question->options;
+        $q_info['gozine_correct'] = $question->answer;
+        $q_info['solution'] = $question->solution;
+
+        $courses = Course::all();
+        foreach($courses as $course){
+            $q_info['courses'][$course->id] = $course->name;
+        }
+
+        $sections = Section::all();
+        foreach($sections as $section){
+            $q_info['sections'][$section->id] = $section->name;
+        }
+        //dd($q_info);
+        return json_encode($q_info);
+    }
+
     public function courseAjax($id){
         $email = Session::get('Email');
         $course = Course::find($id);

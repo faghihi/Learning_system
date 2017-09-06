@@ -31,6 +31,15 @@
         </script>
 
         <script src="ASCIIMathML.js"></script>
+        <style>
+            .truncate {
+                display:inline-block;
+                width: 200px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        </style>
 </head>
 <body>
 
@@ -59,6 +68,7 @@
                 <li><a data-toggle="pill" href="#test-data">اطلاعات تمرین ها</a></li>
                 <li><a data-toggle="pill" href="#solved-test">تمرین های حل شده</a></li>
                 <li><a data-toggle="pill" href="#add-question">اضافه کردن سوال</a></li>
+                <li><a data-toggle="pill" href="#show-question">سوالات طرح شده</a></li>
                 <li><a data-toggle="pill" href="#std-data">اطلاعات دانش آموزان</a></li>
             </ul>
         </aside>
@@ -279,6 +289,50 @@
                     </div>
                 </div>
             </div>
+            <div id="show-question" class="tab-pane fade">
+                <h3 class="black">سوال های من:</h3>
+                @if($user_questions->isEmpty())
+                    <p>فعلا سوال طرح نکردید</p>
+                @else
+                    <div class="row">
+                        <div class="dash-table">
+                            <div class="row dash-table-title">
+                                <div class="col-md-5">
+                                    <h4>#</h4>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4>درس</h4>
+                                </div>
+                                <div class="col-md-3">
+                                    <h4>ویرایش</h4>
+                                </div>
+                            </div>
+                            <hr>
+                            @foreach($user_questions as $question)
+                                <div class="row dash-table-content chapter">
+                                    <div class="col-md-5">
+                                        <span class="truncate">{{$question->content}}</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @foreach($courses as $course)
+                                            @if($course->id == $question->course_id)
+                                                {{$course->name}}
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                            {{--<form method="post" action="/EditQuestion/{{$question->id}}">--}}
+                                                {{--<input type="hidden" name="_token" value={{ csrf_token()}}>--}}
+                                    <div class="col-md-3">
+                                        <button class="btn btn-default whichQ" value="{{$question->id}}" >ویرایش</button>
+                                    </div>
+                                            {{--</form>--}}
+                                </div>
+                                <hr>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            </div>
 
             <div id="add-class" class="tab-pane fade">
                 <div class="row">
@@ -338,6 +392,13 @@
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-sm-10 col-md-10">
                         <h3 class="black">اضافه کردن درس</h3>
+                        <br>
+                        @if($errors->create_course->any())
+                            <h4 style="color:red">{{$errors->create_course->first()}}</h4>
+                        @endif
+                        @if(session()->has('error'))
+                            <h4 style="color:red">{{ session()->get('error') }}</h4>
+                        @endif
                         <br>
                         <form action="/CreateCourse" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="_token" value={{ csrf_token() }}>
