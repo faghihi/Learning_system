@@ -252,7 +252,48 @@ class ExerciseController extends Controller
 //        dd($question);
         $question->save();
 
-        return redirect('/');
+        return redirect('/TDashboard');
+    }
+
+    public function editquestion($id){
+        $i = Input::get('course');
+        $course = Course::where('id',$i)->first();
+
+        $section_id = Input::get('section');
+
+        $exercise = Exercise::where('course_id',$course->id)->where('section_id',$section_id)->first();
+
+        $level = Input::get('difficulty');
+        $content = Input::get('question');
+        $option1 = Input::get('gozine1');
+        $option2 = Input::get('gozine2');
+        $option3 = Input::get('gozine3');
+        $option4 = Input::get('gozine4');
+        $arr = array('1' => $option1, '2' => $option2, '3' => $option3, '4' => $option4);
+        $options = json_encode($arr);
+        $answer = Input::get('answer');
+        $solution = Input::get('solution');
+        $email = Session::get('Email');
+        $user = User::where('email','=',$email)->first();
+
+        $question = Question::find($id);
+        $question->section_id = $section_id;
+        $question->course_id = $course->id;
+        if($exercise) {
+            $question->exercise_id = $exercise->id;
+        }else {
+            $question->exercise_id = 0;
+        }
+        $question->level = $level;
+        $question->content = $content;
+        $question->options = $options;
+        $question->answer = $answer;
+        $question->solution = $solution;
+        $question->writer = $user->name;
+//        dd($question);
+        $question->save();
+
+        return redirect('/TDashboard')->with('message','با موفقیت ویرایش شد.');
     }
 
     //get class

@@ -206,10 +206,12 @@ class HomeController extends Controller
         $q_info['section_id'] = $section->id;
         $q_info['level'] = $question->level;
         $q_info['content'] = $question->content;
-        $q_info['gozine1'] = $question->options;
-        $q_info['gozine2'] = $question->options;
-        $q_info['gozine3'] = $question->options;
-        $q_info['gozine4'] = $question->options;
+
+        $someArray = json_decode($question->options, true);
+
+        for($i = 1 ;$i <= 4;$i++){
+            $q_info['gozine'.$i] = $someArray[$i];
+        }
         $q_info['gozine_correct'] = $question->answer;
         $q_info['solution'] = $question->solution;
 
