@@ -140,7 +140,33 @@ $(document).ready(function () {
                 });
             }
         });
-
+        $('input[name="easy"]').on('keydown keyup', function(e){
+            if ($(this).val() > $(this).attr('max')
+                && e.keyCode != 46 // delete
+                && e.keyCode != 8 // backspace
+            ) {
+                e.preventDefault();
+                $(this).val($(this).attr('max'));
+            }
+        });
+        $('input[name="medium"]').on('keydown keyup', function(e){
+            if ($(this).val() > $(this).attr('max')
+                && e.keyCode != 46 // delete
+                && e.keyCode != 8 // backspace
+            ) {
+                e.preventDefault();
+                $(this).val($(this).attr('max'));
+            }
+        });
+        $('input[name="hard"]').on('keydown keyup', function(e){
+            if ($(this).val() > $(this).attr('max')
+                && e.keyCode != 46 // delete
+                && e.keyCode != 8 // backspace
+            ) {
+                e.preventDefault();
+                $(this).val($(this).attr('max'));
+            }
+        });
 
 
     });
