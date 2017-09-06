@@ -8,7 +8,7 @@ jQuery(document).ready(function ($) {
 
 
     // fancybox
-    $(".fancybox").fancybox();
+    // $(".fancybox").fancybox();
     //isotope
     if ($('.isotopeWrapper').length) {
         var $container = $('.isotopeWrapper');

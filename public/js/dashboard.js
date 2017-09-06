@@ -110,34 +110,38 @@ $(document).ready(function () {
                     });
 
                 });
+                console.log('salam haji')
+                var course = $('#choose_course').val();
+                var section = 1;
+                console.log(course);
+                console.log(section);
+
+                $.ajax({
+                    "async": false,
+                    "crossDomain": true,
+                    "url": "/checknum",
+                    "method": "post",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                    },
+                    "data":{
+                        "course": course,
+                        "section": section
+                    },
+                    success:function (response) {
+                        $('input[name="easy"]').attr('max', response['easy']);
+                        $('input[name="medium"]').attr('max', response['medium']);
+                        $('input[name="hard"]').attr('max', response['hard']);
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('error');
+
+                    }
+                });
             }
         });
 
-        var course = $('#choose_course').val();
-        var section = 1;
 
-        $.ajax({
-            "async": false,
-            "crossDomain": true,
-            "url": "/checknum",
-            "method": "post",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            "data":{
-                "course": course,
-                "section": section
-            },
-            success:function (response) {
-                $('input[name="easy"]').attr('max', response['easy']);
-                $('input[name="medium"]').attr('max', response['medium']);
-                $('input[name="hard"]').attr('max', response['hard']);
-            },
-            error:function (xhr, ajaxOptions, thrownError){
-                alert('error');
-
-            }
-        });
 
     });
 

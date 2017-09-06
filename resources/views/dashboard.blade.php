@@ -837,7 +837,7 @@
              "url": "/checknum",
              "method": "post",
              headers: {
-                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
              },
              "data":{
                  "course": course,
