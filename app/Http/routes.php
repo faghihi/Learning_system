@@ -65,7 +65,7 @@ Route::post('/CreateStuEx' , 'ExerciseController@createStuEx');
 
 Route::post('/CreateQuestion' , 'ExerciseController@createquestion');
 
-Route::post('/EditQuestion' , 'ExerciseController@editquestion');
+Route::get('/EditQuestion/{id}' , 'ExerciseController@editquestion');
 
 Route::post('/giveEx', 'ExerciseController@give');
 

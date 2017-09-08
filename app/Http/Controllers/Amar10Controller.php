@@ -40,6 +40,7 @@ class Amar10Controller extends Controller
         }
         $classname = Input::get('classname');
         $school_id = Input::get('school');
+        $code = Input::get('join_code');
         $teacher = User::where('email',Session::get('Email'))->first();
         $class = Classes::where('name',$classname)->where('school_id',$school_id)->first();
 

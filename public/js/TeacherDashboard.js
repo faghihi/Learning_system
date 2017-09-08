@@ -449,24 +449,27 @@ $('.which_ex').on('click',function(){
 
 $('.whichQ').on('click',function(){
     var ID = $(this).val();
+    console.log(ID);
     $.ajax({
         url: '/Q/ajax/'+ID,
         type: "GET",
         dataType: "json",
+
         success:function(data) {
 
             $('#show-question').empty();
 
             $('#show-question').append(
                 '<div class="row"><div class="col-sm-10 col-md-10"><h3 class="black">اضافه کردن سوال</h3><br>'+
-                '<form method="post" action="/EditQuestion" ><input type="hidden" name="_token" value={{ csrf_token() }}>'+
+                "<form method=\"get\" action=\"/EditQuestion/"+ID+"\">"+
+                '<input type="hidden" name="csrf-token" value="'+$('meta[name="csrf-token"]').attr('content')+'">'+
                 '<div class="row"><div class="col-md-4 col-sm-4"><div class="form-group"><label for="chapter">درس :</label>'+
                 '<select name="course" class="form-control" id="cha_course" required>'+
                 '<option value='+ID+' selected>'+data.course+'</option>'+
                 '</select></div></div><div class="col-md-4 col-sm-4"><div class="form-group"><label for="chapter">فصل:</label>'+
                 '<select name="section" class="form-control" id="ch_chapter" required><option value='+data.section_id+'>'+data.section+'</option>'+
                 '</select></div></div><div class="col-md-4 col-sm-4"><div class="form-group"><label for="difficulty">میزان سختی سوال:</label><select name="difficulty" class="form-control " id="difficulty" required>'+
-                '<option value="+data.level+" selected>...</option><option value="0">آسان (1نمره)</option><option value="1">متوسط (2نمره)</option><option value="2">سخت (3نمره)</option></select></div></div></div>'+
+                '<option value="0">آسان (1نمره)</option><option value="1">متوسط (2نمره)</option><option value="2">سخت (3نمره)</option></select></div></div></div>'+
                 '<div class="form-group"><label>صورت سوال:</label><textarea name="question" rows="4" class="form-control" required>'+data.content+'</textarea></div>'+
                 ' <div class="form-group"><label>گزینه ها:</label></div><div class="row"><div class="col-md-6 col-sm-12"><div class="form-group">'+
                 '<input name="gozine1" class="form-control " value='+data.gozine1+'></div></div><div class="col-md-6 col-sm-12"><div class="form-group">'+
