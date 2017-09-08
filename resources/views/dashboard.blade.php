@@ -123,6 +123,11 @@
                         {{ session()->get('message') }}
                     </div>
                 @endif
+                @if(session()->has('error'))
+                    <div class="alert alert-danger">
+                        {{ session()->get('error') }}
+                    </div>
+                @endif
                 <br>
                 <div class="row">
                     <div class="col-md-8 activity situation">
@@ -211,6 +216,8 @@
                                         <div class="col-md-2 col-sm-2">
                                             @if ($ticket->status === 'Open')
                                                 <span class="label label-success">{{ $ticket->status }}</span>
+                                            @elseif($ticket->status == 'Pending')
+                                                <span class="label label-warning">{{ $ticket->status }}</span>
                                             @else
                                                 <span class="label label-danger">{{ $ticket->status }}</span>
                                             @endif
@@ -281,7 +288,7 @@
                                 <hr>
                                 @foreach($user->classes as $cl)
                                 @foreach($classes as $class)
-                                @if($cl->id == $class->id && $cl->pivot->status == 2)
+                                @if($cl->id == $class->id)
                                     <div class="row dash-table-content chapter">
                                         <div class="col-md-4">
                                             {{$cl->name}}
@@ -301,13 +308,12 @@
                                             @endif
                                         </div>
 
-                                        <form method="post" action="/DeleteClass/{{$cl->id}}">
+                                        <form method="get" action="/StuDeleteClass/{{$cl->id}}">
                                             <input type="hidden" name="_token" value={{ csrf_token()}}>
                                             <div class="col-md-2">
                                                 <button class="btn btn-block btn-delete">حذف</button>
                                             </div>
                                         </form>
-
                                     </div>
                                 <hr>
                                 @endif
@@ -421,6 +427,8 @@
                                     <div class="col-md-2">
                                         @if ($ticket->status === 'Open')
                                             <span class="label label-success">{{ $ticket->status }}</span>
+                                        @elseif($ticket->status == 'Pending')
+                                            <span class="label label-warning">{{ $ticket->status }}</span>
                                         @else
                                         	<span class="label label-danger">{{ $ticket->status }}</span>
                                         @endif
@@ -442,12 +450,17 @@
 
                 <div id="test-modal" class="modal fade" role="dialog">
                     <div class="modal-dialog">
-                                <!-- Modal content-->
+
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 <br/>
-                                <h4 class="modal-title">تعریف تمرین :</h4><span id="error_code" style="margin-right: 20px; color: red;display: none;">کد نا قبلا استفاده شده است.</span>
+                                <h4 class="modal-title">تعریف تمرین :</h4><span id="error_easy" style="margin-right: 20px; color: red;display: none;">این تعداد سوال آسان در سیستم موجود نیست.</span>
+                                <span id="error_medium" style="margin-right: 20px; color: red;display: none;">این تعداد سوال متوسط در سیستم موجود نیست.</span>
+                                <span id="error_hard" style="margin-right: 20px; color: red;display: none;">این تعداد سوال سخت در سیستم موجود نیست.</span>
+                                @if($errors->StuCreateQ->any())
+                                    <h4 style="color:red">{{$errors->StuCreateQ->first()}}</h4>
+                                @endif
                             </div>
                             <div class="modal-body">
                                 <div class="row">
@@ -479,19 +492,19 @@
                                                 <div class="col-md-5 col-sm-5">
                                                     <div class="form-group">
                                                         <label>تعداد سوالات آسان:</label>
-                                                        <input name="easy" class="form-control checkeasy" type="number">
+                                                        <input id="easy_no" name="easy" class="form-control" type="number">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-5 col-sm-5">
                                                     <div class="form-group">
                                                         <label>تعداد سوالات متوسط:</label>
-                                                        <input name="medium" class="form-control checkmedium" type="number">
+                                                        <input id="medium_no" name="medium" class="form-control" type="number">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-5 col-sm-5">
                                                     <div class="form-group">
                                                         <label>تعداد سوالات سخت:</label>
-                                                        <input name="hard" class="form-control checkhard" type="number">
+                                                        <input id="hard_no" name="hard" class="form-control" type="number">
                                                     </div>
                                                 </div>
                                             </div>
@@ -777,35 +790,10 @@
             </div>
 
             <div id="class1" class="tab-pane fade">
-
             </div>
             <br><br>
         </article>
         <!-- /Article main content -->
-        <!--Message Modal-->
-        <div id="message-modal" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <br/>
-                        <h3 class="modal-title">ثبت درخواست</h3>
-                        <h4>ادمین</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>درخواست شما در حال بررسی است. تا 24ساعت آینده پاسخ دانش آموز فرستاده خواهد شد.</p>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">ببندش!</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        <!-- /Message Modal-->
     </div>
 </div>
 <!-- /container -->
@@ -824,37 +812,6 @@
 <!-- Google Maps -->
 {{--<script src="{{URL::asset('js/Gmap.JS')}}"></script>--}}
 {{--<script src="{{URL::asset('js/google-map.js')}}"></script>--}}
-
-<script>
- $("#choose_section").on('click',function(){
-
-         var course = $('#choose_course').val();
-         var section = $('#choose_section').val();
-
-         $.ajax({
-             "async": false,
-             "crossDomain": true,
-             "url": "/checknum",
-             "method": "post",
-             headers: {
-                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-             },
-             "data":{
-                 "course": course,
-                 "section": section
-             },
-             success:function (response) {
-                 $('input[name="easy"]').attr('max', response['easy']);
-                 $('input[name="medium"]').attr('max', response['medium']);
-                 $('input[name="hard"]').attr('max', response['hard']);
-             },
-             error:function (xhr, ajaxOptions, thrownError){
-                  alert('error');
-
-             }
-         });
-     })
-</script>
 
 </body>
 </html>

@@ -53,7 +53,11 @@ Route::post('/CreateCourse' , 'Amar10Controller@addcourse');
 
 Route::post('/checkcode' , 'Amar10Controller@checkrepetetive');
 
-Route::post('/checknum' , 'Amar10Controller@checknum');
+Route::get('/checkeasynum' , 'Amar10Controller@checkeasynum');
+Route::get('/checkmednum' , 'Amar10Controller@checkmednum');
+Route::get('/checkhardnum' , 'Amar10Controller@checkhardnum');
+
+Route::get('/problem' , 'Amar10Controller@problem');
 
 Route::post('/CreateEx' , 'ExerciseController@create');
 
@@ -71,7 +75,9 @@ Route::get('/exercise/{id}' , 'ExerciseController@show');
 
 Route::get('/delete/{id}' , 'ExerciseController@delete');
 
-Route::post('/DeleteClass/{id}' , 'Amar10Controller@deleteclass');
+Route::get('/DeleteClass/{id}' , 'Amar10Controller@deleteclass');
+
+Route::get('/StuDeleteClass/{id}' , 'Amar10Controller@studeleteclass');
 
 Route::get('/Video' , 'VideoController@index');
 
@@ -113,5 +119,6 @@ Route::get('my_tickets', 'TicketsController@userTickets');
 
 Route::get('tickets', 'TicketsController@index');
 Route::post('close_ticket/{ticket_id}', 'TicketsController@close');
+Route::post('accept_ticket/{ticket_id}', 'TicketsController@accept');
 
 Route::post('comment', 'CommentsController@postComment');

@@ -216,18 +216,29 @@ $('#ch_class').on('change', function() {
 <!--when user choose school,show class name & student info-->
 $('#selectSchool').on('change', function() {
     var id = $("#selectSchool option:selected").val();
+
     var classBar = document.getElementById("class-bar");
     $.ajax({
         url: '/school/ajax/'+id,
         type: "GET",
         dataType: "json",
+        headers: {
+            'X-CSRF-TOKEN': $('input[name="_token"]').attr('content')
+        },
         success:function(data) {
             $('#chooseClass').empty();
+            $('#class_delete').empty();
             $.each(data, function(key,value){
                 $('#chooseClass').append('<option value="'+ key +'">'+ value.class_name +'</option>');
                 $('#chooseClass').on('click',function(){
                     var cl = $("#chooseClass option:selected").val();
+
                     if(key == cl){
+
+                        $('#class_delete').html(
+                            '<div class="col-md-1 col-sm-1"><i class="fa fa-2x fa-pencil" aria-hidden="true"></i>&nbsp;:</div>'+
+                            '<form method="get" action="/DeleteClass/'+cl+'"><input type="hidden" name="_token" value={{ csrf_token()}}>'+
+                            '<div class="col-md-3 col-sm-5"><button id="class-delete" class="btn btn-block btn-delete">حذف کلاس</button></div></form>');
 
                         var ClassBar = new Chart(classBar, {
                             type: 'bar',
@@ -486,3 +497,81 @@ $('.whichQ').on('click',function(){
         }
     });
 });
+
+<!--for exercise creation -->
+
+$('#s_class').on('change',function(){
+    alert('با کلیک بروی هر فصل تعداد سوالات موجود در سیستم برای آن موضوع نمایش داده می شود');
+    });
+$('#choose_course').on('change', function() {
+    var id = $("#choose_course option:selected").val();
+
+    $.ajax({
+    url: '/section/ajax/'+id,
+    type: "GET",
+    dataType: "json",
+    success:function(data) {
+    $('#choose_section').empty();
+    $.each(data, function(key, value) {
+    $('#choose_section').append('<option value="'+ key +'">'+ value.name +'</option>');
+    $('#choose_section').on('click' , function(){
+    var sec = $('#choose_section option:selected').val();
+    if(key == sec){
+    $('#easy_no').val(value.easy);
+    $('#medium_no').val(value.medium);
+    $('#hard_no').val(value.hard);
+    }
+    });
+
+    });
+    }
+    });
+
+    });
+
+$('#ch_course').on('change', function() {
+    var id = $("#ch_course option:selected").val();
+
+    $.ajax({
+        url: '/question/ajax/'+id,
+        type: "GET",
+        dataType: "json",
+        success:function(data) {
+            $('#choose_chapter').empty();
+            $.each(data, function(key, value) {
+
+                $('#choose_chapter').append('<option value="'+ key +'">'+ value +'</option>');
+
+            });
+        }
+    });
+});
+
+$("#join_code").on('change',function(){
+    var code=$("#join_code").val();
+    console.log(code);
+    $.ajax({
+        "async": false,
+        "crossDomain": true,
+        "url": "/checkcode",
+        "method": "POST",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        "data":{
+            "code":code
+        },
+        success:function (response) {
+            console.log(response);
+            if(response!=1){
+                $("#error_code").show()
+            }
+            else{
+                $("#error_code").hide()
+            }
+        },
+        error:function (xhr, ajaxOptions, thrownError){
+            alert('error');
+        }
+    });
+})

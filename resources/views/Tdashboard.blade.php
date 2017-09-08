@@ -162,7 +162,7 @@
                         @foreach ($tickets as $ticket)
                             <div class="row message-part">
                                 @foreach ($categories as $category)
-                                    @if ($category->id === $ticket->category_id)
+                                    @if ($category->id == $ticket->category_id)
                                         <div class="col-md-2 col-sm-2"><p>{{ $category->name }}</p></div>
                                     @endif
                                 @endforeach
@@ -174,6 +174,8 @@
                                 <div class="col-md-2 col-sm-2">
                                     @if ($ticket->status === 'Open')
                                         <span class="label label-success">{{ $ticket->status }}</span>
+                                    @elseif($ticket->status == 'Pending')
+                                        <span class="label label-warning">{{ $ticket->status }}</span>
                                     @else
                                     	<span class="label label-danger">{{ $ticket->status }}</span>
                                     @endif
@@ -182,10 +184,17 @@
                                     {{ $ticket->updated_at }}
                                 </div>
                                 <div class="col-md-2 col-sm-2">
-                                    <form action="{{ url('close_ticket/' . $ticket->ticket_id) }}" method="POST">
-                                        {!! csrf_field() !!}
-                                    	<button type="submit" class="btn btn-default">Close</button>
-                                    </form>
+                                    @if($ticket->category_id == 4)
+                                        <form action="{{ url('accept_ticket/' . $ticket->ticket_id) }}" method="POST">
+                                            {!! csrf_field() !!}
+                                            <button type="submit" class="btn btn-delete btn-sm" >تایید</button>
+                                        </form>
+                                    @else
+                                        <form action="{{ url('close_ticket/' . $ticket->ticket_id) }}" method="POST">
+                                            {!! csrf_field() !!}
+                                    	    <button type="submit" class="btn btn-default btn-sm" >بستن</button>
+                                        </form>
+                                    @endif
                                 </div>
                         </div>
                         @endforeach
@@ -360,7 +369,7 @@
                                 <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label>نام مدرسه:</label>
-                                        <select id="schoolID" name="school" class="form-control" required>
+                                        <select name="school" class="form-control" required>
                                             <option selected value="0">...</option>
                                             @foreach($schools as $school)
                                                 <option value = {{$school->id}}>{{$school->name}}</option>
@@ -857,38 +866,9 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="row">
-                            <div class="col-md-1 col-sm-1">
-                                <i class="fa fa-2x fa-pencil" aria-hidden="true"></i>&nbsp;:
-                            </div>
-                            @if(count($classes) > 0)
-                            <form method="post" action="/DeleteClass/{{$class->id}}">
-                                <input type="hidden" name="_token" value={{ csrf_token()}}>
-                            <div class="col-md-3 col-sm-5">
-                               <button id="class-delete" class="btn btn-block btn-delete">حذف کلاس</button>
-                            </div>
-                            </form>
-                            @endif
-                            <div class="col-md-3 col-sm-6">
-                               <button id="class-rename" class="btn btn-block">تغییر نام</button>
-                            </div>
+                        <div id="class_delete" class="row">
+
                         </div>
-                        <br>
-                        <form id="rename-form" hidden>
-                            <div class="row">
-                                <div class="col-md-4 col-sm-12"></div>
-                                <div class="col-md-5 col-sm-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" name="className" placeholder="نام قبلی">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 col-sm-12">
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-success">تغییر</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
                         <br><br>
                         <div class="row" >
                             <div class="col-md-12 col-sm-12">
@@ -1013,31 +993,6 @@
             </div>
         </article>
         <!-- /Article main content -->
-        <!--Message Modal-->
-        <div id="message-modal" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <br/>
-                        <h3 class="modal-title">ثبت درخواست</h3>
-                        <h4>ادمین</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>درخواست شما در حال بررسی است. تا 24ساعت آینده پاسخ دانش آموز فرستاده خواهد شد.</p>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">ببندش!</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        <!-- /Message Modal-->
-
     </div>
 </div>
 <!-- /container -->
@@ -1068,110 +1023,5 @@
 {{--<script src="js/Gmap.JS"></script>--}}
 {{--<script src="js/google-map.js"></script>--}}
 
-<!--when choose a school , show student's of the school-->
-<script type="text/javascript">
-     $('#schoolID').on('change', function() {
-            var id = $("#schoolID option:selected").val();
-                $.ajax({
-                    url: '/createClass/ajax/'+id,
-                    type: "GET",
-                    dataType: "json",
-                    success:function(data) {
-                        $('#whole-student').empty();
-                        $.each(data, function(key, value) {
-                            $('#whole-student').append('<option value="'+ key +'">'+ value +'</option>');
-                        });
-                    }
-                });
-     });
-</script>
-
-<!--for exercise creation -->
-<script type="text/javascript">
-     $('#s_class').on('change',function(){
-        alert('با کلیک بروی هر فصل تعداد سوالات موجود در سیستم برای آن موضوع نمایش داده می شود');
-     });
-     $('#choose_course').on('change', function() {
-            var id = $("#choose_course option:selected").val();
-
-                $.ajax({
-                    url: '/section/ajax/'+id,
-                    type: "GET",
-                    dataType: "json",
-                    success:function(data) {
-                        $('#choose_section').empty();
-                        $.each(data, function(key, value) {
-                            $('#choose_section').append('<option value="'+ key +'">'+ value.name +'</option>');
-                            $('#choose_section').on('click' , function(){
-                                var sec = $('#choose_section option:selected').val();
-                                if(key == sec){
-                                    $('#easy_no').val(value.easy);
-                                    $('#medium_no').val(value.medium);
-                                    $('#hard_no').val(value.hard);
-                                }
-                            });
-
-                        });
-                    }
-                });
-
-      });
-</script>
-
-<script type="text/javascript">
-     $('#ch_course').on('change', function() {
-            var id = $("#ch_course option:selected").val();
-
-                $.ajax({
-                    url: '/question/ajax/'+id,
-                    type: "GET",
-                    dataType: "json",
-                    success:function(data) {
-                        $('#choose_chapter').empty();
-                        $.each(data, function(key, value) {
-
-                                $('#choose_chapter').append('<option value="'+ key +'">'+ value +'</option>');
-
-                        });
-                    }
-                });
-      });
-     $("#join_code").on('change',function(){
-         var code=$("#join_code").val();
-         console.log(code);
-         $.ajax({
-             "async": false,
-             "crossDomain": true,
-             "url": "http://localhost:8000/checkcode",
-             "method": "POST",
-             headers: {
-                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-             },
-             "data":{
-                 "code":code
-             },
-             success:function (response) {
-                 console.log(response);
-                 if(response!=1){
-                    $("#error_code").show()
-                 }
-                 else{
-                     $("#error_code").hide()
-                 }
-             },
-             error:function (xhr, ajaxOptions, thrownError){
-                  alert('error');
-
-             }
-         });
-     })
-</script>
-
-{{--<script>--}}
-    {{--CKEDITOR.config.image_previewText = 'در اینجا می توانید پیش نمایش عکس را مشاهده کنید';--}}
-    {{--CKEDITOR.config.contentsLangDirection = 'rtl';--}}
-    {{--CKEDITOR.replace( 'editor1' );--}}
-    {{--CKEDITOR.config.mathJaxLib = '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML';--}}
-{{--</script>--}}
 </body>
 </html>

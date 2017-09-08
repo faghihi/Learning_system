@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes;
 use App\Course;
 use App\School;
 use App\User;
@@ -119,5 +120,23 @@ class TicketsController extends Controller
         //$mailer->sendTicketStatusNotification($ticketOwner, $ticket);
 
         return redirect()->back()->with("status", "The ticket has been closed.");
+    }
+
+    public function accept($ticket_id)
+    {
+        $ticket = Ticket::where('ticket_id', $ticket_id)->firstOrFail();
+
+        $ticket->status = 'Open';
+
+        //$ticket->save();
+
+        $ticketOwner = $ticket->user;
+
+        $class = Classes::find($ticket->ticket_id);
+        $user = User::find($ticket->user_id);
+
+        $user->classes()->updateExistingPivot($class->id,['status'=>2]);
+
+        return redirect()->back()->with("status", "The ticket has been open.");
     }
 }

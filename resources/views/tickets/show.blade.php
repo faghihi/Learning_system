@@ -55,6 +55,8 @@
 		        		<p>
 	        			@if ($ticket->status === 'Open')
     						وضعیت: <span class="label label-success">{{ $ticket->status }}</span>
+    					@elseif($ticket->status === 'Pending')
+    					    وضعیت: <span class="label label-warning">{{ $ticket->status }}</span>
     					@else
     						وضعیت: <span class="label label-danger">{{ $ticket->status }}</span>
     					@endif

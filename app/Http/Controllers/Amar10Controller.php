@@ -10,6 +10,7 @@ use App\School;
 use App\Classes;
 use App\Course;
 use App\Question;
+use App\Ticket;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -39,6 +40,7 @@ class Amar10Controller extends Controller
         }
         $classname = Input::get('classname');
         $school_id = Input::get('school');
+        $teacher = User::where('email',Session::get('Email'))->first();
         $class = Classes::where('name',$classname)->where('school_id',$school_id)->first();
 
         if($class){
@@ -48,7 +50,8 @@ class Amar10Controller extends Controller
             $class = new classes();
             $class->name = $classname;
             $class->school_id = $school_id;
-            $class->Rstring=Input::get('join_code');
+            $class->Rstring = Input::get('join_code');
+            $class->teacher_name = $teacher->id;
             $class->save();
         }
 
@@ -437,7 +440,6 @@ class Amar10Controller extends Controller
     //delete class
     public function deleteclass($id){
         $class = Classes::find($id);
-
         //delete class's user
         $class->users()->detach();
         //delete class
@@ -446,7 +448,16 @@ class Amar10Controller extends Controller
         return redirect()->back();
     }
 
+    //delete student request
+    public function studeleteclass($id){
 
+        $ticket = Ticket::where('ticket_id',$id)->first();
+        if($ticket){
+            $ticket->delete();
+        }
+
+        return redirect('/Dashboard')->with('message','حذف شد');
+    }
     public function checkrepetetive(Request $request)
     {
         $code=$request->get('code');
@@ -458,17 +469,71 @@ class Amar10Controller extends Controller
             return 1;
         }
     }
-
-    public function checknum(Request $request)
+    //check num of easy question
+    public function checkeasynum(Request $request)
     {
-        $course = $request->get('course');
-        $section = $request->get('section');
+        $course = $request->get( 'course' );
+        $section = $request->get( 'section' );
+        $easy = $request->get('num');
 
         $q_easy = Question::where('course_id',$course)->where('section_id',$section)->where('level',0)->get();
-        $q_medium = Question::where('course_id',$course)->where('section_id',$section)->where('level',1)->get();
+
+        if($easy > count($q_easy)){
+            return 0;
+        }else{
+            return 1;
+        }
+    }
+    //check num of medium question
+    public function checkmednum(Request $request)
+    {
+        $course = $request->get( 'course' );
+        $section = $request->get( 'section' );
+        $med = $request->get('num');
+
+        $q_med = Question::where('course_id',$course)->where('section_id',$section)->where('level',1)->get();
+
+        if($med > count($q_med)){
+            return 0;
+        }else{
+            return 1;
+        }
+    }
+    //check num of hard Question
+    public function checkhardnum(Request $request)
+    {
+        $course = $request->get( 'course' );
+        $section = $request->get( 'section' );
+        $hard = $request->get('num');
+
         $q_hard = Question::where('course_id',$course)->where('section_id',$section)->where('level',2)->get();
 
-        return ['easy' => count($q_easy), 'medium' => count($q_medium), 'hard' => count($q_hard)];
-//        return $q_easy;
+        if($hard > count($q_hard)){
+            return 0;
+        }else{
+            return 1;
+        }
+    }
+
+    public function problem(){
+
+        $name = Input::get('exercise_name');
+        $user = User::where('email',Session::get('Email'))->first();
+        $message = Input::get('problem');
+        $question = Input::get('question');
+
+        $ticket = new Ticket([
+            'title'     => $name,
+            'user_id'   => $user->id,
+            'ticket_id' => $question,
+            'category_id'  => 3,
+            'priority'  => 'کم',
+            'message'   => $message,
+            'status'    => "Open",
+        ]);
+
+        $ticket->save();
+
+        return redirect('/Dashboard');
     }
 }

@@ -1,6 +1,4 @@
-/**
- * Created by RshNk on 29/09/2016.
- */
+
 $(document).ready(function () {
     //handle multiple nav
 
@@ -108,69 +106,132 @@ $(document).ready(function () {
                             $('#hard_no').val(value.hard);
                         }
                     });
-
-                });
-                console.log('salam haji')
-                var course = $('#choose_course').val();
-                var section = 1;
-                console.log(course);
-                console.log(section);
-
-                $.ajax({
-                    "async": false,
-                    "crossDomain": true,
-                    "url": "/checknum",
-                    "method": "post",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                    },
-                    "data":{
-                        "course": course,
-                        "section": section
-                    },
-                    success:function (response) {
-                        $('input[name="easy"]').attr('max', response['easy']);
-                        $('input[name="medium"]').attr('max', response['medium']);
-                        $('input[name="hard"]').attr('max', response['hard']);
-                    },
-                    error:function (xhr, ajaxOptions, thrownError){
-                        alert('error');
-
-                    }
                 });
             }
         });
-        $('input[name="easy"]').on('keydown keyup', function(e){
-            if ($(this).val() > $(this).attr('max')
-                && e.keyCode != 46 // delete
-                && e.keyCode != 8 // backspace
-            ) {
-                e.preventDefault();
-                $(this).val($(this).attr('max'));
-            }
-        });
-        $('input[name="medium"]').on('keydown keyup', function(e){
-            if ($(this).val() > $(this).attr('max')
-                && e.keyCode != 46 // delete
-                && e.keyCode != 8 // backspace
-            ) {
-                e.preventDefault();
-                $(this).val($(this).attr('max'));
-            }
-        });
-        $('input[name="hard"]').on('keydown keyup', function(e){
-            if ($(this).val() > $(this).attr('max')
-                && e.keyCode != 46 // delete
-                && e.keyCode != 8 // backspace
-            ) {
-                e.preventDefault();
-                $(this).val($(this).attr('max'));
-            }
-        });
 
+        //$('input[name="easy"]').on('keydown keyup', function(e){
+        //    if ($(this).val() > $(this).attr('max')
+        //        && e.keyCode != 46 // delete
+        //        && e.keyCode != 8 // backspace
+        //    ) {
+        //        e.preventDefault();
+        //        $(this).val($(this).attr('max'));
+        //    }
+        //});
+        //$('input[name="medium"]').on('keydown keyup', function(e){
+        //    if ($(this).val() > $(this).attr('max')
+        //        && e.keyCode != 46 // delete
+        //        && e.keyCode != 8 // backspace
+        //    ) {
+        //        e.preventDefault();
+        //        $(this).val($(this).attr('max'));
+        //    }
+        //});
+        //$('input[name="hard"]').on('keydown keyup', function(e){
+        //    if ($(this).val() > $(this).attr('max')
+        //        && e.keyCode != 46 // delete
+        //        && e.keyCode != 8 // backspace
+        //    ) {
+        //        e.preventDefault();
+        //        $(this).val($(this).attr('max'));
+        //    }
+        //});
 
     });
 
+    $('#easy_no').on('change',function(){
+        var num=$(this).val();
+        var course = $('#choose_course').val();
+        var section = $('#choose_section').val();
+
+        $.ajax({
+            "url": "/checkeasynum",
+            "method": "get",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            },
+            "data":{
+                "course": course,
+                "section": section,
+                "num": num
+            },
+            success:function (response) {
+                if(response!=1){
+                    $("#error_easy").show()
+                }
+                else{
+                    $("#error_easy").hide()
+                }
+            },
+            error:function (xhr, ajaxOptions, thrownError){
+                alert('error');
+
+            }
+        });
+    });
+
+    $('#medium_no').on('change',function(){
+        var num=$(this).val();
+        var course = $('#choose_course').val();
+        var section = $('#choose_section').val();
+
+        $.ajax({
+            "url": "/checkmednum",
+            "method": "get",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            },
+            "data":{
+                "course": course,
+                "section": section,
+                "num": num
+            },
+            success:function (response) {
+                if(response!=1){
+                    $("#error_medium").show()
+                }
+                else{
+                    $("#error_medium").hide()
+                }
+            },
+            error:function (xhr, ajaxOptions, thrownError){
+                alert('error');
+
+            }
+        });
+    });
+
+    $('#hard_no').on('change',function(){
+        var num=$(this).val();
+        var course = $('#choose_course').val();
+        var section = $('#choose_section').val();
+
+        $.ajax({
+            "url": "/checkhardnum",
+            "method": "get",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            },
+            "data":{
+                "course": course,
+                "section": section,
+                "num": num
+            },
+            success:function (response) {
+                if(response!=1){
+                    $("#error_hard").show()
+                }
+                else{
+                    $("#error_hard").hide()
+                }
+            },
+            error:function (xhr, ajaxOptions, thrownError){
+                alert('error');
+
+            }
+        });
+    });
     //fill progress bar in situation part in first page
     var UrTest=parseInt($('.situation .UrTest:eq(0)').text());
     var GoalTest=parseInt($('.situation .GoalTest:eq(0)').text());
