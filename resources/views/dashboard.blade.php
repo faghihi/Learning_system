@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +6,7 @@
     <meta name="_token" content="{{ csrf_token() }}">
     <title>داشبورد</title>
     <link rel="favicon" href="{{URL::asset('images/favicon.png')}}">
-    <!-- custome js just for login page -->
+    <!-- custom js just for login page -->
     <link rel="stylesheet" href="{{URL::asset('css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{URL::asset('css/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{URL::asset('css/fontiran.css')}}">
@@ -28,14 +27,11 @@
 <!-- Fixed navbar -->
 @include('navbar',array('active'=>'dashboard'))
 <!-- /.navbar -->
-
 <header id="head" class="secondary">
     <div class="container">
         <h1>داشبورد</h1>
-        <p></p>
     </div>
 </header>
-
 <!-- container -->
 <div class="container">
     <br>
@@ -46,12 +42,16 @@
             <div class="row">
                 <div class="col-md-12 col-sm-12 activity">
                     <ul class="nav nav-pills nav-stacked">
-                        <li class="active"><a data-toggle="pill" href="#first-page">
+                        <li class="active">
+                            <a data-toggle="pill" href="#first-page">
                                 <i class="fa fa-home fa-3x" aria-hidden="true"></i>صفحه نخست
-                            </a></li>
-                        <li><a data-toggle="pill" href="#goal">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="pill" href="#goal">
                                 <i class="fa fa-bullseye fa-3x" aria-hidden="true"></i>&nbsp;هدف
-                            </a></li>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -100,16 +100,16 @@
                 </div>
             </div>
             <br>
-            <div class="row">
-                <div class="col-md-12 col-sm-12 activity">
-                    <h4 class="section-title black">پیام ها :</h4>
-                    <ul class="nav nav-pills nav-stacked">
-                        <li ><a data-toggle="pill" href="#new-message">ایجاد پیام</a></li>
-                        <li ><a data-toggle="pill" href="#sent-box">مشاهده پیام ها</a></li>
-                    </ul>
-                    <br>
-                </div>
-            </div>
+            {{--<div class="row">--}}
+                {{--<div class="col-md-12 col-sm-12 activity">--}}
+                    {{--<h4 class="section-title black">پیام ها :</h4>--}}
+                    {{--<ul class="nav nav-pills nav-stacked">--}}
+                        {{--<li ><a data-toggle="pill" href="#new-message">ایجاد پیام</a></li>--}}
+                        {{--<li ><a data-toggle="pill" href="#sent-box">مشاهده پیام ها</a></li>--}}
+                    {{--</ul>--}}
+                    {{--<br>--}}
+                {{--</div>--}}
+            {{--</div>--}}
         </aside>
         <!-- /Sidebar -->
         <!-- Article main content -->
@@ -183,7 +183,6 @@
                     </div>
                 </div>
                 <br>
-
                 <!--message part-->
                 <div class="row">
                     <div class="col-md-12 col-sm-12 ">
@@ -193,39 +192,48 @@
                 @if ($tickets->isEmpty())
                     <p>فعلا پیامی نداری</p>
                 @else
+                    <hr>
+                    {{--<div class="row">--}}
+                        {{--<div class="col-md-4 col-sm-4">--}}
+                            {{--<input type="text" id="search" class="form-control" placeholder="جستجو...">--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                    {{--<br>--}}
                     <div class="row">
-
                             <div class="col-md-12 col-sm-12 message">
                                 <div class="row message-title">
-                                    <div class="col-md-2 col-sm-2"><b>دسته</b></div>
-                                    <div class="col-md-4 col-sm-4"><b>موضوع</b></div>
+                                    <div class="col-md-3 col-sm-3"><b>دسته</b></div>
+                                    <div class="col-md-5 col-sm-5"><b>موضوع</b></div>
                                     <div class="col-md-2 col-sm-2"><b>وضعیت</b></div>
-                                    <div class="col-md-4 col-sm-4"><b>آخرین بروزرسانی</b></div>
+                                    <div class="col-md-2 col-sm-2"><b>حذف</b></div>
                                 </div>
                                 @foreach ($tickets as $ticket)
                                     <div class="row message-part">
                                         @foreach ($categories as $category)
-                                            @if ($category->id === $ticket->category_id)
-                                                <div class="col-md-2 col-sm-2"><p>{{ $category->name }}</p></div>
+                                            @if ($category->id == $ticket->category_id)
+                                                <div class="col-md-3 col-sm-3"><p>{{ $category->name }}</p></div>
                                             @endif
                                         @endforeach
-                                        <div class="col-md-4 col-sm-4">
+                                        <div class="col-md-5 col-sm-5">
                                             <a href="{{ url('tickets/'. $ticket->ticket_id) }}">
                                                 #{{ $ticket->ticket_id }} - {{ $ticket->title }}
                                             </a>
                                         </div>
                                         <div class="col-md-2 col-sm-2">
                                             @if ($ticket->status === 'Open')
-                                                <span class="label label-success">{{ $ticket->status }}</span>
+                                                <span class="label label-success">فعال</span>
                                             @elseif($ticket->status == 'Pending')
-                                                <span class="label label-warning">{{ $ticket->status }}</span>
+                                                <span class="label label-warning">منتظر تایید</span>
                                             @else
-                                                <span class="label label-danger">{{ $ticket->status }}</span>
+                                                <span class="label label-danger">بسته</span>
                                             @endif
                                         </div>
-                                        <div class="col-md-4 col-sm-4">
-                                            {{ $ticket->updated_at }}
-                                        </div>
+                                        <form method="get" action="/DeleteTicket/{{$ticket->id}}">
+                                            <input type="hidden" name="_token" value={{ csrf_token()}}>
+                                            <div class="col-md-2 col-sm-2">
+                                                <button class="btn btn-sm btn-delete">حذف</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 @endforeach
                             </div>
@@ -277,7 +285,7 @@
                                         <h4>نام کلاس</h4>
                                     </div>
                                     <div class="col-md-4">
-                                        <h4>مدرسه</h4>
+                                        <h4>آموزگار</h4>
                                     </div>
                                     <div class="col-md-2">
                                         <h4>وضعیت</h4>
@@ -295,9 +303,9 @@
                                             {{$cl->name}}
                                         </div>
                                         <div class="col-md-4">
-                                            @foreach($schools as $school)
-                                                @if($school->id == $cl->school_id)
-                                                    {{$school->name}}
+                                            @foreach($teachers as $t)
+                                                @if($t->id == $cl->teacher_name)
+                                                    {{$t->name}}
                                                 @endif
                                             @endforeach
                                         </div>

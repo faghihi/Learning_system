@@ -154,35 +154,31 @@
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-md-10 col-sm-10 message">
                         <div class="row message-title">
-                            <div class="col-md-2 col-sm-2"><b>دسته</b></div>
-                            <div class="col-md-3 col-sm-3"><b>موضوع</b></div>
+                            <div class="col-md-3 col-sm-3"><b>دسته</b></div>
+                            <div class="col-md-5 col-sm-5"><b>موضوع</b></div>
                             <div class="col-md-2 col-sm-2"><b>وضعیت</b></div>
-                            <div class="col-md-3 col-sm-3"><b>آخرین بروزرسانی</b></div>
                             <div class="col-md-2 col-sm-2"><b>عملیات</b></div>
                         </div>
                         @foreach ($tickets as $ticket)
                             <div class="row message-part">
                                 @foreach ($categories as $category)
                                     @if ($category->id == $ticket->category_id)
-                                        <div class="col-md-2 col-sm-2"><p>{{ $category->name }}</p></div>
+                                        <div class="col-md-3 col-sm-3"><p>{{ $category->name }}</p></div>
                                     @endif
                                 @endforeach
-                                <div class="col-md-3 col-sm-3">
+                                <div class="col-md-5 col-sm-5">
                                     <a href="{{ url('tickets/'. $ticket->ticket_id) }}">
                                         #{{ $ticket->ticket_id }} - {{ $ticket->title }}
                                     </a>
                                 </div>
                                 <div class="col-md-2 col-sm-2">
                                     @if ($ticket->status === 'Open')
-                                        <span class="label label-success">{{ $ticket->status }}</span>
+                                        <span class="label label-success">فعال</span>
                                     @elseif($ticket->status == 'Pending')
-                                        <span class="label label-warning">{{ $ticket->status }}</span>
+                                        <span class="label label-warning">منتظر تایید</span>
                                     @else
-                                    	<span class="label label-danger">{{ $ticket->status }}</span>
+                                    	<span class="label label-danger">بسته</span>
                                     @endif
-                                </div>
-                                <div class="col-md-3 col-sm-3">
-                                    {{ $ticket->updated_at }}
                                 </div>
                                 <div class="col-md-2 col-sm-2">
                                     @if($ticket->category_id == 4)
@@ -210,6 +206,13 @@
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-sm-10 col-md-10">
                         <h3 class="black">اضافه کردن سوال</h3>
+                        <br>
+                        @if($errors->CreateQ->any())
+                            <h4 style="color:red">{{$errors->CreateQ->first()}}</h4>
+                        @endif
+                        @if(session()->has('error'))
+                            <h4 style="color:red">{{ session()->get('error') }}</h4>
+                        @endif
                         <br>
                         <form action="/CreateQuestion" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="_token" value={{ csrf_token() }}>
@@ -251,6 +254,14 @@
                                 <p>برای اطلاعات بیشتر درباره ی نحوه ی وارد کردن عکس، فرمول های ریاضی و یا نمودارها در سوالات به قسمت <a href="/guide">راهنمایی</a> مراجعه کنید.</p>
                                 <textarea name="question" rows="4" class="form-control" required>
                                 </textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>تصویر سوال(ختیاری) :</label>
+                                        <input name="Q_image" type="file" class="form-control">
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label>گزینه ها:</label>
@@ -330,12 +341,9 @@
                                             @endif
                                         @endforeach
                                     </div>
-                                            {{--<form method="post" action="/EditQuestion/{{$question->id}}">--}}
-                                                {{--<input type="hidden" name="_token" value={{ csrf_token()}}>--}}
                                     <div class="col-md-3">
                                         <button class="btn btn-default whichQ" value="{{$question->id}}" >ویرایش</button>
                                     </div>
-                                            {{--</form>--}}
                                 </div>
                                 <hr>
                             @endforeach
@@ -462,17 +470,26 @@
                 <div class="row">
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-sm-10 col-md-10">
-                        <h3 class="black">تعریف تمرین</h3>
+                        <h3 class="black">تعریف تمرین</h3><span id="error_easy" style="margin-right: 20px; color: red;display: none;">این تعداد سوال آسان در سیستم موجود نیست.</span>
+                        <span id="error_medium" style="margin-right: 20px; color: red;display: none;">این تعداد سوال متوسط در سیستم موجود نیست.</span>
+                        <span id="error_hard" style="margin-right: 20px; color: red;display: none;">این تعداد سوال سخت در سیستم موجود نیست.</span>
+                        <br>
+                        @if($errors->CreateEx->any())
+                            <h4 style="color:red">{{$errors->CreateEx->first()}}</h4>
+                        @endif
+                        @if(session()->has('error'))
+                            <h4 style="color:red">{{ session()->get('error') }}</h4>
+                        @endif
                         <br>
                         <form action="/CreateEx"  method="post">
                             <div class="row">
                                 <div class="col-md-6 col-sm-6">
                                     <div class="form-group">
                                         <label>کلاس:</label>
-                                        <select id="s_class" name="class" class="form-control" required>
+                                        <select  name="class" class="form-control" required>
                                             <option value=""></option>
-                                            @if(count($classes) > 0)
-                                                @foreach($classes as $class)
+                                            @if(count($user_classes) > 0)
+                                                @foreach($user_classes as $class)
                                                     <option value={{$class->id}}>{{$class->name}}</option>
                                                 @endforeach
                                             @endif
@@ -486,7 +503,11 @@
                                             <option value=""></option>
                                             @if(count($courses) > 0)
                                                 @foreach($courses as $course)
-                                                    <option value={{$course->id}}>{{$course->name}}-{{$course->grade}}</option>
+                                                    @foreach($grades as $grade)
+                                                        @if($grade->id == $course->grade_id)
+                                                            <option value={{$course->id}}>{{$course->name}}-{{$grade->name}}</option>
+                                                        @endif
+                                                    @endforeach
                                                 @endforeach
                                             @endif
                                         </select>
@@ -503,7 +524,7 @@
                                 <div class="col-md-3 col-sm-3">
                                     <div class="form-group">
                                         <label>تعداد سوالات آسان:</label>
-                                        <input name="easy" class="form-control" type="number">
+                                        <input id="easy_num" name="easy" class="form-control" type="number">
                                     </div>
                                 </div>
                                 <div class="col-md-1 col-sm-1">
@@ -515,7 +536,7 @@
                                 <div class="col-md-3 col-sm-3">
                                     <div class="form-group">
                                         <label>تعداد سوالات متوسط:</label>
-                                        <input name="medium" class="form-control" type="number">
+                                        <input id="medium_num" name="medium" class="form-control" type="number">
                                     </div>
                                 </div>
                                 <div class="col-md-1 col-sm-1">
@@ -527,7 +548,7 @@
                                 <div class="col-md-3 col-sm-3">
                                     <div class="form-group">
                                         <label>تعداد سوالات سخت:</label>
-                                        <input name="hard" class="form-control" type="number">
+                                        <input id="hard_num" name="hard" class="form-control" type="number">
                                     </div>
                                 </div>
                                 <div class="col-md-1 col-sm-1">
@@ -604,8 +625,9 @@
                                 </div>
                             </div>
                             <hr>
-                            @if(count($exercises) > 0)
-                            @foreach($exercises as $exercise)
+                            @if(count($user_exercises) > 0)
+                            @foreach($user_exercises as $exercise)
+                            @if($exercise->code != 0)
                             <div class="row dash-table-content chapter">
                                 <div class="col-md-3">
                                     <button class="btn btn-default which_ex" value="{{$exercise->id}}">{{$exercise->name}}</button>
@@ -640,6 +662,7 @@
                                 </div>
                             </div>
                             <hr>
+                            @endif
                             @endforeach
                             @endif
                         </div>
@@ -650,7 +673,7 @@
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
                                     <label>نام</label>
-                                    <input id="ex_name" type="text" class="form-control editable" value="" >
+                                    <input id="ex_name" type="text" class="form-control editable" value="" disabled>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
@@ -782,8 +805,10 @@
                                 <label>تمرین:</label>
                                 <select id="selectExercise" class="form-control">
                                     <option selected>...</option>
-                                    @foreach($exercises as $exercise)
-                                        <option value="{{$exercise->id}}">{{$exercise->name}}</option>
+                                    @foreach($user_exercises as $exercise)
+                                        @if($exercise->code != 0)
+                                            <option value="{{$exercise->id}}">{{$exercise->name}}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -842,26 +867,35 @@
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-sm-10 col-md-10">
                         <h3 class="black">اطلاعات کلاس ها</h3>
+                        @if($user_classes->isEmpty())
+                            فعلا کلاسی ایجاد نکرده اید.
+                        @else
                         <br>
                         <form >
                             <div class="row">
-                                <div class="col-md-4 col-sm-12">
-                                    <div class="form-group">
-                                        <label>مدرسه:</label>
-                                            <select id="selectSchool" name="selectSchool" class="form-control">
-                                            <option value=""></option>
-                                            @if(count($schools) > 0)
-                                                @foreach($schools as $school)
-                                                    <option value="{{$school->id}}">{{$school->name}}</option>
-                                                @endforeach
-                                            @endif
-                                            </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-5 col-sm-12">
+                                {{--<div class="col-md-4 col-sm-12">--}}
+                                    {{--<div class="form-group">--}}
+                                        {{--<label>مدرسه:</label>--}}
+                                            {{--<select id="selectSchool" name="selectSchool" class="form-control">--}}
+                                            {{--<option value=""></option>--}}
+                                            {{--@if(count($schools) > 0)--}}
+                                                {{--@foreach($schools as $school)--}}
+                                                    {{--<option value="{{$school->id}}">{{$school->name}}</option>--}}
+                                                {{--@endforeach--}}
+                                            {{--@endif--}}
+                                            {{--</select>--}}
+                                    {{--</div>--}}
+                                {{--</div>--}}
+                                <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label >انتخاب کلاس:</label>
                                         <select id="chooseClass" name="chooseClass" class="form-control">
+                                            <option value=""></option>
+                                            @if(count($user_classes) > 0)
+                                                @foreach($user_classes as $uc)
+                                                    <option value="{{$uc->id}}">{{$uc->name}}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
@@ -904,9 +938,11 @@
                             </div>
                         </div>
                     </div>
+                    @endif
                 </div>
                 <br><br>
             </div>
+
             <div id="std-data" class="tab-pane fade">
                 <div class="row">
                     <div class="col-md-1 col-sm-1"></div>
@@ -919,7 +955,7 @@
                                     <label>کلاس:</label>
                                     <select id="ch_class" class="form-control">
                                         <option selected>...</option>
-                                        @foreach($classes as $class)
+                                        @foreach($user_classes as $class)
                                             <option value="{{$class->id}}">{{$class->name}}</option>
                                         @endforeach
                                     </select>

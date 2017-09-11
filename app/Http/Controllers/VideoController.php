@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\School;
 use App\Course;
+use Illuminate\Support\Facades\Session;
 
 class VideoController extends Controller
 {
@@ -14,6 +15,8 @@ class VideoController extends Controller
         $schools = School::all();
         $courses = Course::all();
 
-        return view('video',compact('teachers','schools','courses'));
+        $email = Session::get('Email');
+        $user = User::where('email',$email)->first();
+        return view('video',compact('teachers','schools','courses','user'));
     }
 }

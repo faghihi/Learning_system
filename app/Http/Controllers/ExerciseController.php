@@ -21,124 +21,145 @@ class ExerciseController extends Controller
 {
     //create an exercise
     public function create(){
-        //give info from user
-        $name = Input::get('nameEx');
-        $code = Input::get('code');
-        $easy = Input::get('easy');
-        $medium = Input::get('medium');
-        $hard = Input::get('hard');
-        $class_id = Input::get('class');
-        $course_id = Input::get('course');
-        $section_id = Input::get('section');
-        $start = Input::get('startdate');
-        $end = Input::get('enddate');
+        //set rules for validation
+        $rules = array(
+            'nameEx' => 'required|max:64',
+            'code' => 'required|digits:4',
+            'easy' => 'required',
+            'medium' => 'required',
+            'hard'=>'required',
+            'course' => 'required',
+            'section' => 'required',
+            'class' => 'required',
+        );
 
-        //if user set a class, exercise save to classes_exercises table too
-        if($class_id){
-            $exercise = new ClassExercise();
-            $exercise->name = $name;
-            $exercise->code = $code;
-            $exercise->class_id = $class_id;
-            $exercise->course_id = $course_id;
-            $exercise->easy_no = $easy;
-            $exercise->medium_no = $medium;
-            $exercise->hard_no = $hard;
-            $exercise->section_id = $section_id;
-            $exercise->start_date = $start;
-            $exercise->end_date = $end;
-            $exercise->save();
+        $messages = [
+            'required' => 'لطفا همه فیلد ها را پر کنید',
+            'digits' => 'برای رمز فقط از عدد استفاده کنید،حداقل 4 عدد',
+        ];
 
-            $cl = Classes::find($class_id);
-            foreach($cl->users as $user){
-                $ticket = new Ticket([
-                    'title'     => $name,
-                    'user_id'   => $user->id,
-                    'ticket_id' => strtoupper(str_random(10)),
-                    'category_id'  => 3,
-                    'priority'  => 'کم',
-                    'message'   => 'نام تمرین : '.$name. ' کد : '.$code,
-                    'status'    => "Open",
-                ]);
+        $validator = \Validator::make(Input::all() , $rules , $messages);
+        if($validator->fails()){
+            return redirect()->back()->withInput()->withErrors($validator,'CreateEx');
+        }else {
+            $email = Session::get('Email');
+            $user = User::where('email', $email)->first();
 
-                $ticket->save();
+            //give info from user
+            $name = Input::get('nameEx');
+            $code = Input::get('code');
+            $easy = Input::get('easy');
+            $medium = Input::get('medium');
+            $hard = Input::get('hard');
+            $class_id = Input::get('class');
+            $course_id = Input::get('course');
+            $section_id = Input::get('section');
+            $start = Input::get('startdate');
+            $end = Input::get('enddate');
+
+            $q_easy = Question::where('course_id',$course_id)->where('section_id',$section_id)->where('level',0)->get();
+            $q_med = Question::where('course_id',$course_id)->where('section_id',$section_id)->where('level',1)->get();
+            $q_hard = Question::where('course_id',$course_id)->where('section_id',$section_id)->where('level',2)->get();
+
+            if($easy > count($q_easy) || $medium > count($q_med) || $hard > count($q_hard)){
+                return redirect()->back()->with('error','تعداد سوالاتی که انتخاب کردید در سیستم موجود نمی باشد');
             }
 
-            $exercise = new exercise();
-            $exercise->name = $name;
-            $exercise->code = $code;
-            $exercise->course_id = $course_id;
-            $exercise->easy_no = $easy;
-            $exercise->medium_no = $medium;
-            $exercise->hard_no = $hard;
-            $exercise->section_id = $section_id;
-            $exercise->start_date = $start;
-            $exercise->end_date = $end;
-            $exercise->save();
+            //if user set a class, exercise save to classes_exercises table too
+            if ($class_id) {
 
+                $exercise = new ClassExercise();
+                $exercise->name = $name;
+                $exercise->code = $code;
+                $exercise->class_id = $class_id;
+                $exercise->course_id = $course_id;
+                $exercise->easy_no = $easy;
+                $exercise->medium_no = $medium;
+                $exercise->hard_no = $hard;
+                $exercise->section_id = $section_id;
+                $exercise->start_date = $start;
+                $exercise->end_date = $end;
+                $exercise->save();
 
-            $easy = $exercise->easy_no;
-            $medium = $exercise->medium_no;
-            $hard = $exercise->hard_no;
-            $total = $easy + $medium + $hard;
+                $cl = Classes::find($class_id);
+                //user exercise ticket
+                foreach ($cl->users as $u) {
+                    $ticket = new Ticket([
+                        'title' => $name,
+                        'user_id' => $u->id,
+                        'ticket_id' => strtoupper(str_random(10)),
+                        'category_id' => 3,
+                        'priority' => 'کم',
+                        'message' => 'نام تمرین : ' . $name . ' کد : ' . $code,
+                        'status' => "Open",
+                    ]);
 
-            $q_easy = Question::inRandomOrder()->where('course_id',$exercise->course_id)->where('section_id',$exercise->section_id)
-                ->where('level',0)->get();
-
-            $q_medium = Question::inRandomOrder()->where('course_id',$exercise->course_id)->where('section_id',$exercise->section_id)
-                ->where('level',1)->get();
-
-            $q_hard = Question::inRandomOrder()->where('course_id',$exercise->course_id)->where('section_id',$exercise->section_id)
-                ->where('level',2)->get();
-
-            $i = 0;$j = 0;$k = 0;
-            if($easy > 0){
-                for($i = 0;$i < $easy;$i++){
-                    $quest[$i] = $q_easy[$i];
+                    $ticket->save();
                 }
-            }
-            if($medium > 0 ){
-                for($j = 0;$j < $medium;$j++){
-                    $quest[$i+$j] = $q_medium[$j];
-                }
-            }
-            if($hard > 0 ){
-                for($k = 0;$k < $hard;$k++){
-                    $quest[$k+$i+$j] = $q_hard[$k];
-                }
-            }
 
-            for($j = 0;$j < $total;$j++){
-                $questions[$j] = $quest[$j];
-            }
+                $exercise = new exercise();
+                $exercise->name = $name;
+                $exercise->code = $code;
+                $exercise->course_id = $course_id;
+                $exercise->easy_no = $easy;
+                $exercise->medium_no = $medium;
+                $exercise->hard_no = $hard;
+                $exercise->section_id = $section_id;
+                $exercise->start_date = $start;
+                $exercise->end_date = $end;
+                $exercise->writer = $user->id;
+                $exercise->save();
 
-            //set exercise_id for questions
-            try{
-                foreach($questions as $question){
-                    $question->exercises()->attach($exercise->id);
+
+                $easy = $exercise->easy_no;
+                $medium = $exercise->medium_no;
+                $hard = $exercise->hard_no;
+                $total = $easy + $medium + $hard;
+
+                $q_easy = Question::inRandomOrder()->where('course_id', $exercise->course_id)->where('section_id', $exercise->section_id)
+                    ->where('level', 0)->get();
+
+                $q_medium = Question::inRandomOrder()->where('course_id', $exercise->course_id)->where('section_id', $exercise->section_id)
+                    ->where('level', 1)->get();
+
+                $q_hard = Question::inRandomOrder()->where('course_id', $exercise->course_id)->where('section_id', $exercise->section_id)
+                    ->where('level', 2)->get();
+
+                $i = 0;
+                $j = 0;
+                $k = 0;
+                if ($easy > 0) {
+                    for ($i = 0; $i < $easy; $i++) {
+                        $quest[$i] = $q_easy[$i];
+                    }
                 }
-            }catch (\Exception $e) {
-                return $e->getMessage();
-            }
+                if ($medium > 0) {
+                    for ($j = 0; $j < $medium; $j++) {
+                        $quest[$i + $j] = $q_medium[$j];
+                    }
+                }
+                if ($hard > 0) {
+                    for ($k = 0; $k < $hard; $k++) {
+                        $quest[$k + $i + $j] = $q_hard[$k];
+                    }
+                }
 
+                for ($j = 0; $j < $total; $j++) {
+                    $questions[$j] = $quest[$j];
+                }
+
+                //set exercise_id for questions
+                try {
+                    foreach ($questions as $question) {
+                        $question->exercises()->attach($exercise->id);
+                    }
+                } catch (\Exception $e) {
+                    return $e->getMessage();
+                }
+
+            }
         }
-        //if user don't set a class,just save in exercises table
-        else {
-            $exercise = new exercise();
-            $exercise->name = $name;
-            $exercise->code = $code;
-            $exercise->course_id = $course_id;
-            $exercise->easy_no = $easy;
-            $exercise->medium_no = $medium;
-            $exercise->hard_no = $hard;
-            $exercise->section_id = $section_id;
-            $exercise->start_date = $start;
-            $exercise->end_date = $end;
-            $exercise->save();
-        }
-
-        //$user = User::where('email',Session::get('Email'))->first();
-
-        return redirect('/');
+        return redirect('/TDashboard')->with('message','تمرین ثبت شد.');
     }
 
     //student create exercise
@@ -242,46 +263,85 @@ class ExerciseController extends Controller
         return redirect('/Dashboard')->with('message','ایول به خودم');
 
     }
-    public function createquestion(){
+    public function createquestion(Request $request){
 
-        $id = Input::get('course');
-        $course = Course::where('id',$id)->first();
+        //set rules for validation
+        $rules = array(
+            'answer' => 'required',
+            'gozine4' => 'required',
+            'gozine3' => 'required',
+            'gozine2' => 'required',
+            'gozine1' => 'required',
+            'question'=>'required',
+            'course' => 'required',
+            'section' => 'required',
+            'difficulty' => 'required',
+        );
 
-        $section_id = Input::get('section');
+        $messages = [
+            'required' => 'لطفا همه فیلد ها را پر کنید',
+        ];
 
-        $exercise = Exercise::where('course_id',$course->id)->where('section_id',$section_id)->first();
-
-        $level = Input::get('difficulty');
-        $content = Input::get('question');
-        $option1 = Input::get('gozine1');
-        $option2 = Input::get('gozine2');
-        $option3 = Input::get('gozine3');
-        $option4 = Input::get('gozine4');
-        $arr = array('1' => $option1, '2' => $option2, '3' => $option3, '4' => $option4);
-        $options = json_encode($arr);
-        $answer = Input::get('answer');
-        $solution = Input::get('solution');
-        $email = Session::get('Email');
-        $user = User::where('email','=',$email)->first();
-
-        $question = new Question();
-        $question->section_id = $section_id;
-        $question->course_id = $course->id;
-        if($exercise) {
-            $question->exercise_id = $exercise->id;
-        }else {
-            $question->exercise_id = 0;
+        $validator = \Validator::make(Input::all() , $rules , $messages);
+        if($validator->fails()){
+            return redirect()->back()->withInput()->withErrors($validator,'CreateQ');
         }
-        $question->level = $level;
-        $question->content = $content;
-        $question->options = $options;
-        $question->answer = $answer;
-        $question->solution = $solution;
-        $question->writer = $user->name;
-//        dd($question);
-        $question->save();
+        else {
+            $id = Input::get('course');
+            $course = Course::where('id', $id)->first();
 
-        return redirect('/TDashboard');
+            $section_id = Input::get('section');
+
+            $exercise = Exercise::where('course_id', $course->id)->where('section_id', $section_id)->first();
+
+            $level = Input::get('difficulty');
+            $content = Input::get('question');
+            $option1 = Input::get('gozine1');
+            $option2 = Input::get('gozine2');
+            $option3 = Input::get('gozine3');
+            $option4 = Input::get('gozine4');
+            $arr = array('1' => $option1, '2' => $option2, '3' => $option3, '4' => $option4);
+            $options = json_encode($arr);
+            $answer = Input::get('answer');
+            $solution = Input::get('solution');
+            $email = Session::get('Email');
+            $user = User::where('email', '=', $email)->first();
+            $upload = Input::file('Q_image');
+
+            if ($upload) {
+                $rand = rand(11, 99);
+                $upload->move(public_path() . '/uploads', $rand . $upload->getClientOriginalName());
+                $mim = $upload->getClientMimeType();
+                $type_name = explode('/', $mim);
+                $type_name = end($type_name);
+                if ($type_name == 'jpg' || $type_name == 'jpeg' || $type_name == 'png') {
+                    $image_path = $rand . $upload->getClientOriginalName();
+                } else {
+                    return redirect()->back()->with('error', 'فایل وارد شده مورد تایید نیست.');
+                }
+            } else {
+                $image_path = null;
+            }
+
+            $question = new Question();
+            $question->section_id = $section_id;
+            $question->course_id = $course->id;
+            if ($exercise) {
+                $question->exercise_id = $exercise->id;
+            } else {
+                $question->exercise_id = 0;
+            }
+            $question->level = $level;
+            $question->content = $content;
+            $question->options = $options;
+            $question->answer = $answer;
+            $question->solution = $solution;
+            $question->writer = $user->name;
+            $question->image = $image_path;
+//        dd($question);
+            $question->save();
+        }
+        return redirect('/TDashboard')->with('message','سوال جدید ثبت شد.');
     }
 
     public function editquestion($id){
@@ -350,16 +410,28 @@ class ExerciseController extends Controller
             //add to user classes
             $user->classes()->attach($class->id,['status'=>1]);
 
+            //user class req ticket
             $ticket = new Ticket([
                 'title'     => $name,
                 'user_id'   => $user->id,
-                'ticket_id' => $class->id,
+                'ticket_id' => strtoupper(str_random(10)),
                 'category_id'  => 4,
                 'priority'  => 'کم',
                 'message'   => 'تمایل به عضویت در کلاس',
                 'status'    => "Pending",
             ]);
+            $ticket->save();
 
+            //teacher class req ticket
+            $ticket = new Ticket([
+                'title'     => $name,
+                'user_id'   => $class->teacher_name,
+                'ticket_id' => strtoupper(str_random(10)),
+                'category_id'  => 4,
+                'priority'  => 'کم',
+                'message'   => 'تمایل به عضویت در کلاس',
+                'status'    => "Pending",
+            ]);
             $ticket->save();
         }else{
             return redirect()->back()->with('msg', 'رمز را اشتباه وارد کردید');

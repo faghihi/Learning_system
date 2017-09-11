@@ -52,87 +52,155 @@ class HomeController extends Controller
         return json_encode($stud);
     }
 
-    public function schoolAjax($id){
-
-        $school = School::find($id);
-        $classes = Classes::where('school_id',$school->id)->get();
+    public function clAjax($id){
+        $class = Classes::find($id);
         $exercises = Exercise::all();
 
-        if(count($classes) > 0){
-            foreach($classes as $class){
+        $status = 0;
+        $total = 0;
+
+        $user_class = $class->users;
+
+        if(count($user_class) > 0) {
+            foreach ($user_class as $us_cl) {
                 $status = 0;
                 $total = 0;
 
-                $info[$class->id]['class_name'] = $class->name;
+                $user[$us_cl->id] = User::where('email', $us_cl->email)->first();
 
-                $class = Classes::find($class->id);
-                $user_class = $class->users;
+                $info['user'][$us_cl->id]['stud_name'] = $user[$us_cl->id]->name;
 
-                if(count($user_class) > 0) {
-                    foreach ($user_class as $us_cl) {
-                        $status = 0;
-                        $total = 0;
+                $labels[] = $user[$us_cl->id]->name;
 
-                        $user[$us_cl->id] = User::where('email', $us_cl->email)->first();
+                $scores = Score::where('user_id', $user[$us_cl->id]->id)->get();
 
-                        $info[$class->id]['user'][$us_cl->id]['stud_name'] = $user[$us_cl->id]->name;
+                if (count($scores) > 0) {
+                    foreach ($scores as $score) {
+                        foreach($exercises as $ex) {
+                            if ($score->exercise_id == $ex->id && $ex->code > 0) {
+                                $sections = Section::where('course_id', $score->course_id)->get();
 
-                        $labels[] = $user[$us_cl->id]->name;
+                                foreach ($sections as $section) {
+                                    if ($section->id == $score->section_id) {
+                                        $info['user'][$us_cl->id]['section'][$section->id][$score->exercise_id]['section_name'] = $section->name;
+                                        $info['user'][$us_cl->id]['section'][$section->id][$score->exercise_id]['status'] = $score->st_point;
+                                        $info['user'][$us_cl->id]['section'][$section->id][$score->exercise_id]['total'] = $score->t_point;
+                                        $info['user'][$us_cl->id]['section'][$section->id][$score->exercise_id]['progress'] = $score->percent;
 
-                        $scores = Score::where('user_id', $user[$us_cl->id]->id)->get();
-
-                        if (count($scores) > 0) {
-                            foreach ($scores as $score) {
-                                foreach($exercises as $ex) {
-                                    if ($score->exercise_id == $ex->id && $ex->code > 0) {
-                                        $sections = Section::where('course_id', $score->course_id)->get();
-
-                                        foreach ($sections as $section) {
-                                            if ($section->id == $score->section_id) {
-                                                $info[$class->id]['user'][$us_cl->id]['section'][$section->id][$score->exercise_id]['section_name'] = $section->name;
-                                                $info[$class->id]['user'][$us_cl->id]['section'][$section->id][$score->exercise_id]['status'] = $score->st_point;
-                                                $info[$class->id]['user'][$us_cl->id]['section'][$section->id][$score->exercise_id]['total'] = $score->t_point;
-                                                $info[$class->id]['user'][$us_cl->id]['section'][$section->id][$score->exercise_id]['progress'] = $score->percent;
-
-                                                $status = $status + $score->st_point;
-                                                $total = $total + $score->t_point;
-                                            }
-                                        }
+                                        $status = $status + $score->st_point;
+                                        $total = $total + $score->t_point;
                                     }
                                 }
                             }
-                            $avg = $status * 100 / $total;
-                            $data[] = $avg;
-                        } else {
-                            $info[$class->id]['user'][$us_cl->id]['section'][0][0]['section_name'] = 'فعلا هیچی';
-                            $info[$class->id]['user'][$us_cl->id]['section'][0][0]['status'] = 0;
-                            $info[$class->id]['user'][$us_cl->id]['section'][0][0]['total'] = 0;
-                            $info[$class->id]['user'][$us_cl->id]['section'][0][0]['progress'] = 0;
-
-                            $data[] = [];
                         }
-
-                        $info[$class->id]['labels'] = $labels;
-                        $info[$class->id]['data'] = $data;
                     }
-                    $labels = [];
-                    $data = [];
-                }else {
-                    $info[$class->id]['user'][0]['stud_name'] = [];
-                    $info[$class->id]['labels'] = [];
-                    $info[$class->id]['data'] = [];
+                    $avg = $status * 100 / $total;
+                    $data[] = $avg;
+                } else {
+                    $info['user'][$us_cl->id]['section'][0][0]['section_name'] = 'فعلا هیچی';
+                    $info['user'][$us_cl->id]['section'][0][0]['status'] = 0;
+                    $info['user'][$us_cl->id]['section'][0][0]['total'] = 0;
+                    $info['user'][$us_cl->id]['section'][0][0]['progress'] = 0;
+
+                    $data[] = [];
                 }
+
+                $info['labels'] = $labels;
+                $info['data'] = $data;
             }
-        }else{
-            $info[0]['class_name'] = [];
-            $info[0]['user'][0]['stud_name'] = [];
-            $info[0]['labels'] = [];
-            $info[0]['data'] = [];
+            $labels = [];
+            $data = [];
+        }else {
+            $info['user'][0]['stud_name'] = [];
+            $info['labels'] = [];
+            $info['data'] = [];
         }
 
-//        dd($info);
+        //dd($info);
         return json_encode($info);
     }
+
+//    public function schoolAjax($id){
+//
+//        $school = School::find($id);
+//        $classes = Classes::where('school_id',$school->id)->get();
+//        $exercises = Exercise::all();
+//
+//        if(count($classes) > 0){
+//            foreach($classes as $class){
+//                $status = 0;
+//                $total = 0;
+//
+//                $info[$class->id]['class_name'] = $class->name;
+//
+//                $class = Classes::find($class->id);
+//                $user_class = $class->users;
+//
+//                if(count($user_class) > 0) {
+//                    foreach ($user_class as $us_cl) {
+//                        $status = 0;
+//                        $total = 0;
+//
+//                        $user[$us_cl->id] = User::where('email', $us_cl->email)->first();
+//
+//                        $info[$class->id]['user'][$us_cl->id]['stud_name'] = $user[$us_cl->id]->name;
+//
+//                        $labels[] = $user[$us_cl->id]->name;
+//
+//                        $scores = Score::where('user_id', $user[$us_cl->id]->id)->get();
+//
+//                        if (count($scores) > 0) {
+//                            foreach ($scores as $score) {
+//                                foreach($exercises as $ex) {
+//                                    if ($score->exercise_id == $ex->id && $ex->code > 0) {
+//                                        $sections = Section::where('course_id', $score->course_id)->get();
+//
+//                                        foreach ($sections as $section) {
+//                                            if ($section->id == $score->section_id) {
+//                                                $info[$class->id]['user'][$us_cl->id]['section'][$section->id][$score->exercise_id]['section_name'] = $section->name;
+//                                                $info[$class->id]['user'][$us_cl->id]['section'][$section->id][$score->exercise_id]['status'] = $score->st_point;
+//                                                $info[$class->id]['user'][$us_cl->id]['section'][$section->id][$score->exercise_id]['total'] = $score->t_point;
+//                                                $info[$class->id]['user'][$us_cl->id]['section'][$section->id][$score->exercise_id]['progress'] = $score->percent;
+//
+//                                                $status = $status + $score->st_point;
+//                                                $total = $total + $score->t_point;
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                            $avg = $status * 100 / $total;
+//                            $data[] = $avg;
+//                        } else {
+//                            $info[$class->id]['user'][$us_cl->id]['section'][0][0]['section_name'] = 'فعلا هیچی';
+//                            $info[$class->id]['user'][$us_cl->id]['section'][0][0]['status'] = 0;
+//                            $info[$class->id]['user'][$us_cl->id]['section'][0][0]['total'] = 0;
+//                            $info[$class->id]['user'][$us_cl->id]['section'][0][0]['progress'] = 0;
+//
+//                            $data[] = [];
+//                        }
+//
+//                        $info[$class->id]['labels'] = $labels;
+//                        $info[$class->id]['data'] = $data;
+//                    }
+//                    $labels = [];
+//                    $data = [];
+//                }else {
+//                    $info[$class->id]['user'][0]['stud_name'] = [];
+//                    $info[$class->id]['labels'] = [];
+//                    $info[$class->id]['data'] = [];
+//                }
+//            }
+//        }else{
+//            $info[0]['class_name'] = [];
+//            $info[0]['user'][0]['stud_name'] = [];
+//            $info[0]['labels'] = [];
+//            $info[0]['data'] = [];
+//        }
+//
+////        dd($info);
+//        return json_encode($info);
+//    }
 
     public function sectionAjax($id){
         $section = Section::where('course_id',$id)->get();
@@ -181,7 +249,7 @@ class HomeController extends Controller
             if(count($scores) > 0) {
                 foreach ($scores as $score) {
                     foreach ($exercises as $exercise) {
-                        if ($score->exercise_id == $exercise->id) {
+                        if ($score->exercise_id == $exercise->id && $exercise->code > 0)  {
                             $students[$s->id]['score'][$score->exercise_id]['exercise_name'] = $exercise->name;
                             $students[$s->id]['score'][$score->exercise_id]['exercise_st_point'] = $score->st_point;
                             $students[$s->id]['score'][$score->exercise_id]['exercise_t_point'] = $score->t_point;

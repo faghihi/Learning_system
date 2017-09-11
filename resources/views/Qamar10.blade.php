@@ -70,6 +70,9 @@
                 <li>
                     <div class="question-box">
                         <p>{{$question['content']}}</p>
+                        <div>
+                            <img src="/uploads/{{$question->image}}">
+                        </div>
                         <input name="t<?php echo $count?>" data-questionid="{{$question->id}}" type="hidden" value="{{$question['content']}}" form="test">
                         @if($question->level == 0)
                             <div class="point">(نمره : <span>&nbsp;1&nbsp;</span>)</div>
@@ -82,6 +85,7 @@
                             <img src='/images/emoticon/32hard.png' title="{{$question['level']}}">
                         @endif
                         <br>
+
 
                         <div class="row answer">
                         @if(count($saves) > 0)

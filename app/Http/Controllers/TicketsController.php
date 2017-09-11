@@ -85,17 +85,12 @@ class TicketsController extends Controller
     public function show($ticket_id)
     {
         $ticket = Ticket::where('ticket_id', $ticket_id)->firstOrFail();
-
         $comments = $ticket->comments;
-
         $category = $ticket->category;
 
         $user = User::where('email',Session::get('Email'))->first();
-
         $teachers = User::where('type','teacher')->get();
-
         $schools = School::all();
-
         $courses = Course::all();
 
         return view('tickets.show', compact('ticket', 'category', 'comments','user','teachers','schools','courses'));
@@ -110,9 +105,7 @@ class TicketsController extends Controller
     public function close($ticket_id)
     {
         $ticket = Ticket::where('ticket_id', $ticket_id)->firstOrFail();
-
         $ticket->status = 'Closed';
-
         $ticket->save();
 
         $ticketOwner = $ticket->user;
@@ -125,10 +118,8 @@ class TicketsController extends Controller
     public function accept($ticket_id)
     {
         $ticket = Ticket::where('ticket_id', $ticket_id)->firstOrFail();
-
         $ticket->status = 'Open';
-
-        //$ticket->save();
+        $ticket->save();
 
         $ticketOwner = $ticket->user;
 
@@ -138,5 +129,12 @@ class TicketsController extends Controller
         $user->classes()->updateExistingPivot($class->id,['status'=>2]);
 
         return redirect()->back()->with("status", "The ticket has been open.");
+    }
+
+    public function deleteticket($id){
+        $ticket = Ticket::find($id);
+        $ticket->delete();
+
+        return redirect()->back()->with("status", "The ticket has been delete.");
     }
 }

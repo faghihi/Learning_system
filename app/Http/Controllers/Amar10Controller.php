@@ -164,40 +164,6 @@ class Amar10Controller extends Controller
         'count_solved'=>$count_solved,'sections'=>$sections]);
     }
 
-    public function quest($name){
-        $count=2;
-        $question_array=array();
-        $questions=DB::select('select * from questions ORDER by RAND() LIMIT '."$count");
-        $number=0;
-        foreach ($questions as $question)
-        {
-            $question_array[$number]['id']=$question->id;
-            $question_array[$number]['content']=$question->content;
-            $question_array[$number]['answer']=$question->answer;
-            $answers=explode(';',$question->answers);
-            //print_r($answers);
-            for($i=0;$i<=3;$i++){
-                $question_array[$number]['answers'][$i]=$answers[$i];
-            }
-            switch ($question->level)
-            {
-                case 0 : $question_array[$number]['level']="ساده";
-                    break;
-                case 1:  $question_array[$number]['level']="متوسط";
-                    break;
-                case 2:  $question_array[$number]['level']="سخت";
-                    break;
-            }
-            $number++;
-        }
-        return view('Q'.$name)->with('questions',$question_array);
-
-//        echo $number;
-//        print_r($question_array);
-//        echo $question_array[$number-1]["answers"][0];
-        
-    }
-
     //add course to users_courses table
     public function add($id){
         if(Session::get('Login')!="True")
@@ -396,48 +362,13 @@ class Amar10Controller extends Controller
         return view('errors\503');
     }
 
-    public function continuethis(){
-        $question_array=array();
-        $username=Session::get('UserName');
-        $questions=DB::select('select * from tempanswer Where username="'.$username.'"');
-        $number=0;
-        foreach ($questions as $question) {
+    public function delete($id){
+        $email = Session::get('Email');
+        $user = User::where('email',$email)->first();
+        $user->courses()->detach($id);
 
-            $question_array[$number]['id'] = $question->id;
-            $question_array[$number]['checked']=$question->answer;
-            $thisquest = DB::select('select * from questions Where id="' . $question_array[$number]['id'] . '"');
-            foreach ($thisquest as $quest) {
-                $question_array[$number]['content']=$quest->content;
-                $question_array[$number]['answer']=$quest->answer;
-                $answers=explode(';',$quest->answers);
-                //print_r($answers);
-                for($i=0;$i<=3;$i++){
-                    $question_array[$number]['answers'][$i]=$answers[$i];
-                }
-                switch ($quest->level)
-                {
-                    case 0 : $question_array[$number]['level']="ساده";
-                        break;
-                    case 1:  $question_array[$number]['level']="متوسط";
-                        break;
-                    case 2:  $question_array[$number]['level']="سخت";
-                        break;
-                }
-            }
-
-            $number++;
-        }
-        return view('Continue')->with('questions',$question_array);
+        return redirect()->back();
     }
-
-     public function delete($id){
-         $email = Session::get('Email');
-         $user = User::where('email',$email)->first();
-         $user->courses()->detach($id);
-
-         return redirect()->back();
-     }
-
     //delete class
     public function deleteclass($id){
         $class = Classes::find($id);
@@ -448,17 +379,23 @@ class Amar10Controller extends Controller
 
         return redirect()->back();
     }
-
     //delete student request
     public function studeleteclass($id){
-
         $ticket = Ticket::where('ticket_id',$id)->first();
         if($ticket){
             $ticket->delete();
         }
 
+        $email = Session::get('Email');
+        $user = User::where('email',$email)->first();
+
+        $class = Classes::find($id);
+        //delete class's user
+        $user->classes()->detach($class->id);
+
         return redirect('/Dashboard')->with('message','حذف شد');
     }
+
     public function checkrepetetive(Request $request)
     {
         $code=$request->get('code');
@@ -515,7 +452,7 @@ class Amar10Controller extends Controller
             return 1;
         }
     }
-
+    //user see problem in question
     public function problem(){
 
         $name = Input::get('exercise_name');
@@ -523,16 +460,29 @@ class Amar10Controller extends Controller
         $message = Input::get('problem');
         $question = Input::get('question');
 
+        //user problem's ticket
         $ticket = new Ticket([
             'title'     => $name,
             'user_id'   => $user->id,
-            'ticket_id' => $question,
-            'category_id'  => 3,
+            'ticket_id' => strtoupper(str_random(10)),
+            'category_id'  => 1,
             'priority'  => 'کم',
             'message'   => $message,
             'status'    => "Open",
         ]);
+        $ticket->save();
 
+        $teacher = User::where('name',$question->writer)->where('type','teacher')->first();
+        //teacher problem's ticket
+        $ticket = new Ticket([
+            'title'     => $name,
+            'user_id'   => $teacher->id,
+            'ticket_id' => strtoupper(str_random(10)),
+            'category_id'  => 1,
+            'priority'  => 'کم',
+            'message'   => $question.'  '.$message,
+            'status'    => "Open",
+        ]);
         $ticket->save();
 
         return redirect('/Dashboard');

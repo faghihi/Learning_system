@@ -36,13 +36,15 @@ class DashboardController extends Controller
         $sections = Section::all();
         $class_exercise = ClassExercise::all();
         $grades=Grade::all();
-        $tickets = Ticket::all();
+        $tickets = Ticket::where('user_id', $user->id)->paginate(10);
         $categories = Category::all();
         $teachers = User::where('type','teacher')->get();
+        $user_classes = Classes::where('teacher_name',$user->id)->get();
+        $user_exercises = Exercise::where('writer',$user->id)->get();
         $user_questions = Question::where('writer',$user->name)->get();
-
+        //dd($user_classes);
         return view('Tdashboard', compact('schools','user','users','classes','courses','sections','exercises',
-            'class_exercise','grades','tickets','categories','teachers','user_questions'));
+            'class_exercise','grades','tickets','categories','teachers','user_questions','user_classes','user_exercises'));
     }
 
     //show student dashboard

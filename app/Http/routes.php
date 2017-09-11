@@ -79,11 +79,14 @@ Route::get('/DeleteClass/{id}' , 'Amar10Controller@deleteclass');
 
 Route::get('/StuDeleteClass/{id}' , 'Amar10Controller@studeleteclass');
 
+Route::get('/DeleteTicket/{id}' , 'TicketsController@deleteticket');
+
 Route::get('/Video' , 'VideoController@index');
 
 Route::get('/guide' , 'HomeController@guide');
 
 Route::get('school/ajax/{id}','HomeController@schoolAjax');
+Route::get('cl/ajax/{id}','HomeController@clAjax');
 Route::get('section/ajax/{id}','HomeController@sectionAjax');
 Route::get('student/ajax/{id}','HomeController@studentAjax');
 Route::get('course/ajax/{id}','HomeController@courseAjax');

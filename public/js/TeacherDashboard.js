@@ -213,40 +213,30 @@ $('#ch_class').on('change', function() {
     });
 });
 
-<!--when user choose school,show class name & student info-->
-$('#selectSchool').on('change', function() {
-    var id = $("#selectSchool option:selected").val();
-
+<!--when user choose class,show student info-->
+$('#chooseClass').on('change', function() {
+    var id = $("#chooseClass option:selected").val();
     var classBar = document.getElementById("class-bar");
     $.ajax({
-        url: '/school/ajax/'+id,
+        url: '/cl/ajax/'+id,
         type: "GET",
         dataType: "json",
         headers: {
             'X-CSRF-TOKEN': $('input[name="_token"]').attr('content')
         },
         success:function(data) {
-            $('#chooseClass').empty();
-            $('#class_delete').empty();
-            $.each(data, function(key,value){
-                $('#chooseClass').append('<option value="'+ key +'">'+ value.class_name +'</option>');
-                $('#chooseClass').on('click',function(){
-                    var cl = $("#chooseClass option:selected").val();
-
-                    if(key == cl){
-
-                        $('#class_delete').html(
-                            '<div class="col-md-1 col-sm-1"><i class="fa fa-2x fa-pencil" aria-hidden="true"></i>&nbsp;:</div>'+
-                            '<form method="get" action="/DeleteClass/'+cl+'"><input type="hidden" name="_token" value={{ csrf_token()}}>'+
-                            '<div class="col-md-3 col-sm-5"><button id="class-delete" class="btn btn-block btn-delete">حذف کلاس</button></div></form>');
+            $('#class_delete').html(
+            '<div class="col-md-1 col-sm-1"><i class="fa fa-2x fa-pencil" aria-hidden="true"></i>&nbsp;:</div>'+
+            '<form method="get" action="/DeleteClass/'+id+'"><input type="hidden" name="_token" value={{ csrf_token()}}>'+
+            '<div class="col-md-3 col-sm-5"><button id="class-delete" class="btn btn-block btn-delete">حذف کلاس</button></div></form>');
 
                         var ClassBar = new Chart(classBar, {
                             type: 'bar',
                             data: {
-                                labels: value.labels,
+                                labels: data.labels,
                                 datasets: [{
                                     label: 'نمره',
-                                    data: value.data,
+                                    data: data.data,
                                     backgroundColor: [
                                         randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2),
                                         randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2)
@@ -281,7 +271,7 @@ $('#selectSchool').on('change', function() {
 
                         });
                         $('#stud_info').empty();
-                        $.each(value.user , function(i,val){
+                        $.each(data.user , function(i,val){
                             $('#stud_info').append(
                                 '<div class="row dash-table-content chapter"><div class="col-md-5">'+
                                 '<p class="black">'+val.stud_name+'</p></div><div class="col-md-6"></div><div class="col-md-1">'+
@@ -296,18 +286,108 @@ $('#selectSchool').on('change', function() {
                                         y.total+'</span></p></div>'+'<div class="col-md-4"><div class="progress">'+
                                         '<div class="progress-bar progress-bar-striped" style="width:'+y.progress+'%'+'">'+y.progress+'%'+'</div></div></div></div>');
                                 });
-
                             });
-
                             $('#stud_info').append('<hr/>');
                         });
-                    }
-                });
-
-            });
         }
     });
 });
+
+<!--when user choose school,show class name & student info-->
+//$('#selectSchool').on('change', function() {
+//    var id = $("#selectSchool option:selected").val();
+//
+//    var classBar = document.getElementById("class-bar");
+//    $.ajax({
+//        url: '/school/ajax/'+id,
+//        type: "GET",
+//        dataType: "json",
+//        headers: {
+//            'X-CSRF-TOKEN': $('input[name="_token"]').attr('content')
+//        },
+//        success:function(data) {
+//            $('#chooseClass').empty();
+//            $('#class_delete').empty();
+//            $.each(data, function(key,value){
+//                $('#chooseClass').append('<option value="'+ key +'">'+ value.class_name +'</option>');
+//                $('#chooseClass').on('click',function(){
+//                    var cl = $("#chooseClass option:selected").val();
+//
+//                    if(key == cl){
+//
+//                        $('#class_delete').html(
+//                            '<div class="col-md-1 col-sm-1"><i class="fa fa-2x fa-pencil" aria-hidden="true"></i>&nbsp;:</div>'+
+//                            '<form method="get" action="/DeleteClass/'+cl+'"><input type="hidden" name="_token" value={{ csrf_token()}}>'+
+//                            '<div class="col-md-3 col-sm-5"><button id="class-delete" class="btn btn-block btn-delete">حذف کلاس</button></div></form>');
+//
+//                        var ClassBar = new Chart(classBar, {
+//                            type: 'bar',
+//                            data: {
+//                                labels: value.labels,
+//                                datasets: [{
+//                                    label: 'نمره',
+//                                    data: value.data,
+//                                    backgroundColor: [
+//                                        randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2),
+//                                        randomColor(.2),randomColor(.2),randomColor(.2),randomColor(.2)
+//                                    ],
+//                                    borderColor: [
+//                                        randomColor(1),randomColor(1),randomColor(1),randomColor(1),randomColor(1),
+//                                        randomColor(1),randomColor(1),randomColor(1),randomColor(1)
+//                                    ],
+//                                    borderWidth: 1
+//                                }]
+//                            },
+//                            options: {
+//
+//                                defaultFontFamily: "IRANSans",
+//                                title: {
+//                                    display: true,
+//                                    text: 'نمرات در کل تمرین های کلاس',
+//                                    position: 'top',
+//                                    fontSize: 16,
+//                                    fontFamily: "IRANSans"
+//                                },
+//                                scales: {
+//                                    yAxes: [{
+//                                        ticks: {
+//                                            beginAtZero:true,
+//                                            max:100,
+//                                            min:0
+//                                        }
+//                                    }]
+//                                }
+//                            }
+//
+//                        });
+//                        $('#stud_info').empty();
+//                        $.each(value.user , function(i,val){
+//                            $('#stud_info').append(
+//                                '<div class="row dash-table-content chapter"><div class="col-md-5">'+
+//                                '<p class="black">'+val.stud_name+'</p></div><div class="col-md-6"></div><div class="col-md-1">'+
+//                                '<button class="btn-delete btn-sm delete-student" title="حذف دانش آموز"><i class="fa fa-1x fa-user-times"></i></button></div></div>');
+//
+//                            $.each(val.section , function(j,v){
+//                                $.each(v , function(x,y){
+//                                    $('#stud_info').append(
+//                                        '<div class="row dash-table-content dash-section">'+
+//                                        '<div class="col-md-5"><p>'+y.section_name+'</p></div>'+
+//                                        '<div class="col-md-2"><p><span class="stuPoint">'+y.status+'</span>/<span class="totalPoint">'+
+//                                        y.total+'</span></p></div>'+'<div class="col-md-4"><div class="progress">'+
+//                                        '<div class="progress-bar progress-bar-striped" style="width:'+y.progress+'%'+'">'+y.progress+'%'+'</div></div></div></div>');
+//                                });
+//
+//                            });
+//
+//                            $('#stud_info').append('<hr/>');
+//                        });
+//                    }
+//                });
+//
+//            });
+//        }
+//    });
+//});
 
 //test chart info-circle
 $('#selectExercise').on('change',function(){
@@ -503,9 +583,9 @@ $('.whichQ').on('click',function(){
 
 <!--for exercise creation -->
 
-$('#s_class').on('change',function(){
-    alert('با کلیک بروی هر فصل تعداد سوالات موجود در سیستم برای آن موضوع نمایش داده می شود');
-    });
+//$('#s_class').on('change',function(){
+//    alert('با کلیک بروی هر فصل تعداد سوالات موجود در سیستم برای آن موضوع نمایش داده می شود');
+//    });
 $('#choose_course').on('change', function() {
     var id = $("#choose_course option:selected").val();
 
@@ -577,4 +657,97 @@ $("#join_code").on('change',function(){
             alert('error');
         }
     });
-})
+});
+
+$('#easy_num').on('change',function(){
+    var num=$(this).val();
+    var course = $('#choose_course').val();
+    var section = $('#choose_section').val();
+
+    $.ajax({
+        "url": "/checkeasynum",
+        "method": "get",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+        },
+        "data":{
+            "course": course,
+            "section": section,
+            "num": num
+        },
+        success:function (response) {
+            if(response!=1){
+                $("#error_easy").show()
+            }
+            else{
+                $("#error_easy").hide()
+            }
+        },
+        error:function (xhr, ajaxOptions, thrownError){
+            alert('error');
+
+        }
+    });
+});
+
+$('#medium_num').on('change',function(){
+    var num=$(this).val();
+    var course = $('#choose_course').val();
+    var section = $('#choose_section').val();
+
+    $.ajax({
+        "url": "/checkmednum",
+        "method": "get",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+        },
+        "data":{
+            "course": course,
+            "section": section,
+            "num": num
+        },
+        success:function (response) {
+            if(response!=1){
+                $("#error_medium").show()
+            }
+            else{
+                $("#error_medium").hide()
+            }
+        },
+        error:function (xhr, ajaxOptions, thrownError){
+            alert('error');
+
+        }
+    });
+});
+
+$('#hard_num').on('change',function(){
+    var num=$(this).val();
+    var course = $('#choose_course').val();
+    var section = $('#choose_section').val();
+
+    $.ajax({
+        "url": "/checkhardnum",
+        "method": "get",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+        },
+        "data":{
+            "course": course,
+            "section": section,
+            "num": num
+        },
+        success:function (response) {
+            if(response!=1){
+                $("#error_hard").show()
+            }
+            else{
+                $("#error_hard").hide()
+            }
+        },
+        error:function (xhr, ajaxOptions, thrownError){
+            alert('error');
+
+        }
+    });
+});
