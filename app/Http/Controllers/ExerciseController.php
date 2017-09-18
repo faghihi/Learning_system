@@ -6,6 +6,7 @@ use App\ClassExercise;
 use App\Course;
 use App\Exercise;
 use App\Question;
+use App\Score;
 use App\Section;
 use App\tempanswer;
 use App\User;
@@ -68,18 +69,18 @@ class ExerciseController extends Controller
             //if user set a class, exercise save to classes_exercises table too
             if ($class_id) {
 
-                $exercise = new ClassExercise();
-                $exercise->name = $name;
-                $exercise->code = $code;
-                $exercise->class_id = $class_id;
-                $exercise->course_id = $course_id;
-                $exercise->easy_no = $easy;
-                $exercise->medium_no = $medium;
-                $exercise->hard_no = $hard;
-                $exercise->section_id = $section_id;
-                $exercise->start_date = $start;
-                $exercise->end_date = $end;
-                $exercise->save();
+                $cl_exercise = new ClassExercise();
+                $cl_exercise->name = $name;
+                $cl_exercise->code = $code;
+                $cl_exercise->class_id = $class_id;
+                $cl_exercise->course_id = $course_id;
+                $cl_exercise->easy_no = $easy;
+                $cl_exercise->medium_no = $medium;
+                $cl_exercise->hard_no = $hard;
+                $cl_exercise->section_id = $section_id;
+                $cl_exercise->start_date = $start;
+                $cl_exercise->end_date = $end;
+                $cl_exercise->save();
 
                 $cl = Classes::find($class_id);
                 //user exercise ticket
@@ -148,13 +149,10 @@ class ExerciseController extends Controller
                     $questions[$j] = $quest[$j];
                 }
 
+                $ex = Exercise::where('name',$name)->where('code',$code)->where('writer',$user->id)->first();
                 //set exercise_id for questions
-                try {
-                    foreach ($questions as $question) {
-                        $question->exercises()->attach($exercise->id);
-                    }
-                } catch (\Exception $e) {
-                    return $e->getMessage();
+                foreach ($questions as $question) {
+                    $question->exercises()->sync($ex->id);
                 }
 
             }
@@ -250,7 +248,7 @@ class ExerciseController extends Controller
             //set exercise_id for questions
             try {
                 foreach ($questions as $question) {
-                    $question->exercises()->attach($exercise->id);
+                    $question->exercises()->sync($exercise->id);
                 }
             } catch (\Exception $e) {
                 return $e->getMessage();
@@ -344,6 +342,28 @@ class ExerciseController extends Controller
         return redirect('/TDashboard')->with('message','سوال جدید ثبت شد.');
     }
 
+    public function editexercise($id,Request $request){
+        $exercise = Exercise::find($id);
+//        $i = Input::get('course');
+//        $course = Course::where('id',$i)->first();
+//        $section_id = Input::get('section');
+//
+        $start = $request->input('start');
+        $end = $request->input('end');
+//        $users = $request->input('tag_id');
+//        dd($users);
+//        $easy = Input::get('ex_easy');
+//        $medium = Input::get('ex_medium');
+//        $hard = Input::get('ex_hard');
+
+        $exercise->start_date = $start;
+        $exercise->end_date = $end;
+
+        $exercise->save();
+
+        return redirect('/TDashboard')->with('message','با موفقیت ویرایش شد.');
+    }
+
     public function editquestion($id){
         $i = Input::get('course');
         $course = Course::where('id',$i)->first();
@@ -424,7 +444,7 @@ class ExerciseController extends Controller
 
             //teacher class req ticket
             $ticket = new Ticket([
-                'title'     => $name,
+                'title'     => $user->name,
                 'user_id'   => $class->teacher_name,
                 'ticket_id' => strtoupper(str_random(10)),
                 'category_id'  => 4,
@@ -474,20 +494,28 @@ class ExerciseController extends Controller
 
     //show exercise
     public function show($id){
-
-        $email = Session::get('Email');
         $courses = Course::all();
         $exercise = Exercise::where('id','=',$id)->first();
+        $email = Session::get('Email');
+        $user = User::where('email','=',$email)->first();
+
+//        $ex = $user->exercises;
+//        //dd($ex);
+//        foreach($ex as $e){
+//            if($e->id == $exercise->id){
+//
+//            }else{
+//                return redirect()->back();
+//            }
+//        }
 
         $questions = $exercise->questions;
 
         $course = Course::where('id','=',$exercise->course_id)->first();
         $section = Section::where('id','=',$exercise->section_id)->first();
-        $user = User::where('email','=',$email)->first();
 
         foreach($questions as $question){
             $answers[$question->id] = json_decode($question->options);
-
         }
 
         $saves = tempanswer::where('user_id',$user->id)->where('exercise_id',$exercise->id)->get();
@@ -527,5 +555,51 @@ class ExerciseController extends Controller
         $user->exercises()->detach($id);
 
         return redirect('/Dashboard');
+    }
+
+    //teacher delete exercise
+    public function del($id){
+        $ex = Exercise::find($id);
+        $email = Session::get('Email');
+        $user = User::where('email',$email)->first();
+        $class_ex = ClassExercise::where('name',$ex->name)->where('code',$ex->code)->first();
+
+        if($class_ex){
+            $class = Classes::find($class_ex->class_id);
+            $users = $class->users;
+            foreach($users as $user){
+                $score = Score::where('exercise_id',$id)->where('user_id',$user->id)->first();
+                if($score){
+                    $score->delete();
+                }
+
+                $user->exercises()->detach($id);
+            }
+
+            $class_ex->delete();
+
+        }else{
+            $users = $ex->users;
+            foreach($users as $user){
+                $score = Score::where('exercise_id',$id)->where('user_id',$user->id)->first();
+                if($score){
+                    $score->delete();
+                }
+
+                $user->exercises()->detach($id);
+            }
+        }
+
+        $tempanswers = tempanswer::where('exercise_id',$id)->get();
+        if(count($tempanswers) > 0) {
+            foreach ($tempanswers as $temp) {
+                $temp->delete();
+            }
+        }
+
+
+        $ex->delete($id);
+
+        return redirect('/TDashboard')->with('message','تمرین مورد نظر حذف شد.');
     }
 }

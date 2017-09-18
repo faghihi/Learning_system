@@ -500,6 +500,33 @@ $('.which_ex').on('click',function(){
         type: "GET",
         dataType: "json",
         success:function(data) {
+            $('#ex-info').empty();
+            $('#ex-info').append(
+                "<form method=\"get\" action=\"/EditEx/"+ID+"\">"+
+                '<input type="hidden" name="csrf-token" value="'+$('meta[name="csrf-token"]').attr('content')+'">'+
+                '<div class="row"><div class="col-md-4 col-sm-12"><div class="form-group"><label>نام</label><input id="ex_name" type="text" class="form-control" value="" disabled></div></div>'+
+                '<div class="col-md-4 col-sm-12"><div class="form-group"><label>رمز</label><input id="ex_code" type="text" class="form-control" value="" disabled></div></div>'+
+                '<div class="col-md-4 col-sm-12"><div class="form-group"><label>درس</label><input id="ex_course" type="text" class="form-control" value="" disabled></div></div></div>'+
+                '<div class="row"><div class="col-md-6 col-sm-12"><div class="form-group"><label>فصل</label><input id="ex_section" type="text" class="form-control" value="" disabled></div></div></div>'+
+                '<div class="row"><div class="col-md-4 col-sm-12"><div class="form-group"><label>تاریخ شروع</label><input name="start" id="ex_start" type="date" class="form-control editable" value="" disabled></div></div>'+
+                '<div class="col-md-4 col-sm-12"><div class="form-group"><label>تاریخ پایان</label><input name="end" id="ex_end" type="date" class="form-control editable" value="" disabled></div></div></div>'+
+                '<div ><div class="row"><div class="col-md-3 col-sm-12"><div class="form-group"><label class="control-label">تعداد سوال:</label></div></div>'+
+                '<div class="col-md-1 col-sm-4"><div class="form-group"><label>آسان</label></div></div>'+
+                '<div class="col-md-2 col-sm-8"><div class="form-group"><input id="ex_easy" type="number" class="form-control" value="" disabled></div></div>'+
+                '<div class="col-md-1 col-sm-4"><div class="form-group"><label>متوسط</label></div></div>'+
+                '<div class="col-md-2 col-sm-8"><div class="form-group"><input id="ex_medium" type="number" class="form-control" value="" disabled></div></div>'+
+                '<div class="col-md-1 col-sm-4"><div class="form-group"><label>سخت</label></div></div>'+
+                '<div class="col-md-2 col-sm-8"><div class="form-group"><input id="ex_hard" type="number" class="form-control" value="" disabled></div></div></div></div>'+
+                '<div class="row"><div class="col-md-12 col-sm-12"><div class="form-group"><label>دانش آموزان</label><input id="testDataStu" class="form-control" value="" disabled></div>'+
+                '<div class="form-group" hidden><label>دانش آموزان</label><ul class="add-std" id="testDataStuEdit"></ul></div></div></div>'+
+                '<div class="row test-data-btn" hidden><div class="col-md-3 col-sm-3"><div class="form-group"><button id="setChanges" class="btn btn-block btn-success">اعمال تغییر</button></div></div>'+
+                '<div class="col-md-3 col-sm-3"><div class="form-group"><button class="btn btn-block btn-delete" id="noChange">انصراف</button></div></div></div></form>'+
+                '<div class="row"><div class="col-md-1 col-sm-1"><i class="fa fa-2x fa-pencil" aria-hidden="true"></i>&nbsp;:</div>'+
+                '<div class="col-md-3 col-sm-3"><a href="/del/'+ID+'" class="btn btn-block btn-delete" >حذف</a></div>'+
+                '<div class="col-md-3 col-sm-3"><button class="btn btn-block btn-success" onclick="change_test()">ایجاد تغییرات</button></div>'+
+                '<div class="col-md-5 col-sm-12"><a href="/exercise/'+ID+'" class="btn btn-block btn-default">مشاهده تمرین</a></div></div>'
+            );
+
             $('#ex_name').val(data.name);
             $('#ex_code').val(data.code);
             $('#ex_course').val(data.course_name);
@@ -510,8 +537,9 @@ $('.which_ex').on('click',function(){
             $('#ex_medium').val(data.medium);
             $('#ex_hard').val(data.hard);
 
+
             $('#testDataStuEdit').tagit({
-                //availableTags: data.user,
+                //availableTags: {value:value ,label:key},
                 singleField: true ,
                 singleFieldNode: $('#testDataStu')
             });
@@ -519,12 +547,19 @@ $('.which_ex').on('click',function(){
 
             $.each(data.user , function(key,value){
                 $('#testDataStuEdit').tagit('createTag',value);
+
+                //$("#testDataStuEdit").tagit({
+                //    afterTagRemoved: function(event, ui) {
+                //        // do something special
+                //        console.log(ui.tag);
+                //    }
+                //});
+
             });
-
-
         }
     });
 });
+
 
 
 $('.whichQ').on('click',function(){
@@ -583,9 +618,6 @@ $('.whichQ').on('click',function(){
 
 <!--for exercise creation -->
 
-//$('#s_class').on('change',function(){
-//    alert('با کلیک بروی هر فصل تعداد سوالات موجود در سیستم برای آن موضوع نمایش داده می شود');
-//    });
 $('#choose_course').on('change', function() {
     var id = $("#choose_course option:selected").val();
 

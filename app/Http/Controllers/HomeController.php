@@ -59,7 +59,7 @@ class HomeController extends Controller
         $status = 0;
         $total = 0;
 
-        $user_class = $class->users;
+        $user_class = $class->users()->where('status', 2)->get();
 
         if(count($user_class) > 0) {
             foreach ($user_class as $us_cl) {
@@ -116,7 +116,7 @@ class HomeController extends Controller
             $info['data'] = [];
         }
 
-        //dd($info);
+//        dd($info);
         return json_encode($info);
     }
 
@@ -236,7 +236,7 @@ class HomeController extends Controller
 
     public function studentAjax($id){
         $class = Classes::find($id);
-        $student = $class->users;
+        $student = $class->users()->where('status', 2)->get();
 
         foreach($student as $s){
             $students[$s->id]['name'] = $s->name;
@@ -358,9 +358,16 @@ class HomeController extends Controller
 
     public function exerciseAjax($id){
         $exercise = Exercise::find($id);
+        $exercise_cl = ClassExercise::where('name',$exercise->name)->where('code',$exercise->code)->first();
         $course = Course::where('id',$exercise->course_id)->first();
         $section = Section::where('id',$exercise->section_id)->first();
-        $users = $exercise->users;
+
+        if($exercise_cl) {
+            $class = Classes::find($exercise_cl->class_id);
+            $users = $class->users;
+        }else{
+            $users = [];
+        }
 
         $exercise_info['name'] = $exercise->name;
         $exercise_info['code'] = $exercise->code;
@@ -377,7 +384,7 @@ class HomeController extends Controller
                 $exercise_info['user'][$user->id] = $user->name;
             }
         }
-        //dd($exercise_info);
+//        dd($exercise_info);
         return json_encode($exercise_info);
     }
 
@@ -392,7 +399,13 @@ class HomeController extends Controller
         $bad = 0;
         $data = array();
 
-        $scores = Score::where('exercise_id',$id)->where('section_id',$section->id)->get();
+        $classuser = ClassExercise::where('name',$exercise->name)->where('code',$exercise->code)->first();
+        $cl = Classes::find($classuser->class_id);
+        $stu = $cl->users;
+
+        foreach($stu as $s){
+            $scores = Score::where('exercise_id',$id)->where('user_id',$s->id)->get();
+        }
 
         if(count($scores) > 0) {
             foreach ($scores as $score) {
@@ -412,9 +425,9 @@ class HomeController extends Controller
             $data[] = $bad;
             $info[$exercise->id]['data'] = $data;
         }else{
-            $data[] = 1;
-            $data[] = 1;
-            $data[] = 1;
+            $data[] = 0;
+            $data[] = 0;
+            $data[] = 0;
             $info[$exercise->id]['data'] = $data;
         }
 
@@ -447,7 +460,7 @@ class HomeController extends Controller
             $info[$exercise->id]['labels'] = $labels;
             $info[$exercise->id]['udata'] = $udata;
         }
-        //dd($info);
+//        dd($info);
         return json_encode($info);
     }
 }

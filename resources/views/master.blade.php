@@ -6,7 +6,7 @@
 	<meta name="description" content="free-educational-responsive-web-template-webEdu">
 	<meta name="author" content="webThemez.com">
 	<title>سایت آموزش آنلاین</title>
-	<link rel="favicon" href='/images/favicon.png'>
+	<link rel="shortcut icon" href="images/favicon.png">
 	<link rel="stylesheet" href="{{URL::asset('css/bootstrap.min.css')}}">
 	<link rel="stylesheet" href="{{URL::asset('css/font-awesome.min.css')}}">
 	<link rel="stylesheet" href="{{URL::asset('css/bootstrap-theme.css')}}" media="screen">

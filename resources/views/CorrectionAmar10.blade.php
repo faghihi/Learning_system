@@ -139,7 +139,10 @@
                             <p class="NC-tag">{{$question['correct']}}</p>
                             <div class="point">(&nbsp;<span></span>&nbsp;نمره&nbsp;)</div>
                             <img title="{{$question['level']}}">
-                            <br>
+                            <br><br>
+                            <div>
+                                <b>راه حل :<span class="solution">&nbsp;{{$question['solution']}}</span></b>
+                            </div>
                         </div>
                         <hr>
                     </li>

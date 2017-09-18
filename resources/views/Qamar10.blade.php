@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{$course->name}}-{{$course->grade}}</title>
+    <title>{{$course->name}}</title>
     <link rel="favicon" href="{{URL::asset('images/favicon.png')}}">
     <!-- custome js just for login page -->
 
@@ -90,7 +90,7 @@
                         <div class="row answer">
                         @if(count($saves) > 0)
                             @foreach($saves as $save)
-                                @if($save->id == $question->id)
+                                @if($save->question_id == $question->id)
                                 @foreach($answers as $ans=>$answeri)
                                     @if($ans == $question->id)
                                         @foreach($answeri as $answer=>$value)
@@ -156,9 +156,9 @@
                                                             <label>سوال :</label>
                                                             <select id="choose_question" name="question" class="form-control">
                                                                 @if(count($questions) > 0)
-                                                                    <?php $count = 1; ?>
+                                                                    <?php $cnt = 1; ?>
                                                                     @foreach($exercise->questions as $ex)
-                                                                        <option value={{$ex->id}}>{{$count++}}</option>
+                                                                        <option value={{$ex->id}}>{{$cnt++}}</option>
                                                                     @endforeach
                                                                 @endif
                                                             </select>

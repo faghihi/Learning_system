@@ -5,8 +5,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>داشبورد</title>
-        <link rel="favicon" href="images/favicon.png">
-        <link rel="favicon" href="images/favicon.png">
+        <link rel="shortcut icon" href="images/favicon.png">
         <!-- custome js just for login page -->
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/font-awesome.min.css">
@@ -148,7 +147,12 @@
                     </div>
                 </div>
                 @if ($tickets->isEmpty())
-                    <p>فعلا پیامی نداری</p>
+                    <div class="row">
+                        <div class="col-md-1 col-sm-1"></div>
+                        <div class="col-md-10 col-sm-10">
+                            <p>فعلا پیامی نداری</p>
+                        </div>
+                    </div>
                 @else
                 <div class="row">
                     <div class="col-md-1 col-sm-1"></div>
@@ -608,7 +612,7 @@
                     <div class="row">
                         <div class="col-md-12 col-sm-12 dash-table">
                             <div class="row dash-table-title">
-                                <div class="col-md-3">
+                                <div class="col-md-5">
                                     <h4>نام تمرین</h4>
                                 </div>
                                 <div class="col-md-3">
@@ -616,9 +620,6 @@
                                 </div>
                                 <div class="col-md-3">
                                     <h5>مدرسه</h5>
-                                </div>
-                                <div class="col-md-2">
-                                    <h5>وضعیت تمرین</h5>
                                 </div>
                                 <div class="col-md-1">
                                     <h5>حذف</h5>
@@ -629,7 +630,7 @@
                             @foreach($user_exercises as $exercise)
                             @if($exercise->code != 0)
                             <div class="row dash-table-content chapter">
-                                <div class="col-md-3">
+                                <div class="col-md-5">
                                     <button class="btn btn-default which_ex" value="{{$exercise->id}}">{{$exercise->name}}</button>
                                 </div>
                                 <div class="col-md-3">
@@ -646,14 +647,21 @@
                                 @endif
                                 </div>
                                 <div class="col-md-3">
-                                        @foreach($schools as $school)
-                                            @if($school->id == 1)
-                                                <p>{{$school->name}}</p>
+                                    @if(count($class_exercise) > 0)
+                                        @foreach($class_exercise as $cl_ex)
+                                            @if($cl_ex->name == $exercise->name)
+                                                @foreach($classes as $class)
+                                                    @if($cl_ex->class_id == $class->id)
+                                                        @foreach($schools as $school)
+                                                            @if($class->school_id == $school->id)
+                                                                <p>{{$school->name}}</p>
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
+                                                @endforeach
                                             @endif
                                         @endforeach
-                                </div>
-                                <div class="col-md-2">
-                                    <p>حل شده</p>
+                                    @endif
                                 </div>
                                 <div class="col-md-1">
                                     <button class="btn-delete btn-sm delete-test" title="حذف تمرین">
@@ -668,129 +676,7 @@
                         </div>
                     </div>
                     <br>
-                    <form>
-                        <div class="row">
-                            <div class="col-md-4 col-sm-12">
-                                <div class="form-group">
-                                    <label>نام</label>
-                                    <input id="ex_name" type="text" class="form-control editable" value="" disabled>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-sm-12">
-                                <div class="form-group">
-                                    <label>رمز</label>
-                                    <input id="ex_code" type="text" class="form-control" value="" disabled>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-sm-12">
-                                <div class="form-group">
-                                    <label>درس</label>
-                                    <input id="ex_course" type="text" class="form-control" value="" disabled>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>فصل</label>
-                                    <input id="ex_section" type="text" class="form-control" value="" disabled>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 col-sm-12">
-                                <div class="form-group">
-                                    <label>تاریخ شروع</label>
-                                    <input id="ex_start" type="date" class="form-control editable" value="" disabled>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-sm-12">
-                                <div class="form-group">
-                                    <label>تاریخ پایان</label>
-                                    <input id="ex_end" type="date" class="form-control editable" value="" disabled>
-                                </div>
-                            </div>
-                        </div>
-                        <div >
-                            <div class="row">
-                                <div class="col-md-3 col-sm-12">
-                                    <div class="form-group">
-                                        <label class="control-label">تعداد سوال:</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-1 col-sm-4">
-                                    <div class="form-group">
-                                        <label>آسان</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 col-sm-8">
-                                    <div class="form-group">
-                                        <input id="ex_easy" type="number" class="form-control editable" value="" disabled>
-                                    </div>
-                                </div>
-                                <div class="col-md-1 col-sm-4">
-                                    <div class="form-group">
-                                        <label>متوسط</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 col-sm-8">
-                                    <div class="form-group">
-                                        <input id="ex_medium" type="number" class="form-control editable" value="" disabled>
-                                    </div>
-                                </div>
-                                <div class="col-md-1 col-sm-4">
-                                    <div class="form-group">
-                                        <label>سخت</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 col-sm-8">
-                                    <div class="form-group">
-                                        <input id="ex_hard" type="number" class="form-control editable" value="" disabled>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12">
-                                <div class="form-group">
-                                    <label>دانش آموزان</label>
-                                    <input id="testDataStu" class="form-control" value="" disabled>
-                                </div>
-                                <div class="form-group" hidden>
-                                    <label>دانش آموزان</label>
-                                    <ul class="add-std" id="testDataStuEdit"></ul>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="row test-data-btn" hidden>
-                            <div class="col-md-3 col-sm-3">
-                                <div class="form-group">
-                                    <button id="setChanges" class="btn btn-block btn-success">اعمال تغییر</button>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-sm-3">
-                                <div class="form-group">
-                                    <button class="btn btn-block btn-delete" id="noChange">انصراف</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <br><br>
-                    <div class="row">
-                        <div class="col-md-1 col-sm-1">
-                            <i class="fa fa-2x fa-pencil" aria-hidden="true"></i>&nbsp;:
-                        </div>
-                        <div class="col-md-3 col-sm-3">
-                            <button class="btn btn-block btn-delete" id="delete-test">حذف</button>
-                        </div>
-                        <div class="col-md-3 col-sm-3">
-                            <button class="btn btn-block btn-success" onclick="change_test()">ایجاد تغییرات</button>
-                        </div>
-                        <div class="col-md-5 col-sm-12">
-                            <button onclick="virtual_click('#solved-test')" class="btn btn-block btn-default">مشاهده جزئیات(تمرین های حل شده)</button>
-                        </div>
-                    </div>
+                    <div id="ex-info"></div>
                     <br><br>
                 </div>
             </div>

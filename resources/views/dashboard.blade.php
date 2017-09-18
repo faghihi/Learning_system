@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="_token" content="{{ csrf_token() }}">
     <title>داشبورد</title>
-    <link rel="favicon" href="{{URL::asset('images/favicon.png')}}">
+    <link rel="shortcut icon" href="images/favicon.png">
     <!-- custom js just for login page -->
     <link rel="stylesheet" href="{{URL::asset('css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{URL::asset('css/font-awesome.min.css')}}">
@@ -88,7 +88,11 @@
                             @foreach($user_course as $co)
                                 @foreach($courses as $course)
                                     @if($co->id == $course->id)
-                                        <li><a rel="{{$course->id}}" data-toggle="pill" href="#class1"><span class="course">{{$course->name}}</span>&nbsp;-&nbsp;<span class="teacher">{{$course->teacher_name}}</span></a></li>
+                                        @foreach($grades as $grade)
+                                            @if($course->grade_id == $grade->id)
+                                                <li><a rel="{{$course->id}}" data-toggle="pill" href="#class1"><span class="course">{{$course->name}}</span>&nbsp;-&nbsp;<span class="teacher">{{$grade->name}}</span></a></li>
+                                            @endif
+                                        @endforeach
                                     @endif
                                 @endforeach
                             @endforeach
@@ -484,7 +488,11 @@
                                                             <option value=""></option>
                                                             @if(count($courses) > 0)
                                                                 @foreach($courses as $course)
-                                                                    <option value={{$course->id}}>{{$course->name}}-{{$course->grade_id}}</option>
+                                                                    @foreach($grades as $grade)
+                                                                        @if($grade->id == $course->grade_id)
+                                                                            <option value={{$course->id}}>{{$course->name}}-{{$grade->name}}</option>
+                                                                        @endif
+                                                                    @endforeach
                                                                 @endforeach
                                                             @endif
                                                         </select>
@@ -822,5 +830,15 @@
 {{--<script src="{{URL::asset('js/Gmap.JS')}}"></script>--}}
 {{--<script src="{{URL::asset('js/google-map.js')}}"></script>--}}
 
+<script>
+    $('.btn-delete').on('click',function(){
+        var r = confirm("مطمئنی می خوای حذفش کنی؟");
+        if (r == true) {
+
+        } else {
+            return false;
+        }
+    });
+</script>
 </body>
 </html>

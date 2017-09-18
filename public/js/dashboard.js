@@ -23,10 +23,19 @@ $(document).ready(function () {
                 '<div class="col-md-4"><h4>مهارت</h4></div></div><hr><div class="row dash-table-content chapter"><div id="info"></div></div></div></div>'+
                 "<form method=\"post\" action=\"/DeleteCourse/"+course+"\">"+
                 '<input type="hidden" name="_token" value="'+$('meta[name="_token"]').attr('content')+'">'+
-                '<p>برای حذف درس کلیک کنید.</p><div class="form-group"><button class="btn btn-delete btn-sm">حذف درس</button>'+
+                '<p>برای حذف درس کلیک کنید.</p><div class="form-group"><button id="del-course" class="btn btn-delete btn-sm">حذف درس</button>'+
                 '</div></form>');
 
-                $('#info').empty()
+                $('#del-course').on('click', function(){
+                    var r = confirm("مطمئنی می خوای حذفش کنی؟");
+                    if (r == true) {
+
+                    } else {
+                        return false;
+                    }
+                });
+
+                $('#info').empty();
                 var stuLine = document.getElementById("student-line");
                 var StuLine = new Chart(stuLine, {
                     type: 'line',

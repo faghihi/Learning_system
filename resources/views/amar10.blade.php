@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{$course->name}}-{{$course->grade}}</title>
-    <link rel="favicon" href="{{URL::asset('images/favicon.png')}}">
+    <title>{{$course->name}}</title>
+    <link rel="shortcut icon" href="images/favicon.png">
     <!-- custome js just for login page -->
 
     <link rel="stylesheet" href="{{URL::asset('css/bootstrap.min.css')}}">
@@ -29,11 +29,14 @@
 
 <header id="head" class="secondary">
     <div class="container">
-        <h1>{{$course->name}}-{{$course->grade}}</h1>
+        @foreach($grades as $grade)
+            @if($grade->id == $course->grade_id)
+                <h1>{{$course->name}}-{{$grade->name}}</h1>
+            @endif
+        @endforeach
         <p></p>
     </div>
 </header>
-
 
 <!-- container -->
 <div class="container">
@@ -42,9 +45,6 @@
     <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-4">
-            <p>
-                این موضوع شامل بخش های ۱۰ تا ۱۲ کتاب ریاضی سال ۱۰ ام میباشد.
-            </p>
             <p>
                             تعداد تمرین های موجود: <span> {{count($exercises)}}تا</span>
                         </p>

@@ -67,6 +67,8 @@ Route::post('/CreateQuestion' , 'ExerciseController@createquestion');
 
 Route::get('/EditQuestion/{id}' , 'ExerciseController@editquestion');
 
+Route::get('/EditEx/{id}' , 'ExerciseController@editexercise');
+
 Route::post('/giveEx', 'ExerciseController@give');
 
 Route::post('/giveCl', 'ExerciseController@giveClass');
@@ -74,6 +76,8 @@ Route::post('/giveCl', 'ExerciseController@giveClass');
 Route::get('/exercise/{id}' , 'ExerciseController@show');
 
 Route::get('/delete/{id}' , 'ExerciseController@delete');
+
+Route::get('/del/{id}' , 'ExerciseController@del');
 
 Route::get('/DeleteClass/{id}' , 'Amar10Controller@deleteclass');
 

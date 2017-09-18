@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exercise;
+use App\Grade;
 use App\Score;
 use App\Section;
 use App\User;
@@ -159,9 +160,10 @@ class Amar10Controller extends Controller
             }
         }
         $sections = Section::where('course_id',$id)->get();
+        $grades = Grade::all();
 
         return view('amar10')->with(['Check'=>$check,'courses'=>$courses,'user'=>$user,'course'=>$course,'exercises'=>$exercises,
-        'count_solved'=>$count_solved,'sections'=>$sections]);
+        'count_solved'=>$count_solved,'sections'=>$sections,'grades'=>$grades]);
     }
 
     //add course to users_courses table
@@ -181,7 +183,7 @@ class Amar10Controller extends Controller
 
     //save user answer to temp_answers
     public function save($id){
-
+        //$exercise = Exercise::find($id);
         $email = Session::get('Email');
         $user = User::where('email',$email)->first();
 
@@ -193,7 +195,7 @@ class Amar10Controller extends Controller
                     $count = Input::get('number');
                     for ($i = 0; $i < $count; $i++) {
                         $answerid = Input::get('n' . $i);
-                        $temp = tempanswer::where('id', $answerid)->where('user_id', $user->id)->first();
+                        $temp = tempanswer::where('question_id', $answerid)->where('user_id', $user->id)->first();
 
                         if (Input::has('q' . $i)) {
                             $answercheck = Input::get('q' . $i);
@@ -212,17 +214,19 @@ class Amar10Controller extends Controller
                 $count = Input::get('number');
                 for ($i = 0; $i < $count; $i++) {
                     $answerid = Input::get('n' . $i);
+
                     $temp = new tempanswer();
-                    $temp->id = $answerid;
+                    $temp->question_id = (int)$answerid;
                     $temp->user_id = $user->id;
 
-                    $question = Question::where('id', $answerid)->first();
+//                    $question = Question::where('id', $answerid)->get();
 
-                    foreach($question->exercises as $q){
-                        if($q->id == $id){
-                            $temp->exercise_id = $q->id;
-                        }
-                    }
+//                    foreach($question->exercises as $q){
+//                        if($q->id == $id){
+//                            $temp->exercise_id = $q->id;
+//                        }
+//                    }
+                    $temp->exercise_id = $id;
 
                     if (Input::has('q' . $i)) {
                         $answercheck = Input::get('q' . $i);
@@ -315,6 +319,8 @@ class Amar10Controller extends Controller
                              $total_point += 3;
                         break;
                 }
+
+                $question_array[$i]['solution'] = $quest->solution;
             }
         }
 

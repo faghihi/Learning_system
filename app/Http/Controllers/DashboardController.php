@@ -29,6 +29,10 @@ class DashboardController extends Controller
         $email = Session::get('Email');
         $user = User::where('email','=',$email)->first();
 
+        if($user->type == 'student'){
+            return redirect('/Dashboard');
+        }
+
         $users = User::all();
         $exercises =  Exercise::all();
         $classes = Classes::all();
@@ -52,8 +56,13 @@ class DashboardController extends Controller
         if(Session::get('Login')!="True"){
             return redirect('/');
         }
+
         $email=Session::get('Email');
         $user = User::where('email','=',$email)->first();
+
+        if($user->type == 'teacher'){
+            return redirect('/TDashboard');
+        }
 
         $users = Goal::where('user_id',$user->id)->get();
         $info=array();
@@ -100,13 +109,15 @@ class DashboardController extends Controller
         }
         $user_scores = Score::where('user_id',$user->id)->get();
         $user_classes = $user->classes;
+        $grades=Grade::all();
         $teachers = User::all();
         $schools = School::all();
         $categories = Category::all();
         $tickets = Ticket::where('user_id', $user->id)->paginate(10);
+
         return view('dashboard')->with(['info'=>$info,'courses'=>$courses,'exercises'=>$exercises,'user_course'=>$user_course,'user'=>$user,'user_exercise'=>$user_exercise,
             'count'=>$count_solve,'user_scores'=>$user_scores,'answer_count'=>$count_answer,'user_classes'=>$user_classes,
-        'classes'=>$classes,'teachers'=>$teachers,'schools'=>$schools,'categories'=>$categories,'tickets'=>$tickets]);
+        'classes'=>$classes,'teachers'=>$teachers,'schools'=>$schools,'categories'=>$categories,'tickets'=>$tickets,'grades'=>$grades]);
     }
 
     public function SetGoal(){
