@@ -535,40 +535,24 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-3 col-sm-3">
+                                <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label>تعداد سوالات آسان:</label>
                                         <input id="easy_num" name="easy" class="form-control" type="number">
                                     </div>
                                 </div>
-                                <div class="col-md-1 col-sm-1">
-                                    <div class="form-group">
-                                        <label>تعداد</label>
-                                        <input id="easy_no" class="form-control" disabled>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-3">
+
+                                <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label>تعداد سوالات متوسط:</label>
                                         <input id="medium_num" name="medium" class="form-control" type="number">
                                     </div>
                                 </div>
-                                <div class="col-md-1 col-sm-1">
-                                    <div class="form-group">
-                                        <label>تعداد</label>
-                                        <input id="medium_no" class="form-control" disabled>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-3">
+
+                                <div class="col-md-4 col-sm-4">
                                     <div class="form-group">
                                         <label>تعداد سوالات سخت:</label>
                                         <input id="hard_num" name="hard" class="form-control" type="number">
-                                    </div>
-                                </div>
-                                <div class="col-md-1 col-sm-1">
-                                    <div class="form-group">
-                                        <label>تعداد</label>
-                                        <input id="hard_no" class="form-control" disabled>
                                     </div>
                                 </div>
                             </div>

@@ -640,9 +640,9 @@ $('#choose_course').on('change', function() {
 
                     var sec = $('#choose_section option:selected').val();
                     if(key == sec){
-                        $('#easy_no').val(value.easy);
-                        $('#medium_no').val(value.medium);
-                        $('#hard_no').val(value.hard);
+                        $('#easy_num').val(value.easy);
+                        $('#medium_num').val(value.medium);
+                        $('#hard_num').val(value.hard);
                     }
                 });
             });

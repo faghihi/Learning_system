@@ -221,7 +221,7 @@ class HomeController extends Controller
                         $sections[$s->id]['medium'] =  $sections[$s->id]['medium']+1;
                     }
                     if ($question->level == 2) {
-                        $sections[$s->id]['hard'] =  $sections[$s->id]['medium']+1;
+                        $sections[$s->id]['hard'] =  $sections[$s->id]['hard']+1;
                     }
                 }
             }else{
@@ -230,7 +230,7 @@ class HomeController extends Controller
                 $sections[$s->id]['hard'] = 0;
             }
         }
-        //dd($sections);
+//        dd($sections);
         return json_encode($sections);
     }
 
