@@ -465,6 +465,7 @@ class Amar10Controller extends Controller
         $user = User::where('email',Session::get('Email'))->first();
         $message = Input::get('problem');
         $question = Input::get('question');
+        $q = Question::find($question);
 
         //user problem's ticket
         $ticket = new Ticket([
@@ -473,12 +474,12 @@ class Amar10Controller extends Controller
             'ticket_id' => strtoupper(str_random(10)),
             'category_id'  => 1,
             'priority'  => 'کم',
-            'message'   => $message,
+            'message'   => $message.'::'.$q->content,
             'status'    => "Open",
         ]);
         $ticket->save();
 
-        $teacher = User::where('name',$question->writer)->where('type','teacher')->first();
+        $teacher = User::where('name',$q->writer)->where('type','teacher')->first();
         //teacher problem's ticket
         $ticket = new Ticket([
             'title'     => $name,
@@ -486,7 +487,7 @@ class Amar10Controller extends Controller
             'ticket_id' => strtoupper(str_random(10)),
             'category_id'  => 1,
             'priority'  => 'کم',
-            'message'   => $question.'  '.$message,
+            'message'   => $message.'::'.$q->content,
             'status'    => "Open",
         ]);
         $ticket->save();

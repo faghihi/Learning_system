@@ -617,32 +617,38 @@ $('.whichQ').on('click',function(){
 });
 
 <!--for exercise creation -->
+$('#all').on('click', function(){
+    if($(this).prop("checked") == true){
+        $('#code-cl').prop('disabled', 'disabled');
+    }else{
+        $('#code-cl').prop('disabled', false);
+    }
+});
 
 $('#choose_course').on('change', function() {
     var id = $("#choose_course option:selected").val();
 
     $.ajax({
-    url: '/section/ajax/'+id,
-    type: "GET",
-    dataType: "json",
-    success:function(data) {
-    $('#choose_section').empty();
-    $.each(data, function(key, value) {
-    $('#choose_section').append('<option value="'+ key +'">'+ value.name +'</option>');
-    $('#choose_section').on('click' , function(){
-    var sec = $('#choose_section option:selected').val();
-    if(key == sec){
-    $('#easy_no').val(value.easy);
-    $('#medium_no').val(value.medium);
-    $('#hard_no').val(value.hard);
-    }
-    });
+        url: '/section/ajax/'+id,
+        type: "GET",
+        dataType: "json",
+        success:function(data) {
+            $('#choose_section').empty();
+            $.each(data, function(key, value) {
+                $('#choose_section').append('<option value="'+ key +'">'+ value.name +'</option>');
+                $('#choose_section').on('click' , function(){
 
+                    var sec = $('#choose_section option:selected').val();
+                    if(key == sec){
+                        $('#easy_no').val(value.easy);
+                        $('#medium_no').val(value.medium);
+                        $('#hard_no').val(value.hard);
+                    }
+                });
+            });
+        }
     });
-    }
-    });
-
-    });
+});
 
 $('#ch_course').on('change', function() {
     var id = $("#ch_course option:selected").val();

@@ -172,7 +172,7 @@
                                 @endforeach
                                 <div class="col-md-5 col-sm-5">
                                     <a href="{{ url('tickets/'. $ticket->ticket_id) }}">
-                                        #{{ $ticket->ticket_id }} - {{ $ticket->title }}
+                                        #{{ $ticket->title }}
                                     </a>
                                 </div>
                                 <div class="col-md-2 col-sm-2">
@@ -490,7 +490,7 @@
                                 <div class="col-md-6 col-sm-6">
                                     <div class="form-group">
                                         <label>کلاس:</label>
-                                        <select  name="class" class="form-control" required>
+                                        <select id="choose-cl" name="class" class="form-control" required>
                                             <option value=""></option>
                                             @if(count($user_classes) > 0)
                                                 @foreach($user_classes as $class)
@@ -500,6 +500,15 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="form-group">
+                                        <label>&nbsp;</label><br>
+                                        <input id="all" type="checkbox" name="all"> تمرین برای همه
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6 col-sm-6">
                                     <div class="form-group">
                                         <label>درس:</label>
@@ -517,12 +526,13 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label >فصل:</label>
-                                <select id="choose_section" name="section" class="form-control"required>
-                                </select>
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label >فصل:</label>
+                                        <select id="choose_section" name="section" class="form-control"required>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-3 col-sm-3">
@@ -572,7 +582,7 @@
                                 <div class="col-md-6 col-sm-6">
                                     <div class="form-group">
                                         <label>رمز:</label>
-                                        <input name="code" class="form-control" placeholder="برای ورود دانش آموزان به تمرین">
+                                        <input id="code-cl" name="code" class="form-control" placeholder="برای ورود دانش آموزان به تمرین">
                                     </div>
                                 </div>
                             </div>

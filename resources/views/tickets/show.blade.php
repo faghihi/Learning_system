@@ -21,6 +21,11 @@
     <script src="{{URL::asset('js/html5shiv.js')}}"></script>
     <script src="{{URL::asset('js/respond.min.js')}}"></script>
     <![endif]-->
+    <script type="text/javascript" async
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <script src="ASCIIMathML.js"></script>
 </head>
 
 <body>
@@ -54,11 +59,11 @@
 		        		<p>دسته: {{ $category->name }}</p>
 		        		<p>
 	        			@if ($ticket->status === 'Open')
-    						وضعیت: <span class="label label-success">{{ $ticket->status }}</span>
+    						وضعیت: <span class="label label-success">فعال</span>
     					@elseif($ticket->status === 'Pending')
-    					    وضعیت: <span class="label label-warning">{{ $ticket->status }}</span>
+    					    وضعیت: <span class="label label-warning">منتظر تایید</span>
     					@else
-    						وضعیت: <span class="label label-danger">{{ $ticket->status }}</span>
+    						وضعیت: <span class="label label-danger">بسته</span>
     					@endif
 		        		</p>
 		        		<p>ساخته شده در: {{ $ticket->created_at->diffForHumans() }}</p>

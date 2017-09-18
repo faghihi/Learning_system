@@ -25,7 +25,7 @@ class ExerciseController extends Controller
         //set rules for validation
         $rules = array(
             'nameEx' => 'required|max:64',
-            'code' => 'required|digits:4',
+            'code' => 'digits:4',
             'easy' => 'required',
             'medium' => 'required',
             'hard'=>'required',
@@ -46,9 +46,14 @@ class ExerciseController extends Controller
             $email = Session::get('Email');
             $user = User::where('email', $email)->first();
 
+            $check = Input::get('all');
             //give info from user
             $name = Input::get('nameEx');
-            $code = Input::get('code');
+            if($check){
+                $code = 0;
+            }else{
+                $code = Input::get('code');
+            }
             $easy = Input::get('easy');
             $medium = Input::get('medium');
             $hard = Input::get('hard');
@@ -69,35 +74,6 @@ class ExerciseController extends Controller
             //if user set a class, exercise save to classes_exercises table too
             if ($class_id) {
 
-                $cl_exercise = new ClassExercise();
-                $cl_exercise->name = $name;
-                $cl_exercise->code = $code;
-                $cl_exercise->class_id = $class_id;
-                $cl_exercise->course_id = $course_id;
-                $cl_exercise->easy_no = $easy;
-                $cl_exercise->medium_no = $medium;
-                $cl_exercise->hard_no = $hard;
-                $cl_exercise->section_id = $section_id;
-                $cl_exercise->start_date = $start;
-                $cl_exercise->end_date = $end;
-                $cl_exercise->save();
-
-                $cl = Classes::find($class_id);
-                //user exercise ticket
-                foreach ($cl->users as $u) {
-                    $ticket = new Ticket([
-                        'title' => $name,
-                        'user_id' => $u->id,
-                        'ticket_id' => strtoupper(str_random(10)),
-                        'category_id' => 3,
-                        'priority' => 'کم',
-                        'message' => 'نام تمرین : ' . $name . ' کد : ' . $code,
-                        'status' => "Open",
-                    ]);
-
-                    $ticket->save();
-                }
-
                 $exercise = new exercise();
                 $exercise->name = $name;
                 $exercise->code = $code;
@@ -111,6 +87,42 @@ class ExerciseController extends Controller
                 $exercise->writer = $user->id;
                 $exercise->save();
 
+                $cl_exercise = new ClassExercise();
+                $cl_exercise->name = $name;
+                $cl_exercise->code = $code;
+                $cl_exercise->class_id = $class_id;
+                $cl_exercise->course_id = $course_id;
+                $cl_exercise->easy_no = $easy;
+                $cl_exercise->medium_no = $medium;
+                $cl_exercise->hard_no = $hard;
+                $cl_exercise->section_id = $section_id;
+                $cl_exercise->start_date = $start;
+                $cl_exercise->end_date = $end;
+                $cl_exercise->save();
+
+                if($code > 0) {
+                    $cl = Classes::find($class_id);
+                    //user exercise ticket
+                    foreach ($cl->users as $u) {
+                        $ticket = new Ticket([
+                            'title' => $name,
+                            'user_id' => $u->id,
+                            'ticket_id' => strtoupper(str_random(10)),
+                            'category_id' => 3,
+                            'priority' => 'کم',
+                            'message' => 'نام تمرین : ' . $name . ' کد : ' . $code,
+                            'status' => "Open",
+                        ]);
+
+                        $ticket->save();
+                    }
+                }else {
+                    $cl = Classes::find($class_id);
+                    //user exercise ticket
+                    foreach ($cl->users as $u) {
+                        $u->exercises()->attach($exercise->id, ['status' => 0]);
+                    }
+                }
 
                 $easy = $exercise->easy_no;
                 $medium = $exercise->medium_no;
@@ -152,7 +164,7 @@ class ExerciseController extends Controller
                 $ex = Exercise::where('name',$name)->where('code',$code)->where('writer',$user->id)->first();
                 //set exercise_id for questions
                 foreach ($questions as $question) {
-                    $question->exercises()->sync($ex->id);
+                    $question->exercises()->attach($ex->id);
                 }
 
             }
@@ -248,7 +260,7 @@ class ExerciseController extends Controller
             //set exercise_id for questions
             try {
                 foreach ($questions as $question) {
-                    $question->exercises()->sync($exercise->id);
+                    $question->exercises()->attach($exercise->id);
                 }
             } catch (\Exception $e) {
                 return $e->getMessage();
@@ -432,7 +444,7 @@ class ExerciseController extends Controller
 
             //user class req ticket
             $ticket = new Ticket([
-                'title'     => $name,
+                'title'     => $class->name,
                 'user_id'   => $user->id,
                 'ticket_id' => strtoupper(str_random(10)),
                 'category_id'  => 4,
@@ -442,11 +454,12 @@ class ExerciseController extends Controller
             ]);
             $ticket->save();
 
+            $tick = array('class' => $class->id, 'user' => $user->id, 'ticket' => $ticket->id);
             //teacher class req ticket
             $ticket = new Ticket([
                 'title'     => $user->name,
                 'user_id'   => $class->teacher_name,
-                'ticket_id' => strtoupper(str_random(10)),
+                'ticket_id' => json_encode($tick),
                 'category_id'  => 4,
                 'priority'  => 'کم',
                 'message'   => 'تمایل به عضویت در کلاس',

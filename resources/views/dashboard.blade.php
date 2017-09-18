@@ -220,7 +220,7 @@
                                         @endforeach
                                         <div class="col-md-5 col-sm-5">
                                             <a href="{{ url('tickets/'. $ticket->ticket_id) }}">
-                                                #{{ $ticket->ticket_id }} - {{ $ticket->title }}
+                                                #{{ $ticket->title }}
                                             </a>
                                         </div>
                                         <div class="col-md-2 col-sm-2">
@@ -336,126 +336,126 @@
                         </div>
                     @endif
             </div>
-            <!-- create a ticket -->
-            <div id="new-message" class="tab-pane fade">
-                <h3 class="black">پیام جدید :</h3>
-                <p>میتوانید یک پیام جدید ایجاد کنید.</p>
-                <hr>
-                @if($errors->any())
-                    <div class="alert alert-danger">
-                        {{$errors->first()}}
-                    </div>
-                @endif
-                @if(session()->has('status'))
-                    <div class="alert alert-success">
-                        {{ session()->get('status') }}
-                    </div>
-                @endif
-                <form class="form-horizontal" method="POST" action="{{ url('/new_ticket') }}">
-                    {!! csrf_field() !!}
-                    <div class="form-group">
-                        <label for="title" class="col-md-2 control-label">موضوع</label>
-                        <div class="col-md-6">
-                            <input id="title" type="text" class="form-control" name="title" value="{{ old('title') }}">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="category" class="col-md-2 control-label">دسته</label>
-                        <div class="col-md-6">
-                            <select id="category" type="category" class="form-control" name="category">
-                                <option value="">...</option>
-                                    @if(count($categories) > 0)
-                                        @foreach ($categories as $category)
-                						    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                        @endforeach
-                                    @endif
-                            </select>
-                        </div>
-                    </div>
+            {{--<!-- create a ticket -->--}}
+            {{--<div id="new-message" class="tab-pane fade">--}}
+                {{--<h3 class="black">پیام جدید :</h3>--}}
+                {{--<p>میتوانید یک پیام جدید ایجاد کنید.</p>--}}
+                {{--<hr>--}}
+                {{--@if($errors->any())--}}
+                    {{--<div class="alert alert-danger">--}}
+                        {{--{{$errors->first()}}--}}
+                    {{--</div>--}}
+                {{--@endif--}}
+                {{--@if(session()->has('status'))--}}
+                    {{--<div class="alert alert-success">--}}
+                        {{--{{ session()->get('status') }}--}}
+                    {{--</div>--}}
+                {{--@endif--}}
+                {{--<form class="form-horizontal" method="POST" action="{{ url('/new_ticket') }}">--}}
+                    {{--{!! csrf_field() !!}--}}
+                    {{--<div class="form-group">--}}
+                        {{--<label for="title" class="col-md-2 control-label">موضوع</label>--}}
+                        {{--<div class="col-md-6">--}}
+                            {{--<input id="title" type="text" class="form-control" name="title" value="{{ old('title') }}">--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                    {{--<div class="form-group">--}}
+                        {{--<label for="category" class="col-md-2 control-label">دسته</label>--}}
+                        {{--<div class="col-md-6">--}}
+                            {{--<select id="category" type="category" class="form-control" name="category">--}}
+                                {{--<option value="">...</option>--}}
+                                    {{--@if(count($categories) > 0)--}}
+                                        {{--@foreach ($categories as $category)--}}
+                						    {{--<option value="{{ $category->id }}">{{ $category->name }}</option>--}}
+                                        {{--@endforeach--}}
+                                    {{--@endif--}}
+                            {{--</select>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group">
-                        <label for="priority" class="col-md-2 control-label">اولویت</label>
-                        <div class="col-md-6">
-                            <select id="priority" type="" class="form-control" name="priority">
-                                <option value="">...</option>
-                                <option value="low">کم</option>
-                                <option value="medium">متوسط</option>
-                                <option value="high">زیاد</option>
-                            </select>
-                        </div>
-                    </div>
+                    {{--<div class="form-group">--}}
+                        {{--<label for="priority" class="col-md-2 control-label">اولویت</label>--}}
+                        {{--<div class="col-md-6">--}}
+                            {{--<select id="priority" type="" class="form-control" name="priority">--}}
+                                {{--<option value="">...</option>--}}
+                                {{--<option value="low">کم</option>--}}
+                                {{--<option value="medium">متوسط</option>--}}
+                                {{--<option value="high">زیاد</option>--}}
+                            {{--</select>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group">
-                        <label for="message" class="col-md-2 control-label">متن پیام</label>
-                        <div class="col-md-6">
-                            <textarea rows="6" id="message" class="form-control" name="message"></textarea>
-                        </div>
-                    </div>
+                    {{--<div class="form-group">--}}
+                        {{--<label for="message" class="col-md-2 control-label">متن پیام</label>--}}
+                        {{--<div class="col-md-6">--}}
+                            {{--<textarea rows="6" id="message" class="form-control" name="message"></textarea>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group">
-                        <div class="col-md-6 col-md-offset-4">
-                            <button type="submit" class="btn btn-default">
-                                <i class="fa fa-btn fa-ticket"></i> ایجاد پیام
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div id="sent-box" class="tab-pane fade">
-                <h3 class="black">پیام های من</h3>
-                @if ($tickets->isEmpty())
-                    <p>تا کنون پیامی ایجاد نکردید.</p>
-                @else
-                    <div class="row">
-                        <div class="dash-table">
-                            <div class="row dash-table-title">
-                                <div class="col-md-3">
-                                    <h4>نام دسته</h4>
-                                </div>
-                                <div class="col-md-4">
-                                    <h4>موضوع</h4>
-                                </div>
-                                <div class="col-md-2">
-                                    <h4>وضعیت</h4>
-                                </div>
-                                <div class="col-md-3">
-                                    <h4>آخرین به روزرسانی</h4>
-                                </div>
-                            </div>
-                            <hr>
-                            @foreach($tickets as $ticket)
-                                <div class="row dash-table-content chapter">
-                                    <div class="col-md-3">
-                                    @foreach($categories as $cat)
-                                        @if ($cat->id === $ticket->category_id)
-                                            <p>{{$cat->name}}</p>
-                                        @endif
-                                    @endforeach
-                                    </div>
-                                    <div class="col-md-4">
-                                        <a href="{{ url('tickets/'. $ticket->ticket_id) }}">
-                                            #{{ $ticket->ticket_id }} - {{ $ticket->title }}
-                                        </a>
-                                    </div>
-                                    <div class="col-md-2">
-                                        @if ($ticket->status === 'Open')
-                                            <span class="label label-success">{{ $ticket->status }}</span>
-                                        @elseif($ticket->status == 'Pending')
-                                            <span class="label label-warning">{{ $ticket->status }}</span>
-                                        @else
-                                        	<span class="label label-danger">{{ $ticket->status }}</span>
-                                        @endif
-                                    </div>
-                                    <div class="col-md-3">
-                                        {{ $ticket->updated_at }}
-                                    </div>
-                                </div>
-                                <br>
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
-            </div>
+                    {{--<div class="form-group">--}}
+                        {{--<div class="col-md-6 col-md-offset-4">--}}
+                            {{--<button type="submit" class="btn btn-default">--}}
+                                {{--<i class="fa fa-btn fa-ticket"></i> ایجاد پیام--}}
+                            {{--</button>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--</form>--}}
+            {{--</div>--}}
+            {{--<div id="sent-box" class="tab-pane fade">--}}
+                {{--<h3 class="black">پیام های من</h3>--}}
+                {{--@if ($tickets->isEmpty())--}}
+                    {{--<p>تا کنون پیامی ایجاد نکردید.</p>--}}
+                {{--@else--}}
+                    {{--<div class="row">--}}
+                        {{--<div class="dash-table">--}}
+                            {{--<div class="row dash-table-title">--}}
+                                {{--<div class="col-md-3">--}}
+                                    {{--<h4>نام دسته</h4>--}}
+                                {{--</div>--}}
+                                {{--<div class="col-md-4">--}}
+                                    {{--<h4>موضوع</h4>--}}
+                                {{--</div>--}}
+                                {{--<div class="col-md-2">--}}
+                                    {{--<h4>وضعیت</h4>--}}
+                                {{--</div>--}}
+                                {{--<div class="col-md-3">--}}
+                                    {{--<h4>آخرین به روزرسانی</h4>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                            {{--<hr>--}}
+                            {{--@foreach($tickets as $ticket)--}}
+                                {{--<div class="row dash-table-content chapter">--}}
+                                    {{--<div class="col-md-3">--}}
+                                    {{--@foreach($categories as $cat)--}}
+                                        {{--@if ($cat->id === $ticket->category_id)--}}
+                                            {{--<p>{{$cat->name}}</p>--}}
+                                        {{--@endif--}}
+                                    {{--@endforeach--}}
+                                    {{--</div>--}}
+                                    {{--<div class="col-md-4">--}}
+                                        {{--<a href="{{ url('tickets/'. $ticket->ticket_id) }}">--}}
+                                            {{--#{{ $ticket->ticket_id }} - {{ $ticket->title }}--}}
+                                        {{--</a>--}}
+                                    {{--</div>--}}
+                                    {{--<div class="col-md-2">--}}
+                                        {{--@if ($ticket->status === 'Open')--}}
+                                            {{--<span class="label label-success">{{ $ticket->status }}</span>--}}
+                                        {{--@elseif($ticket->status == 'Pending')--}}
+                                            {{--<span class="label label-warning">{{ $ticket->status }}</span>--}}
+                                        {{--@else--}}
+                                        	{{--<span class="label label-danger">{{ $ticket->status }}</span>--}}
+                                        {{--@endif--}}
+                                    {{--</div>--}}
+                                    {{--<div class="col-md-3">--}}
+                                        {{--{{ $ticket->updated_at }}--}}
+                                    {{--</div>--}}
+                                {{--</div>--}}
+                                {{--<br>--}}
+                            {{--@endforeach--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--@endif--}}
+            {{--</div>--}}
             <div id="new-test" class="tab-pane fade">
                 <h3 class="black">تمرین جدید</h3>
                 <p>برای شروع به حل تمرین مورد نظر روی گزینه ی شروع کلیک کنید.</p>

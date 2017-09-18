@@ -121,10 +121,14 @@ class TicketsController extends Controller
         $ticket->status = 'Open';
         $ticket->save();
 
-        $ticketOwner = $ticket->user;
+        $arr = json_decode($ticket_id);
 
-        $class = Classes::find($ticket->ticket_id);
-        $user = User::find($ticket->user_id);
+        $class = Classes::find($arr->class);
+        $user = User::find($arr->user);
+
+        $tick = Ticket::find($arr->ticket);
+        $tick->status = 'Open';
+        $tick->save();
 
         $user->classes()->updateExistingPivot($class->id,['status'=>2]);
 
