@@ -580,7 +580,7 @@ $('.whichQ').on('click',function(){
                 '<input type="hidden" name="csrf-token" value="'+$('meta[name="csrf-token"]').attr('content')+'">'+
                 '<div class="row"><div class="col-md-4 col-sm-4"><div class="form-group"><label for="chapter">درس :</label>'+
                 '<select name="course" class="form-control" id="cha_course" required>'+
-                '<option value='+ID+' selected>'+data.course+'</option>'+
+                '<option value='+data.course_id+' selected>'+data.course+'</option>'+
                 '</select></div></div><div class="col-md-4 col-sm-4"><div class="form-group"><label for="chapter">فصل:</label>'+
                 '<select name="section" class="form-control" id="ch_chapter" required><option value='+data.section_id+'>'+data.section+'</option>'+
                 '</select></div></div><div class="col-md-4 col-sm-4"><div class="form-group"><label for="difficulty">میزان سختی سوال:</label><select name="difficulty" class="form-control " id="difficulty" required>'+

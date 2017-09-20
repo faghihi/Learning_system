@@ -209,7 +209,6 @@ class ExerciseController extends Controller
                 return redirect()->back()->with('error','تعداد سوالاتی که انتخاب کردید در سیستم موجود نمی باشد');
             }
 
-            //if user set a class, exercise save to classes_exercises table too
             $exercise = new exercise();
             $exercise->name = $name;
             $exercise->course_id = $course_id;
@@ -302,7 +301,7 @@ class ExerciseController extends Controller
 
             $section_id = Input::get('section');
 
-            $exercise = Exercise::where('course_id', $course->id)->where('section_id', $section_id)->first();
+//            $exercise = Exercise::where('course_id', $course->id)->where('section_id', $section_id)->first();
 
             $level = Input::get('difficulty');
             $content = Input::get('question');
@@ -336,11 +335,11 @@ class ExerciseController extends Controller
             $question = new Question();
             $question->section_id = $section_id;
             $question->course_id = $course->id;
-            if ($exercise) {
-                $question->exercise_id = $exercise->id;
-            } else {
-                $question->exercise_id = 0;
-            }
+//            if ($exercise) {
+//                $question->exercise_id = $exercise->id;
+//            } else {
+            $question->exercise_id = 0;
+//            }
             $question->level = $level;
             $question->content = $content;
             $question->options = $options;
@@ -382,7 +381,7 @@ class ExerciseController extends Controller
 
         $section_id = Input::get('section');
 
-        $exercise = Exercise::where('course_id',$course->id)->where('section_id',$section_id)->first();
+//        $exercise = Exercise::where('course_id',$course->id)->where('section_id',$section_id)->first();
 
         $level = Input::get('difficulty');
         $content = Input::get('question');
@@ -400,18 +399,18 @@ class ExerciseController extends Controller
         $question = Question::find($id);
         $question->section_id = $section_id;
         $question->course_id = $course->id;
-        if($exercise) {
-            $question->exercise_id = $exercise->id;
-        }else {
-            $question->exercise_id = 0;
-        }
+//        if($exercise) {
+//            $question->exercise_id = $exercise->id;
+//        }else {
+//            $question->exercise_id = 0;
+//        }
         $question->level = $level;
         $question->content = $content;
         $question->options = $options;
         $question->answer = $answer;
         $question->solution = $solution;
         $question->writer = $user->name;
-//        dd($question);
+
         $question->save();
 
         return redirect('/TDashboard')->with('message','با موفقیت ویرایش شد.');

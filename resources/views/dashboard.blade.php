@@ -576,14 +576,14 @@
                                                 <p>{{$exercise->name}}</p>
                                             </div>
                                             <div class="col-md-4">
-                                                    @if($use->code != 0)
+                                                    @if($use->writer != 0)
                                                         @foreach($courses as $course)
                                                             @if($course->id == $use->course_id)
                                                                 <p>{{$course->teacher_name}}</p>
                                                             @endif
                                                         @endforeach
                                                     @else
-                                                        .....
+                                                        سایت
                                                     @endif
                                             </div>
                                             <div class="col-md-2">

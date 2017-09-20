@@ -159,8 +159,9 @@
                     <div class="col-md-10 col-sm-10 message">
                         <div class="row message-title">
                             <div class="col-md-3 col-sm-3"><b>دسته</b></div>
-                            <div class="col-md-5 col-sm-5"><b>موضوع</b></div>
-                            <div class="col-md-2 col-sm-2"><b>وضعیت</b></div>
+                            <div class="col-md-4 col-sm-4"><b>موضوع</b></div>
+                            <div class="col-md-1 col-sm-1"><b>وضعیت</b></div>
+                            <div class="col-md-1 col-sm-1"></div>
                             <div class="col-md-2 col-sm-2"><b>عملیات</b></div>
                         </div>
                         @foreach ($tickets as $ticket)
@@ -170,12 +171,12 @@
                                         <div class="col-md-3 col-sm-3"><p>{{ $category->name }}</p></div>
                                     @endif
                                 @endforeach
-                                <div class="col-md-5 col-sm-5">
+                                <div class="col-md-4 col-sm-4">
                                     <a href="{{ url('tickets/'. $ticket->ticket_id) }}">
                                         #{{ $ticket->title }}
                                     </a>
                                 </div>
-                                <div class="col-md-2 col-sm-2">
+                                <div class="col-md-1 col-sm-1">
                                     @if ($ticket->status === 'Open')
                                         <span class="label label-success">فعال</span>
                                     @elseif($ticket->status == 'Pending')
@@ -197,6 +198,12 @@
                                         </form>
                                     @endif
                                 </div>
+                                <form method="get" action="/DeleteTicket/{{$ticket->id}}">
+                                    <input type="hidden" name="_token" value={{ csrf_token()}}>
+                                    <div class="col-md-2 col-sm-2">
+                                        <button class="btn btn-sm btn-delete">حذف</button>
+                                    </div>
+                                </form>
                         </div>
                         @endforeach
                     </div>
@@ -817,8 +824,8 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
                     </div>
-                    @endif
                 </div>
                 <br><br>
             </div>
@@ -939,6 +946,16 @@
 <!-- Google Maps -->
 {{--<script src="js/Gmap.JS"></script>--}}
 {{--<script src="js/google-map.js"></script>--}}
+{{--<script>--}}
+    {{--$('.btn-delete').on('click',function(){--}}
+        {{--var r = confirm("مطمئنی می خوای حذفش کنی؟");--}}
+        {{--if (r == true) {--}}
+
+        {{--} else {--}}
+            {{--return false;--}}
+        {{--}--}}
+    {{--});--}}
+{{--</script>--}}
 
 </body>
 </html>

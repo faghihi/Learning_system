@@ -289,6 +289,7 @@ class HomeController extends Controller
         $section = Section::where('id',$question->section_id)->first();
 
         $q_info['course'] = $course->name;
+        $q_info['course_id'] = $course->id;
         $q_info['section'] = $section->name;
         $q_info['section_id'] = $section->id;
         $q_info['level'] = $question->level;
@@ -311,7 +312,7 @@ class HomeController extends Controller
         foreach($sections as $section){
             $q_info['sections'][$section->id] = $section->name;
         }
-        //dd($q_info);
+//        dd($q_info);
         return json_encode($q_info);
     }
 
