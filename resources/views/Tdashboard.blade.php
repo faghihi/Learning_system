@@ -150,11 +150,22 @@
                     <div class="row">
                         <div class="col-md-1 col-sm-1"></div>
                         <div class="col-md-10 col-sm-10">
+                            <hr>
                             <p>فعلا پیامی نداری</p>
                         </div>
                     </div>
                 @else
-                <div class="row">
+                    <div class="row">
+                        <div class="col-md-1 col-sm-1"></div>
+                        <div class="col-md-10 col-sm-10">
+                            <hr>
+                            <div class="col-md-4 col-sm-4">
+                                <p id="search"></p>
+                            </div>
+                        </div>
+                    </div>
+                <br>
+                <div class="row list">
                     <div class="col-md-1 col-sm-1"></div>
                     <div class="col-md-10 col-sm-10 message">
                         <div class="row message-title">
@@ -165,10 +176,10 @@
                             <div class="col-md-2 col-sm-2"><b>عملیات</b></div>
                         </div>
                         @foreach ($tickets as $ticket)
-                            <div class="row message-part">
+                            <div class="row message-part entry">
                                 @foreach ($categories as $category)
                                     @if ($category->id == $ticket->category_id)
-                                        <div class="col-md-3 col-sm-3"><p>{{ $category->name }}</p></div>
+                                        <div class="col-md-3 col-sm-3 category"><p>{{ $category->name }}</p></div>
                                     @endif
                                 @endforeach
                                 <div class="col-md-4 col-sm-4">
@@ -951,6 +962,39 @@
             return false;
         }
     });
+</script>
+<script>
+	(function ($) {
+//	  jQuery.expr[':'].Contains = function(a,i,m){
+//		  return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase())>=0;
+//	  };
+
+	  function listFilter(search, list) {
+		var form = $("<form>").attr({"class":"filterform","action":"#"}),
+			input = $("<input>").attr({"class":"form-control search","type":"text","placeholder":"جستجو"});
+		$(form).append(input).appendTo(search);
+
+		$('.search')
+		  .change( function () {
+			var filter = $(this).val();
+
+			if(filter) {
+			  $(list).find(".category:not(:Contains(" + filter + "))").parent().slideUp();
+			  $(list).find(".category:Contains(" + filter + ")").parent().slideDown();
+			} else {
+			  $(list).find(".entry").slideDown();
+			}
+			return false;
+		  })
+		.keyup( function () {
+			$(this).change();
+		});
+	  }
+
+	  $(function () {
+		listFilter($("#search"), $(".list"));
+	  });
+	}(jQuery));
 </script>
 
 </body>
