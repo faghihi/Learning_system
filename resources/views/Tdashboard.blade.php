@@ -189,7 +189,7 @@
                                     @if($ticket->category_id == 4)
                                         <form action="{{ url('accept_ticket/' . $ticket->ticket_id) }}" method="POST">
                                             {!! csrf_field() !!}
-                                            <button type="submit" class="btn btn-delete btn-sm" >تایید</button>
+                                            <button type="submit" class="btn btn-default btn-sm" >تایید</button>
                                         </form>
                                     @else
                                         <form action="{{ url('close_ticket/' . $ticket->ticket_id) }}" method="POST">
@@ -613,7 +613,7 @@
                     <div class="row">
                         <div class="col-md-12 col-sm-12 dash-table">
                             <div class="row dash-table-title">
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <h4>نام تمرین</h4>
                                 </div>
                                 <div class="col-md-3">
@@ -622,16 +622,13 @@
                                 <div class="col-md-3">
                                     <h5>مدرسه</h5>
                                 </div>
-                                <div class="col-md-1">
-                                    <h5>حذف</h5>
-                                </div>
                             </div>
                             <hr>
                             @if(count($user_exercises) > 0)
                             @foreach($user_exercises as $exercise)
                             @if($exercise->code != 0)
                             <div class="row dash-table-content chapter">
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <button class="btn btn-default which_ex" value="{{$exercise->id}}">{{$exercise->name}}</button>
                                 </div>
                                 <div class="col-md-3">
@@ -653,21 +650,20 @@
                                             @if($cl_ex->name == $exercise->name)
                                                 @foreach($classes as $class)
                                                     @if($cl_ex->class_id == $class->id)
-                                                        @foreach($schools as $school)
-                                                            @if($class->school_id == $school->id)
-                                                                <p>{{$school->name}}</p>
-                                                            @endif
-                                                        @endforeach
+                                                        @if($class->school_id != 0)
+                                                            @foreach($schools as $school)
+                                                                @if($class->school_id == $school->id)
+                                                                    <p>{{$school->name}}</p>
+                                                                @endif
+                                                            @endforeach
+                                                        @else
+                                                            .....
+                                                        @endif
                                                     @endif
                                                 @endforeach
                                             @endif
                                         @endforeach
                                     @endif
-                                </div>
-                                <div class="col-md-1">
-                                    <button class="btn-delete btn-sm delete-test" title="حذف تمرین">
-                                        <i class="fa fa-1x fa-times" aria-hidden="true"></i>
-                                    </button>
                                 </div>
                             </div>
                             <hr>
@@ -946,16 +942,16 @@
 <!-- Google Maps -->
 {{--<script src="js/Gmap.JS"></script>--}}
 {{--<script src="js/google-map.js"></script>--}}
-{{--<script>--}}
-    {{--$('.btn-delete').on('click',function(){--}}
-        {{--var r = confirm("مطمئنی می خوای حذفش کنی؟");--}}
-        {{--if (r == true) {--}}
+<script>
+    $('.btn-delete').on('click',function(){
+        var r = confirm("مطمئنی می خوای حذفش کنی؟");
+        if (r == true) {
 
-        {{--} else {--}}
-            {{--return false;--}}
-        {{--}--}}
-    {{--});--}}
-{{--</script>--}}
+        } else {
+            return false;
+        }
+    });
+</script>
 
 </body>
 </html>

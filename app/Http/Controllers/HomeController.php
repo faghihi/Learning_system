@@ -398,14 +398,19 @@ class HomeController extends Controller
         $good = 0;
         $normal = 0;
         $bad = 0;
-        $data = array();
+        $udata = [];
+        $labels = [];
 
         $classuser = ClassExercise::where('name',$exercise->name)->where('code',$exercise->code)->first();
         $cl = Classes::find($classuser->class_id);
         $stu = $cl->users;
 
-        foreach($stu as $s){
-            $scores = Score::where('exercise_id',$id)->where('user_id',$s->id)->get();
+        if(count($stu) > 0) {
+            foreach ($stu as $s) {
+                $scores = Score::where('exercise_id', $id)->where('user_id', $s->id)->get();
+            }
+        }else{
+            $scores = [];
         }
 
         if(count($scores) > 0) {

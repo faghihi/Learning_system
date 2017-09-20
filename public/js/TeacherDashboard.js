@@ -270,6 +270,16 @@ $('#chooseClass').on('change', function() {
                             }
 
                         });
+
+                        $('#class-delete').on('click', function(){
+                        var r = confirm("مطمئنی می خوای حذفش کنی؟");
+                            if (r == true) {
+
+                            } else {
+                                return false;
+                            }
+                        });
+
                         $('#stud_info').empty();
                         $.each(data.user , function(i,val){
                             $('#stud_info').append(
@@ -522,10 +532,19 @@ $('.which_ex').on('click',function(){
                 '<div class="row test-data-btn" hidden><div class="col-md-3 col-sm-3"><div class="form-group"><button id="setChanges" class="btn btn-block btn-success">اعمال تغییر</button></div></div>'+
                 '<div class="col-md-3 col-sm-3"><div class="form-group"><button class="btn btn-block btn-delete" id="noChange">انصراف</button></div></div></div></form>'+
                 '<div class="row"><div class="col-md-1 col-sm-1"><i class="fa fa-2x fa-pencil" aria-hidden="true"></i>&nbsp;:</div>'+
-                '<div class="col-md-3 col-sm-3"><a href="/del/'+ID+'" class="btn btn-block btn-delete" >حذف</a></div>'+
+                '<div class="col-md-3 col-sm-3"><a id="del-ex" href="/del/'+ID+'" class="btn btn-block btn-delete" >حذف</a></div>'+
                 '<div class="col-md-3 col-sm-3"><button class="btn btn-block btn-success" onclick="change_test()">ایجاد تغییرات</button></div>'+
                 '<div class="col-md-5 col-sm-12"><a href="/exercise/'+ID+'" class="btn btn-block btn-default">مشاهده تمرین</a></div></div>'
             );
+
+            $('#del-ex').on('click', function(){
+                var r = confirm("مطمئنی می خوای حذفش کنی؟");
+                if (r == true) {
+
+                } else {
+                    return false;
+                }
+            });
 
             $('#ex_name').val(data.name);
             $('#ex_code').val(data.code);
