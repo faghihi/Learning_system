@@ -636,11 +636,20 @@
                                     <p>{{$exercise->name}}</p>
                                 </div>
                                 <div class="col-md-4">
-                                    @foreach($courses as $course)
-                                        @if($course->id == $exe->course_id)
-                                            <p>{{$course->teacher_name}}</p>
-                                        @endif
-                                    @endforeach
+                                    @if($exe->writer != 0)
+                                        @foreach($courses as $course)
+                                            @if($course->id == $use->course_id)
+                                                <p>{{$course->teacher_name}}</p>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        سایت
+                                    @endif
+                                    {{--@foreach($courses as $course)--}}
+                                        {{--@if($course->id == $exe->course_id)--}}
+                                            {{--<p>{{$course->teacher_name}}</p>--}}
+                                        {{--@endif--}}
+                                    {{--@endforeach--}}
                                 </div>
                                 <div class="col-md-2">
                                     <a href="/exercise/{{$exercise->id}}"><button class="btn btn-success btn-sm">ادامه</button></a>
@@ -691,11 +700,15 @@
                                 <p class="black">{{$exercise->name}}</p>
                             </div>
                             <div class="col-md-3">
-                                @foreach($courses as $course)
-                                    @if($course->id == $exe->course_id)
-                                        <p>{{$course->teacher_name}}</p>
-                                    @endif
-                                @endforeach
+                                @if($exe->writer != 0)
+                                    @foreach($courses as $course)
+                                        @if($course->id == $use->course_id)
+                                            <p>{{$course->teacher_name}}</p>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    سایت
+                                @endif
                             </div>
                             <div class="col-md-2">
                                 @foreach($user_scores as $score)

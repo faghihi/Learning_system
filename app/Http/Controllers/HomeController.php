@@ -393,7 +393,6 @@ class HomeController extends Controller
     public function exerciseInfoAjax($id){
         $exercise = Exercise::find($id);
         $section = Section::where('id',$exercise->section_id)->first();
-
         $info[$exercise->id]['section_name'] = $section->name;
         $good = 0;
         $normal = 0;
@@ -403,27 +402,28 @@ class HomeController extends Controller
 
         $classuser = ClassExercise::where('name',$exercise->name)->where('code',$exercise->code)->first();
         $cl = Classes::find($classuser->class_id);
+
         $stu = $cl->users;
 
         if(count($stu) > 0) {
             foreach ($stu as $s) {
-                $scores = Score::where('exercise_id', $id)->where('user_id', $s->id)->get();
+                $scores[] = Score::where('exercise_id', $exercise->id)->where('user_id', $s->id)->get();
             }
         }else{
             $scores = [];
         }
 
         if(count($scores) > 0) {
-            foreach ($scores as $score) {
+            foreach($scores as $sc) {
+                foreach ($sc as $score) {
 
-                if ($score->percent < 33.0) {
-                    $bad++;
-                }
-                elseif ($score->percent < 66.0) {
-                    $normal++;
-                }
-                elseif ($score->percent >= 66.0) {
-                    $good++;
+                    if ($score->percent < 33.0) {
+                        $bad++;
+                    } elseif ($score->percent < 66.0) {
+                        $normal++;
+                    } elseif ($score->percent >= 66.0) {
+                        $good++;
+                    }
                 }
             }
             $data[] = $good;
@@ -446,6 +446,7 @@ class HomeController extends Controller
             foreach($student as $s){
                 $info[$exercise->id]['exercise'][$s->id]['name'] = $s->name;
                 $scores = Score::where('user_id',$s->id)->where('exercise_id',$id)->first();
+
                 $labels[] = $s->name;
                 if(count($scores) > 0) {
                         if ($scores->exercise_id == $id) {
@@ -453,7 +454,7 @@ class HomeController extends Controller
                             $info[$exercise->id]['exercise'][$s->id]['score'][$score->exercise_id]['exercise_t_point'] = $scores->t_point;
                             $info[$exercise->id]['exercise'][$s->id]['score'][$score->exercise_id]['exercise_percent'] = $scores->percent;
 
-                            $udata[] = $score->percent;
+                            $udata[] = $scores->percent;
                         }
                 }else{
                     $info[$exercise->id]['exercise'][$s->id]['score'][0]['exercise_st_point'] = 0;
