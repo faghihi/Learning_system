@@ -408,17 +408,17 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="form-group">
-                                        <label>کد عضویت در درس :</label><span id="error_code" style="margin-right: 20px; color: red;display: none;">کد نا قبلا استفاده شده است.</span>
-                                        <input id="join_code" name="join_code" class="form-control" type="text" placeholder="کد عضویت در درس">
+                            {{--<div class="row">--}}
+                                {{--<div class="col-md-12 col-sm-12">--}}
+                                    {{--<div class="form-group">--}}
+                                        {{--<label>کد عضویت در درس :</label><span id="error_code" style="margin-right: 20px; color: red;display: none;">کد نا قبلا استفاده شده است.</span>--}}
+                                        {{--<input id="join_code" name="join_code" class="form-control" type="text" placeholder="کد عضویت در درس">--}}
                                         {{--<select name="students[]" class="add-std" id="whole-student" multiple>--}}
 
                                         {{--</select>--}}
-                                    </div>
-                                </div>
-                            </div>
+                                    {{--</div>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
                             <div class="form-group">
                                 <button type="submit" class="btn btn-default btn-lg">ثبت</button>
                             </div>

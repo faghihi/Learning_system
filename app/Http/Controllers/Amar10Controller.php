@@ -26,7 +26,7 @@ class Amar10Controller extends Controller
         //set rules for validation
         $rules = array(
             'classname' => 'required|max:64',
-            'join_code' => 'required'
+            //'join_code' => 'required'
         );
 
         $messages = [
@@ -41,7 +41,7 @@ class Amar10Controller extends Controller
         }
         $classname = Input::get('classname');
         $school_id = Input::get('school');
-        $code = Input::get('join_code');
+        //$code = Input::get('join_code');
         $teacher = User::where('email',Session::get('Email'))->first();
         $class = Classes::where('name',$classname)->where('school_id',$school_id)->first();
 
@@ -52,9 +52,21 @@ class Amar10Controller extends Controller
             $class = new classes();
             $class->name = $classname;
             $class->school_id = $school_id;
-            $class->Rstring = Input::get('join_code');
+            $class->Rstring = strtoupper(str_random(7));
             $class->teacher_name = $teacher->id;
             $class->save();
+
+            $ticket = new Ticket([
+                'title'     => $classname,
+                'user_id'   => $teacher->id,
+                'ticket_id' => strtoupper(str_random(10)),
+                'category_id'  => 5,
+                'priority'  => 'کم',
+                'message'   => 'کد عضویت در کلاس :'.$class->Rstring,
+                'status'    => "Open",
+            ]);
+
+            $ticket->save();
         }
 
         return redirect('/TDashboard')->with('message','کلاس جدید ایجاد شد');
