@@ -83,7 +83,9 @@
             <div class="row">
                 <div class="col-md-12 col-sm-12 activity">
                     <h4 class="section-title black">درس های فعال:</h4>
+
                     <ul class="nav nav-pills nav-stacked" id="co">
+                        <li ><a data-toggle="pill" href="#get-course">گرفتن درس جدید</a></li>
                         @if(count($user_course) > 0)
                             @foreach($user_course as $co)
                                 @foreach($courses as $course)
@@ -817,6 +819,50 @@
                         </div>
                     </form>
                     <br>
+            </div>
+
+            <div id="get-course" class="tab-pane fade">
+                <h3 class="black">گرفتن درس</h3>
+                <br>
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        {{$errors->first()}}
+                    </div>
+                @endif
+                @if(session()->has('msg'))
+                    <div class="alert alert-danger">
+                        {{ session()->get('msg') }}
+                    </div>
+                @endif
+                <br>
+                <h4>گرفتن درسی که میخواهید در آن عضو شوید</h4><br>
+                <br>
+                <form class="form-inline" action="/giveCourse" method="post">
+                    <input type="hidden" name="_token" value={{ csrf_token()}}>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label>نام  درس :</label>
+                                <select class="form-control" name="courseName">
+                                    @foreach($courses as $course)
+                                        @foreach($grades as $g)
+                                            @if($course->grade_id == $g->id)
+                                                <option value={{$course->id}}>{{$course->name}}-{{$g->name}}</option>
+                                            @endif
+                                        @endforeach
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-12">
+                            <div class="form-group">
+                                <button class="btn btn-default btn-md">ثبت</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <br>
             </div>
 
             <div id="class1" class="tab-pane fade">

@@ -163,6 +163,17 @@ class DashboardController extends Controller
         return redirect('/Dashboard');
     }
 
+    public function addCourse(){
+        $c_id = Input::get('courseName');
+        $course = Course::find($c_id);
+
+        $user = User::where('email',Session::get('Email'))->first();
+
+        $user->courses()->attach($course->id);
+
+        return redirect('/Dashboard')->with('message','درس اضاف شد.');
+    }
+
     public function deletecourse($id){
         $email = Session::get('Email');
         $user = User::where('email',$email)->first();

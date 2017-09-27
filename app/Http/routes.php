@@ -73,6 +73,8 @@ Route::post('/giveEx', 'ExerciseController@give');
 
 Route::post('/giveCl', 'ExerciseController@giveClass');
 
+Route::post('/giveCourse', 'DashboardController@addCourse');
+
 Route::get('/exercise/{id}' , 'ExerciseController@show');
 
 Route::get('/delete/{id}' , 'ExerciseController@delete');
