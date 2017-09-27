@@ -537,7 +537,7 @@
                                             </div>
                                             <input type="hidden" name="_token" value={{ csrf_token() }}>
                                             <div class="form-group">
-                                                <button type="submit" class="btn btn-default btn-lg">ثبت</button>
+                                                <button id="Q-sub" type="submit" class="btn btn-default btn-lg">ثبت</button>
                                             </div>
                                         </form>
                                     </div>

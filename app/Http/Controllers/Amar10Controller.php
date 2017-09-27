@@ -492,6 +492,6 @@ class Amar10Controller extends Controller
         ]);
         $ticket->save();
 
-        return redirect('/Dashboard');
+        return redirect()->back();
     }
 }

@@ -168,9 +168,11 @@ $(document).ready(function () {
             success:function (response) {
                 if(response!=1){
                     $("#error_easy").show()
+                    $('#Q-sub').prop('disabled', 'disabled');
                 }
                 else{
                     $("#error_easy").hide()
+                    $('#Q-sub').prop('disabled', false);
                 }
             },
             error:function (xhr, ajaxOptions, thrownError){
