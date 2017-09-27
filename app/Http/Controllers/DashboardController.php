@@ -17,6 +17,7 @@ use App\School;
 use App\Ticket;
 use App\Question;
 
+use Faker\Provider\DateTime;
 use Illuminate\Support\Facades\Input;
 use Session;
 use DB;
@@ -64,11 +65,12 @@ class DashboardController extends Controller
             return redirect('/TDashboard');
         }
 
-        $users = Goal::where('user_id',$user->id)->get();
+        $goals = Goal::where('user_id',$user->id)->get();
+
         $info=array();
         $info['exam']=0;
         $info['questions']=0;
-        foreach ($users as $us){
+        foreach ($goals as $us){
             $info['exam']=$us->ex_count;
             $info['questions']=$us->q_count;
         }
@@ -125,31 +127,34 @@ class DashboardController extends Controller
         $questions=(int) Input::get('questions');
         $email=Session::get('Email');
         $user=User::where('email',$email)->first();
-        $users=Goal::where('user_id',$user->id)->get();
+        $goals=Goal::where('user_id',$user->id)->get();
         $check=0;
 
+
         $date = new \DateTime('now');
-        foreach ($users as $user){
+        $end = new \DateTime('now');
+        $deadline =  $end->add(new \DateInterval('P7D'));
+        $difference = $date->diff($deadline);
+
+        foreach ($goals as $goal){
             $check=1;
-            DB::table('goals')
-                ->where('user_id',$user->id)
-                ->update(['ex_count'=>$exams,
-                    'q_count'=>$questions,
-                    'start_date'=> $date->format('Y/m/d'),
-                    'end_date'=> $date->add(new \DateInterval('P7D'))]);
+            $goal->ex_count = $exams;
+            $goal->q_count = $questions;
+
+            $goal->update();
         }
         if(!$check){
-            DB::table('goals')->insert(
-              [
-                  'user_id'=>$user->id,
-                  'ex_count'=>$exams,
-                  'q_count'=>$questions,
-                  'start_date'=> $date->format('Y/m/d'),
-                  'end_date'=> $date->add(new \DateInterval('P7D'))
-              ]
-            );
+            $user_goal = new Goal();
+
+            $user_goal->user_id = $user->id;
+            $user_goal->ex_count = $exams;
+            $user_goal->q_count = $questions;
+            $user_goal->start_date = $date->format('Y/m/d');
+            $user_goal->end_date = $deadline->format('Y/m/d');
+
+            $user_goal->save();
         }
-        return redirect('/Dashboard');
+        return redirect('/Dashboard')->with('message','هدف شما ثبت شد.');
     }
 
     public function correct($id){

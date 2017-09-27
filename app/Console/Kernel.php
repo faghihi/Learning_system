@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Goal;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,7 +14,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        // Commands\Inspire::class,
+       // \App\Console\Commands\Inspire::class,
     ];
 
     /**
@@ -24,7 +25,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        // Run once per week ...
+//        $schedule->call(function () {
+//            $goals = Goal::all();
+//            foreach($goals as $goal){
+//                $goal->delete();
+//            }
+//        })->hourly();
+//
+//        ->after(function () {
+//            return redirect('\Dashboard');
+//        });
     }
 }

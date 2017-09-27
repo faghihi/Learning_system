@@ -860,6 +860,8 @@
 //		  return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase())>=0;
 //	  };
 
+
+
 	  function listFilter(search, list) {
 		var form = $("<form>").attr({"class":"filterform","action":"#"}),
 			input = $("<input>").attr({"class":"form-control search","type":"text","placeholder":"جستجو"});

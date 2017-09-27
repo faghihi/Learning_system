@@ -410,7 +410,7 @@ $('#selectExercise').on('change',function(){
         type: "GET",
         dataType: "json",
         success:function(data) {
-            $.each(data, function(key,value){
+            $.each(data, function(key,value) {
                 $('#sect').val(value.section_name);
 
                 var TestPie = new Chart(testPie, {
