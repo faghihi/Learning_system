@@ -586,12 +586,12 @@
                                         <input name="nameEx" class="form-control" placeholder="تمرین">
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-sm-6">
-                                    <div class="form-group">
-                                        <label>رمز:</label>
-                                        <input id="code-cl" name="code" class="form-control" placeholder="برای ورود دانش آموزان به تمرین">
-                                    </div>
-                                </div>
+                                {{--<div class="col-md-6 col-sm-6">--}}
+                                    {{--<div class="form-group">--}}
+                                        {{--<label>رمز:</label>--}}
+                                        {{--<input id="code-cl" name="code" class="form-control" placeholder="برای ورود دانش آموزان به تمرین">--}}
+                                    {{--</div>--}}
+                                {{--</div>--}}
                             </div>
                             <div class="row">
                                 <div class="col-md-6 col-sm-12">
@@ -1002,5 +1002,62 @@
 	}(jQuery));
 </script>
 
+<script>
+
+$('.whichQ').on('click',function(){
+    var ID = $(this).val();
+    console.log(ID);
+    $.ajax({
+        url: '/Q/ajax/'+ID,
+        type: "GET",
+        dataType: "json",
+
+        success:function(data) {
+
+            $('#show-question').empty();
+
+            $('#show-question').append(
+                '<div class="row"><div class="col-sm-10 col-md-10"><h3 class="black">اضافه کردن سوال</h3><br>'+
+                "<form method=\"get\" action=\"/EditQuestion/"+ID+"\">"+
+                '<input type="hidden" name="csrf-token" value="'+$('meta[name="csrf-token"]').attr('content')+'">'+
+                '<div class="row"><div class="col-md-4 col-sm-4"><div class="form-group"><label for="chapter">درس :</label>'+
+                '<select name="course" class="form-control" id="cha_course" required>'+
+                '<option value='+data.course_id+' selected>'+data.course+'</option>'+
+                '</select></div></div><div class="col-md-4 col-sm-4"><div class="form-group"><label for="chapter">فصل:</label>'+
+                '<select name="section" class="form-control" id="ch_chapter" required><option value='+data.section_id+'>'+data.section+'</option>'+
+                '</select></div></div><div class="col-md-4 col-sm-4"><div class="form-group"><label for="difficulty">میزان سختی سوال:</label><select name="difficulty" class="form-control " id="difficulty" required>'+
+                '<option value="0">آسان (1نمره)</option><option value="1">متوسط (2نمره)</option><option value="2">سخت (3نمره)</option></select></div></div></div>'+
+                '<div class="form-group"><label>صورت سوال:</label><textarea name="question" rows="4" class="form-control" required>'+data.content+'</textarea></div>'+
+                ' <div class="form-group"><label>گزینه ها:</label></div><div class="row"><div class="col-md-6 col-sm-12"><div class="form-group">'+
+                '<input name="gozine1" class="form-control " value='+data.gozine1+'></div></div><div class="col-md-6 col-sm-12"><div class="form-group">'+
+                '<input name="gozine2" class="form-control " value='+data.gozine2+'> </div></div></div><div class="row"><div class="col-md-6 col-sm-12"><div class="form-group">'+
+                '<input name="gozine3" class="form-control " value='+data.gozine3+'> </div></div><div class="col-md-6 col-sm-12"><div class="form-group">'+
+                '<input name="gozine4" class="form-control " value='+data.gozine4+'> </div></div></div><div class="row"><div class="col-md-6 col-sm-12">'+
+                '<div class="form-group"><label>گزینه درست:</label><input name="answer" class="form-control " type="number" value='+data.gozine_correct+'> </div></div></div>'+
+                '<div class="form-group"><label>راه حل(اختیاری):</label><textarea name="solution" rows="4" class="form-control" required>'+data.solution+'</textarea></div><div class="form-group">'+
+                '<button id="khar" type="submit" class="btn btn-default btn-lg">ویرایش</button></div></form></div></div>');
+
+                $.each(data.courses, function(key,value){
+                    if(value == data.course){
+
+                    }else {
+                        $('#cha_course').append('<option value=' + key + '>' + value + '</option>')
+                    }
+                });
+
+                $.each(data.sections, function(key,value){
+                    if(value == data.section){
+
+                    }else {
+                        $('#ch_chapter').append('<option value=' + key + '>' + value + '</option>')
+                    }
+                });
+
+
+        }
+    });
+});
+
+</script>
 </body>
 </html>

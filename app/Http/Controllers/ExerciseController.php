@@ -25,7 +25,7 @@ class ExerciseController extends Controller
         //set rules for validation
         $rules = array(
             'nameEx' => 'required|max:64',
-            'code' => 'digits:4',
+            //'code' => 'digits:4',
             'easy' => 'required',
             'medium' => 'required',
             'hard'=>'required',
@@ -36,7 +36,7 @@ class ExerciseController extends Controller
 
         $messages = [
             'required' => 'لطفا همه فیلد ها را پر کنید',
-            'digits' => 'برای رمز فقط از عدد استفاده کنید،حداقل 4 عدد',
+            //'digits' => 'برای رمز فقط از عدد استفاده کنید،حداقل 4 عدد',
         ];
 
         $validator = \Validator::make(Input::all() , $rules , $messages);
@@ -52,7 +52,7 @@ class ExerciseController extends Controller
             if($check){
                 $code = 0;
             }else{
-                $code = Input::get('code');
+                $code = uniqid();
             }
             $easy = Input::get('easy');
             $medium = Input::get('medium');
@@ -100,7 +100,7 @@ class ExerciseController extends Controller
                 $cl_exercise->end_date = $end;
                 $cl_exercise->save();
 
-                if($code > 0) {
+                if($code != 0) {
                     $cl = Classes::find($class_id);
                     //user exercise ticket
                     foreach ($cl->users as $u) {
@@ -628,7 +628,7 @@ class ExerciseController extends Controller
     public function give(){
         //set rules for validation
         $rules = array(
-            'testName' => 'required|max:64', // make sure the email is an actual email
+            //'testName' => 'required|max:64', // make sure the email is an actual email
             'testPass' => 'required'
         );
         $messages = [
@@ -639,12 +639,12 @@ class ExerciseController extends Controller
             return redirect()->back()->withErrors($validator); // send back all errors to the login form
         }
 
-        $name = Input::get('testName');
+        //$name = Input::get('testName');
         $code = Input::get('testPass');
         $email = Session::get('Email');
         $user = User::where('email',$email)->first();
 
-        $exercise = Exercise::where('code','=',$code)->where('name','=',$name)->first();
+        $exercise = Exercise::where('code','=',$code)->first();
 
         if(count($exercise) > 0) {
             //add to user exercises

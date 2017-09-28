@@ -756,12 +756,12 @@
                 <form class="form-inline" action="/giveEx" method="post">
                     <input type="hidden" name="_token" value={{ csrf_token()}}>
                     <div class="row">
-                        <div class="col-md-5 col-sm-12">
-                            <div class="form-group">
-                                <label>نام تمرین:</label>
-                                <input class="form-control" name="testName">
-                            </div>
-                        </div>
+                        {{--<div class="col-md-5 col-sm-12">--}}
+                            {{--<div class="form-group">--}}
+                                {{--<label>نام تمرین:</label>--}}
+                                {{--<input class="form-control" name="testName">--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label>رمز:</label>
