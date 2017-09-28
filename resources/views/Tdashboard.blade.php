@@ -502,7 +502,7 @@
                             <h4 style="color:red">{{ session()->get('error') }}</h4>
                         @endif
                         <br>
-                        <form action="/CreateEx"  method="post">
+                        <form id="my_form" action="/CreateEx"  method="post">
                             <div class="row">
                                 <div class="col-md-6 col-sm-6">
                                     <div class="form-group">
@@ -517,10 +517,16 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4 col-sm-4">
+                                <div class="col-md-3 col-sm-3">
                                     <div class="form-group">
                                         <label>&nbsp;</label><br>
                                         <input id="all" type="checkbox" name="all"> تمرین برای همه
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-3">
+                                    <div class="form-group">
+                                        <label>&nbsp;</label><br>
+                                        <input id="myQ" type="checkbox" name="myQ" /> تمرین از سوال های خودم
                                     </div>
                                 </div>
                             </div>
@@ -636,7 +642,7 @@
                             <hr>
                             @if(count($user_exercises) > 0)
                             @foreach($user_exercises as $exercise)
-                            @if($exercise->code != 0)
+                            {{--@if($exercise->code != 0)--}}
                             <div class="row dash-table-content chapter">
                                 <div class="col-md-6">
                                     <button class="btn btn-default which_ex" value="{{$exercise->id}}">{{$exercise->name}}</button>
@@ -677,7 +683,7 @@
                                 </div>
                             </div>
                             <hr>
-                            @endif
+                            {{--@endif--}}
                             @endforeach
                             @endif
                         </div>
@@ -699,9 +705,9 @@
                                 <select id="selectExercise" class="form-control">
                                     <option selected>...</option>
                                     @foreach($user_exercises as $exercise)
-                                        @if($exercise->code != 0)
+                                        {{--@if($exercise->code != 0)--}}
                                             <option value="{{$exercise->id}}">{{$exercise->name}}</option>
-                                        @endif
+                                        {{--@endif--}}
                                     @endforeach
                                 </select>
                             </div>

@@ -202,6 +202,39 @@ class HomeController extends Controller
 //        return json_encode($info);
 //    }
 
+    public function myAjax($id){
+        $section = Section::where('course_id',$id)->get();
+        $user = User::where('email',Session::get('Email'))->first();
+
+        foreach($section as $s){
+            $sections[$s->id]['name'] = $s->name;
+            $sections[$s->id]['easy'] = 0;
+            $sections[$s->id]['medium'] = 0;
+            $sections[$s->id]['hard'] = 0;
+
+            $questions = Question::where('course_id',$id)->where('section_id',$s->id)->where('writer',$user->name)->get();
+            if(count($questions) > 0) {
+                foreach ($questions as $question) {
+                    if ($question->level == 0) {
+                        $sections[$s->id]['easy'] = $sections[$s->id]['easy']+1;
+                    }
+                    if ($question->level == 1) {
+                        $sections[$s->id]['medium'] =  $sections[$s->id]['medium']+1;
+                    }
+                    if ($question->level == 2) {
+                        $sections[$s->id]['hard'] =  $sections[$s->id]['hard']+1;
+                    }
+                }
+            }else{
+                $sections[$s->id]['easy'] = 0;
+                $sections[$s->id]['medium'] = 0;
+                $sections[$s->id]['hard'] = 0;
+            }
+        }
+//        dd($sections);
+        return json_encode($sections);
+    }
+
     public function sectionAjax($id){
         $section = Section::where('course_id',$id)->get();
 

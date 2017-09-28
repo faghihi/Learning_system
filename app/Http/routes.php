@@ -61,6 +61,8 @@ Route::get('/problem' , 'Amar10Controller@problem');
 
 Route::post('/CreateEx' , 'ExerciseController@create');
 
+Route::post('/createMyEx' , 'ExerciseController@createMyEx');
+
 Route::post('/CreateStuEx' , 'ExerciseController@createStuEx');
 
 Route::post('/CreateQuestion' , 'ExerciseController@createquestion');
@@ -94,6 +96,7 @@ Route::get('/guide' , 'HomeController@guide');
 Route::get('school/ajax/{id}','HomeController@schoolAjax');
 Route::get('cl/ajax/{id}','HomeController@clAjax');
 Route::get('section/ajax/{id}','HomeController@sectionAjax');
+Route::get('my/ajax/{id}','HomeController@myAjax');
 Route::get('student/ajax/{id}','HomeController@studentAjax');
 Route::get('course/ajax/{id}','HomeController@courseAjax');
 Route::get('question/ajax/{id}','HomeController@questionAjax');

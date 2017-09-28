@@ -644,6 +644,39 @@ $('#all').on('click', function(){
     }
 });
 
+$('#myQ').on('click', function(){
+    if($(this).prop("checked") == true){
+        $('#my_form').attr('action', '/createMyEx');
+        $('#choose_course').on('change', function() {
+            var id = $("#choose_course option:selected").val();
+
+            $.ajax({
+                url: '/my/ajax/'+id,
+                type: "GET",
+                dataType: "json",
+                success:function(data) {
+                    $('#choose_section').empty();
+                    $.each(data, function(key, value) {
+                        $('#choose_section').append('<option value="'+ key +'">'+ value.name +'</option>');
+                        $('#choose_section').on('click' , function(){
+
+                            var sec = $('#choose_section option:selected').val();
+                            if(key == sec){
+                                $('#easy_num').val(value.easy);
+                                $('#medium_num').val(value.medium);
+                                $('#hard_num').val(value.hard);
+                            }
+                        });
+                    });
+                }
+            });
+        });
+
+    }else{
+        $('#my_form').attr('action', '/createEx');;
+    }
+});
+
 $('#choose_course').on('change', function() {
     var id = $("#choose_course option:selected").val();
 
