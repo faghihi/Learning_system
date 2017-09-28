@@ -41,7 +41,7 @@ class DashboardController extends Controller
         $sections = Section::all();
         $class_exercise = ClassExercise::all();
         $grades=Grade::all();
-        $tickets = Ticket::where('user_id', $user->id)->paginate(10);
+        $tickets = Ticket::where('user_id', $user->id)->get();
         $categories = Category::all();
         $teachers = User::where('type','teacher')->get();
         $user_classes = Classes::where('teacher_name',$user->id)->get();
@@ -115,7 +115,7 @@ class DashboardController extends Controller
         $teachers = User::all();
         $schools = School::all();
         $categories = Category::all();
-        $tickets = Ticket::where('user_id', $user->id)->paginate(10);
+        $tickets = Ticket::where('user_id', $user->id)->get();
 
         return view('dashboard')->with(['info'=>$info,'courses'=>$courses,'exercises'=>$exercises,'user_course'=>$user_course,'user'=>$user,'user_exercise'=>$user_exercise,
             'count'=>$count_solve,'user_scores'=>$user_scores,'answer_count'=>$count_answer,'user_classes'=>$user_classes,
