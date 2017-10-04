@@ -59,8 +59,23 @@
             <div class="row">
                 <div class="col-md-12 col-sm-12 activity">
                     <h4 class="section-title black">کلاس های فعال :</h4>
-                    <ul class="nav nav-pills nav-stacked">
+                    <ul class="nav nav-pills nav-stacked" id="cls">
                         <li ><a data-toggle="pill" href="#get-class">گرفتن کلاس جدید</a></li>
+                        @if(count($user_classes) > 0)
+                            @foreach($user->classes as $cl)
+                                @if($cl->pivot->status == 2)
+                                    @foreach($classes as $class)
+                                        @if($cl->id == $class->id)
+                                            @foreach($teachers as $t)
+                                                @if($cl->teacher_name == $t->id)
+                                                    <li><a rel1="{{$class->id}}" data-toggle="pill" href="#class5"><span class="class5">{{$class->name}}</span>&nbsp;-&nbsp;<span class="teacher">{{$t->name}}</span></a></li>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                @endif
+                            @endforeach
+                        @endif
                         <li ><a data-toggle="pill" href="#show-class">مشاهده کلاس ها</a></li>
                     </ul>
                     <br>
@@ -561,13 +576,13 @@
                                 <h4>آموزگار</h4>
                             </div>
                             <div class="col-md-2">
-                                <h4>زمان</h4>
-                            </div>
-                            <div class="col-md-2">
                                 <h4>حل</h4>
                             </div>
                             <div class="col-md-2">
                                 <h4>حذف</h4>
+                            </div>
+                            <div class="col-md-2">
+                                <h4>مهلت تحویل</h4>
                             </div>
                         </div>
                         <hr>
@@ -591,26 +606,31 @@
                                                         سایت
                                                     @endif
                                             </div>
-                                            <dic class="'col-md-2">
-                                            {{--@if(count($user_exercise) > 0)--}}
-                                                {{--@foreach($user_exercise as $exercise)--}}
-                                                    {{--@if($exercise)--}}
-                                                        {{--<p>{{'hello'}}</p>--}}
-                                                    {{--@else--}}
-                                                        {{--....--}}
-                                                    {{--@endif--}}
-                                                {{--@endforeach--}}
-                                            {{--@endif--}}
-                                            </dic>
                                             <div class="col-md-2">
                                                 <a href="/exercise/{{$exercise->id}}"><button class="btn btn-success btn-sm">شروع</button></a>
                                             </div>
                                             <div class="col-md-2">
                                                 <a href="/delete/{{$exercise->id}}"><button class="btn btn-delete btn-sm">حذف</button></a>
                                             </div>
+                                            <div class="'col-md-2">
+                                                @if(count($user_exercise) > 0)
+                                                    @foreach($user->exercises as $exe)
+                                                        @if($exercise->id == $exe->id)
+                                                            @foreach($totals as $key=>$value)
+                                                                @if($exercise->id == $key)
+                                                                    @if($value > 0)
+                                                                        <p style="text-align: center">{{$value}} روز</p>
+                                                                    @else
+                                                                        <p class="deadline" style="text-align: center">{{$value}}</p>
+                                                                    @endif
+                                                                @endif
+                                                            @endforeach
+                                                        @endif
+                                                    @endforeach
+                                                @endif
+                                            </div>
                                         </div>
-                                        <br>
-
+                                        <hr>
                                     @endif
                                 @endforeach
                                 @endif
@@ -713,7 +733,7 @@
                             @if($exe->id == $exercise->id && $exe->pivot->status == 2)
                         <div class="row dash-table-content chapter">
                             <div class="col-md-3">
-                                <p class="black">{{$exercise->name}}</p>
+                                <p class="black"><a href="see/{{$exercise->id}}">{{$exercise->name}}</a> </p>
                             </div>
                             <div class="col-md-3">
                                 @if($exe->writer != 0)
@@ -879,6 +899,9 @@
                 <br>
             </div>
 
+            <div id="class5" class="tab-pane fade">
+            </div>
+
             <div id="class1" class="tab-pane fade">
             </div>
             <br><br>
@@ -920,7 +943,13 @@
 //		  return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase())>=0;
 //	  };
 
-
+      var ti = $('.deadline').html();
+      console.log(ti);
+      if(ti == 0){
+        $('.st-off').prop('disabled',true);
+      }else{
+        $('.st-off').prop('disabled', false);
+      }
 
 	  function listFilter(search, list) {
 		var form = $("<form>").attr({"class":"filterform","action":"#"}),

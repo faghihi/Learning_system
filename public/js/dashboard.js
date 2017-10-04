@@ -6,17 +6,106 @@ $(document).ready(function () {
        $('li.active').removeAttr('class');
     });
 
+    //show stat class
+    $('#cls a').on('click' ,function(){
+        var cls = $(this).attr('rel1');
+        console.log(cls);
+        $.ajax({
+            url: '/class/ajax/'+cls,
+            type: "GET",
+            dataType: "json",
+            success:function(data) {
+                $('#class5').html('<div class="tab-pane fade"></div><h3 class="black">اطلاعات کلاس</h3>'+
+                '<h4><span>'+data['course_grade']+'</span>' +'&nbsp;-&nbsp;'+
+                '<span>' +data['teacher']+'</span></h4><br><br>'+
+                '<div class="row" ><div class="col-md-1 col-sm-1"></div><div class="col-md-10 col-sm-10"><canvas id="student-line5"></canvas></div></div><br>'+
+                '<div class="row"><div class="col-md-12"><h4><i class="fa fa-2x fa-file-text" aria-hidden="true"></i>&nbsp;گزارش وضعیت</h4></div></div>'+
+                '<div class="row"><div class="dash-table"><div class="row dash-table-title"><div class="col-md-5"><h4>تمرین</h4></div><div class="col-md-3"><h4>امتیاز</h4></div>'+
+                '<div class="col-md-4"><h4>مهارت</h4></div></div><hr><div class="row dash-table-content chapter"><div id="info5"></div></div></div></div>'+
+                "<form method=\"get\" action=\"/StuDeleteClass/"+cls+"\">"+
+                '<input type="hidden" name="_token" value="'+$('meta[name="_token"]').attr('content')+'">'+
+                '<p>برای حذف کلاس کلیک کنید.</p><div class="form-group"><button id="del-class" class="btn btn-delete btn-sm">حذف کلاس</button>'+
+                '</div></form>');
+
+                $('#del-class').on('click', function(){
+                    var r = confirm("مطمئنی می خوای حذفش کنی؟");
+                    if (r == true) {
+
+                    } else {
+                        return false;
+                    }
+                });
+
+                $('#info5').empty();
+                var stuLine = document.getElementById("student-line5");
+                var StuLine = new Chart(stuLine, {
+                    type: 'line',
+                    data: {
+                        labels: data.labels,
+                        datasets: [
+                            {
+                                label: "نمره",
+                                fill: false,
+                                lineTension: 0.1,
+                                backgroundColor: randomColor(.4),
+                                borderColor: randomColor(1),
+                                borderCapStyle: 'butt',
+                                borderDash: [],
+                                borderDashOffset: 0.0,
+                                borderJoinStyle: 'miter',
+                                pointBorderColor: randomColor(1),
+                                pointBackgroundColor: "#fff",
+                                pointBorderWidth: 5,
+                                pointHoverRadius: 7,
+                                pointHoverBackgroundColor: randomColor(1),
+                                pointHoverBorderColor: randomColor(1),
+                                pointHoverBorderWidth: 2,
+                                pointRadius: 1,
+                                pointHitRadius: 10,
+                                data: data.data,
+                                spanGaps: false
+                            }
+                        ]},
+                    options: {
+                        responsive: true,
+                        title:{
+                            display:true,
+                            text:'نمودار پیشرفت وضعیت',
+                            position: 'top',
+                            fontSize: 16,
+                            fontFamily: "IRANSans"
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    max:100,
+                                    min:0,
+                                    stepSize: 10
+                                }
+                            }]
+                        }
+                    }
+                });
+                $.each(data.score, function(key,value){
+                    $('#info5').append('<div class="col-md-5"><p>'+value['name']+'</p></div>'+
+                    '<div class="col-md-3"><p><span class="stuPoint">'+value['st_point']+'</span>/<span class="totalPoint">'+
+                    value['t_point']+'</span></p></div>'+'<div class="col-md-4"><div class="progress">'+
+                    '<div class="progress-bar progress-bar-striped" style="width:'+value['percent']+'%'+'">'+value['percent']+'%'+'</div></div></div>');
+                });
+            }
+        });
+    });
+
+    //course stat show
     $('#co a').on('click' ,function(){
         var course = $(this).attr('rel');
-        console.log(course);
         $.ajax({
             url: '/course/ajax/'+course,
             type: "GET",
             dataType: "json",
             success:function(data) {
-                $('#class1').html('<div class="tab-pane fade"></div><h3 class="black">اطلاعات کلاس</h3>'+
-                '<h4><span>'+data['course_grade']+'</span>' +'&nbsp;-&nbsp;'+
-                '<span>' +data['teacher']+'</span></h4><br><br>'+
+                $('#class1').html('<div class="tab-pane fade"></div><h3 class="black"> اطلاعات درس</h3>'+
+                '<h4><span>'+data['course_grade']+'</span></h4><br><br>'+
                 '<div class="row" ><div class="col-md-1 col-sm-1"></div><div class="col-md-10 col-sm-10"><canvas id="student-line"></canvas></div></div><br>'+
                 '<div class="row"><div class="col-md-12"><h4><i class="fa fa-2x fa-file-text" aria-hidden="true"></i>&nbsp;گزارش وضعیت</h4></div></div>'+
                 '<div class="row"><div class="dash-table"><div class="row dash-table-title"><div class="col-md-5"><h4>تمرین</h4></div><div class="col-md-3"><h4>امتیاز</h4></div>'+

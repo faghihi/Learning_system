@@ -363,6 +363,48 @@ class HomeController extends Controller
         return json_encode($q_info);
     }
 
+    public function clsAjax($id){
+        $email = Session::get('Email');
+        $cl = Classes::find($id);
+        $course = Course::find($cl->course_id);
+        $user = User::where('email',$email)->first();
+        $sections = Section::where('course_id',$cl->course_id)->get();
+        $scores = Score::where('user_id',$user->id)->where('course_id',$cl->course_id)->get();
+        $exercises = Exercise::all();
+
+        $info['course_grade'] = $course->name.' '.$course->grade;
+        $info['teacher'] = $course->teacher_name;
+
+
+        if(count($scores) > 0) {
+            foreach ($scores as $score) {
+                foreach ($exercises as $exercise) {
+                    if ($score->exercise_id == $exercise->id && $exercise->writer != 0) {
+                        $info['score'][$score->exercise_id]['name'] = $exercise->name;
+                        $info['score'][$score->exercise_id]['st_point'] = $score->st_point;
+                        $info['score'][$score->exercise_id]['t_point'] = $score->t_point;
+                        $info['score'][$score->exercise_id]['percent'] = $score->percent;
+                        $labels[] = $exercise->name;
+                        $data[] =$score->percent;
+                    }
+                }
+            }
+        }else{
+            $info['score'][0]['name']  = 'فعلا هیچی';
+            $info['score'][0]['st_point'] = 0;
+            $info['score'][0]['t_point'] = 0;
+            $info['score'][0]['percent'] = 0;
+            $labels[] = 'فعلا هیچی';
+            $data[] = 0;
+        }
+
+
+        $info['labels'] = $labels;
+        $info['data'] = $data;
+//        dd($info);
+        return json_encode($info);
+    }
+
     public function courseAjax($id){
         $email = Session::get('Email');
         $course = Course::find($id);
@@ -378,7 +420,7 @@ class HomeController extends Controller
             if(count($scores) > 0) {
                 foreach ($scores as $score) {
                     foreach ($exercises as $exercise) {
-                        if ($score->exercise_id == $exercise->id) {
+                        if ($score->exercise_id == $exercise->id && $exercise->writer == 0) {
                             $info['score'][$score->exercise_id]['name'] = $exercise->name;
                             $info['score'][$score->exercise_id]['st_point'] = $score->st_point;
                             $info['score'][$score->exercise_id]['t_point'] = $score->t_point;

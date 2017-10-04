@@ -16,8 +16,8 @@ use App\Exercise;
 use App\School;
 use App\Ticket;
 use App\Question;
+use Carbon\Carbon;
 
-use Faker\Provider\DateTime;
 use Illuminate\Support\Facades\Input;
 use Session;
 use DB;
@@ -79,14 +79,26 @@ class DashboardController extends Controller
         $classes = Classes::all();
         $user_course = $user->courses;
         $user_exercise = $user->exercises;
-        $today = new \DateTime('now');
+
+        $dt = Carbon::now();
+        //$exercises = Exercise::where('end_date', '>', $dt)->get();
 
         $count_solve = 0;
         $count_answer = 0;
+
         if(count($user_exercise) > 0) {
             foreach ($user_exercise as $us_ex) {
-//                $second_date = new DateTime($us_ex->end_date);
-                $diff[$us_ex->id] = $us_ex->end_date;
+                $startTime = Carbon::parse($dt);
+
+                if($us_ex->end_date != null && $us_ex->end_date > $dt) {
+                    $finishTime = Carbon::parse($us_ex->end_date);
+                    $dead = $finishTime->diff($startTime)->format('%d');
+                    if($dead > 0) {
+                        $totalDuration[$us_ex->id] = $dead;
+                    }else{
+                        $user->exercises()->detach($us_ex->id);
+                    }
+                }
 
                 $exam = Score::where('exercise_id', $us_ex->id)->where('user_id', $user->id)->first();
                 $temp = tempanswer::where('exercise_id', $us_ex->id)->where('user_id', $user->id)->get();
@@ -117,14 +129,15 @@ class DashboardController extends Controller
         $user_scores = Score::where('user_id',$user->id)->get();
         $user_classes = $user->classes;
         $grades=Grade::all();
-        $teachers = User::all();
+        $teachers = User::where('type','teacher')->get();
         $schools = School::all();
         $categories = Category::all();
         $tickets = Ticket::where('user_id', $user->id)->get();
 
         return view('dashboard')->with(['info'=>$info,'courses'=>$courses,'exercises'=>$exercises,'user_course'=>$user_course,'user'=>$user,'user_exercise'=>$user_exercise,
             'count'=>$count_solve,'user_scores'=>$user_scores,'answer_count'=>$count_answer,'user_classes'=>$user_classes,
-        'classes'=>$classes,'teachers'=>$teachers,'schools'=>$schools,'categories'=>$categories,'tickets'=>$tickets,'grades'=>$grades,'today'=>$today]);
+            'classes'=>$classes,'teachers'=>$teachers,'schools'=>$schools,'categories'=>$categories,'tickets'=>$tickets,'grades'=>$grades,
+            'totals'=>$totalDuration]);
     }
 
     public function SetGoal(){

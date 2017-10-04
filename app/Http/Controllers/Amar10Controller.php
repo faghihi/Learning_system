@@ -264,6 +264,89 @@ class Amar10Controller extends Controller
         return redirect('/Dashboard');
     }
 
+    public function see ($id) {
+
+//        $count=Input::get('number');
+        $correct = 0;
+        $status_point =0;
+        $total_point = 0;
+        $question_array=array();
+        for($i=0;$i<4;$i++){
+            $question_array[$i]['id']=Input::get('n'.$i);
+
+            if(Input::has('q'.$i)){
+                $answercheck=Input::get('q'.$i);
+            }
+            else {
+                $answercheck=0;
+            }
+            $question_array[$i]['answerthis']=$answercheck;
+            $question_array[$i]['answer']=Input::get('a'.$i);
+            $question_array[$i]['content']=Input::get('t'.$i);
+
+            $thisquest = Question::where('id',$question_array[$i]['id'])->get();
+            foreach ($thisquest as $quest) {
+
+                $answers=json_decode($quest->options);
+                for($j = 0 ;$j < 4;$j++ ){
+                    foreach($answers as $answer=>$value) {
+                        $question_array[$i]['answers'][$answer]=$value;
+                    }
+                }
+
+                if($question_array[$i]['answerthis']==0)
+                {
+                    $question_array[$i]['correct']='N';
+                    $question_array[$i]['answerthis']="شما به این سوال پاسخ نداده اید";
+                }
+                elseif($question_array[$i]['answerthis']==$question_array[$i]['answer']){
+                    $question_array[$i]['correct']='C';
+                    $question_array[$i]['answerthis']=$question_array[$i]['answers'][$question_array[$i]['answerthis']];
+                    $correct ++;
+                    switch ($quest->level)
+                    {
+                        case 0 : $question_array[$i]['level']="ساده";
+                            $status_point += 1;
+                            break;
+                        case 1:  $question_array[$i]['level']="متوسط";
+                            $status_point += 2;
+                            break;
+                        case 2:  $question_array[$i]['level']="سخت";
+                            $status_point += 3;
+                            break;
+                    }
+                }
+                else {
+                    $question_array[$i]['correct']='N';
+                    $question_array[$i]['answerthis']=$question_array[$i]['answers'][$question_array[$i]['answerthis']];
+                }
+                //dd($question_array[$i]['answers'][$question_array[$i]['answer']]);
+                $question_array[$i]['answer']=$question_array[$i]['answers'][$question_array[$i]['answer']];
+                switch ($quest->level)
+                {
+                    case 0 : $question_array[$i]['level']="ساده";
+                        $total_point += 1;
+                        break;
+                    case 1:  $question_array[$i]['level']="متوسط";
+                        $total_point += 2;
+                        break;
+                    case 2:  $question_array[$i]['level']="سخت";
+                        $total_point += 3;
+                        break;
+                }
+
+                $question_array[$i]['solution'] = $quest->solution;
+            }
+        }
+
+        $email = Session::get('Email');
+        $user = User::where('email',$email)->first();
+        $score = Score::where('user_id',$user->id)->where('exercise_id',$id)->first();
+
+        return view ('CorrectionAmar10',compact('score'))->with('questions',$question_array);
+    }
+
+
     public function check ($id){
 
         $count=Input::get('number');
@@ -402,10 +485,10 @@ class Amar10Controller extends Controller
     }
     //delete student request
     public function studeleteclass($id){
-        $ticket = Ticket::where('ticket_id',$id)->first();
-        if($ticket){
-            $ticket->delete();
-        }
+//        $ticket = Ticket::where('ticket_id',$id)->first();
+//        if($ticket){
+//            $ticket->delete();
+//        }
 
         $email = Session::get('Email');
         $user = User::where('email',$email)->first();
