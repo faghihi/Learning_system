@@ -385,18 +385,35 @@
                         @if(session()->has('error'))
                             <h4 style="color:red">{{ session()->get('error') }}</h4>
                         @endif
+                        @if(session()->has('message'))
+                            <h4 style="color:green">{{ session()->get('message') }}</h4>
+                        @endif
                         <form action="/CreateClass" method="post">
                             <input type="hidden" name="_token" value={{ csrf_token() }}>
                             <div class="row">
-                                <div class="col-md-4 col-sm-4">
+                                <div class="col-md-5 col-sm-5">
                                     <div class="form-group">
                                         <label>نام کلاس:</label>
                                         <input name="classname" type="text" class="form-control" placeholder="کلاس">
                                     </div>
                                 </div>
+                                <div class="col-md-5 col-sm-5">
+                                    <div class="form-group">
+                                        <label>درس :</label>
+                                        <select name = "course" class="form-control">
+                                        @foreach($courses as $course)
+                                            @foreach($grades as $grade)
+                                                @if($course->grade_id == $grade->id)
+                                                    <option value={{$course->id}}>{{$course->name}}-{{$grade->name}}</option>
+                                                @endif
+                                            @endforeach
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4 col-sm-4">
+                                <div class="col-md-5 col-sm-5">
                                     <div class="form-group">
                                         <label>نام مدرسه:</label>
                                         <select name="school" class="form-control" required>
@@ -536,16 +553,16 @@
                                     <div class="form-group">
                                         <label>درس:</label>
                                         <select id="choose_course" name="course" class="form-control" required>
-                                            <option value=""></option>
-                                            @if(count($courses) > 0)
-                                                @foreach($courses as $course)
-                                                    @foreach($grades as $grade)
-                                                        @if($grade->id == $course->grade_id)
-                                                            <option value={{$course->id}}>{{$course->name}}-{{$grade->name}}</option>
-                                                        @endif
-                                                    @endforeach
-                                                @endforeach
-                                            @endif
+                                            {{--<option value=""></option>--}}
+                                            {{--@if(count($courses) > 0)--}}
+                                                {{--@foreach($courses as $course)--}}
+                                                    {{--@foreach($grades as $grade)--}}
+                                                        {{--@if($grade->id == $course->grade_id)--}}
+                                                            {{--<option value={{$course->id}}>{{$course->name}}-{{$grade->name}}</option>--}}
+                                                        {{--@endif--}}
+                                                    {{--@endforeach--}}
+                                                {{--@endforeach--}}
+                                            {{--@endif--}}
                                         </select>
                                     </div>
                                 </div>

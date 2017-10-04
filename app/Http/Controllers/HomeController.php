@@ -6,6 +6,7 @@ use App\Classes;
 use App\ClassExercise;
 use App\Course;
 use App\Exercise;
+use App\Grade;
 use App\Question;
 use App\School;
 use App\Score;
@@ -314,6 +315,19 @@ class HomeController extends Controller
         }
         //dd($sec);
         return json_encode($sec);
+    }
+
+    public function coAjax($id){
+        $class = Classes::find($id);
+        $course = Course::find($class->course_id);
+        $grade = Grade::find($course->grade_id);
+
+        $info[$course->id]['id'] = $course->id;
+        $info[$course->id]['name'] = $course->name;
+        $info[$course->id]['grade'] = $grade->name;
+
+//        dd($info);
+        return json_encode($info);
     }
 
     public function quAjax($id){

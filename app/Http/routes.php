@@ -95,6 +95,7 @@ Route::get('/guide' , 'HomeController@guide');
 
 Route::get('school/ajax/{id}','HomeController@schoolAjax');
 Route::get('cl/ajax/{id}','HomeController@clAjax');
+Route::get('co/ajax/{id}','HomeController@coAjax');
 Route::get('section/ajax/{id}','HomeController@sectionAjax');
 Route::get('my/ajax/{id}','HomeController@myAjax');
 Route::get('student/ajax/{id}','HomeController@studentAjax');

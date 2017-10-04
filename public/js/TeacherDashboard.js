@@ -596,7 +596,7 @@ $('#myQ').on('click', function(){
         $('#choose_course').attr('id', 'c');
         $('#choose_section').attr('id', 's');
 
-        $('#c').on('change', function() {
+        //$('#c').on('click', function() {
             var id = $("#c option:selected").val();
 
             $.ajax({
@@ -607,8 +607,15 @@ $('#myQ').on('click', function(){
                     $('#s').empty();
                     $.each(data, function(key, value) {
                         $('#s').append('<option value="'+ key +'">'+ value.name +'</option>');
-                        $('#s').on('click' , function(){
 
+                        var sec = $('#s option:selected').val();
+                        if(key == sec){
+                            $('#easy_num').val(value.easy);
+                            $('#medium_num').val(value.medium);
+                            $('#hard_num').val(value.hard);
+                        }
+
+                        $('#s').on('click' , function(){
                             var sec = $('#s option:selected').val();
                             if(key == sec){
                                 $('#easy_num').val(value.easy);
@@ -619,7 +626,7 @@ $('#myQ').on('click', function(){
                     });
                 }
             });
-        });
+        //});
 
     }else{
         $('#my_form').attr('action', '/createEx');
@@ -628,7 +635,23 @@ $('#myQ').on('click', function(){
     }
 });
 
-$('#choose_course').on('change', function() {
+$('#choose-cl').on('change' , function(){
+    var cl = $("#choose-cl option:selected").val();
+    console.log(cl);
+    $.ajax({
+        url: '/co/ajax/'+cl,
+        type: "GET",
+        dataType: "json",
+        success:function(data) {
+            $('#choose_section').empty();
+            $.each(data, function(key, value) {
+                $('#choose_course').append('<option value="' + value.id + '">' + value.name +'-'+ value.grade + '</option>');
+            });
+        }
+    });
+});
+
+$('#choose_course').on('click', function() {
     var id = $("#choose_course option:selected").val();
 
     $.ajax({
@@ -639,8 +662,15 @@ $('#choose_course').on('change', function() {
             $('#choose_section').empty();
             $.each(data, function(key, value) {
                 $('#choose_section').append('<option value="'+ key +'">'+ value.name +'</option>');
-                $('#choose_section').on('click' , function(){
 
+                var sec = $('#choose_section option:selected').val();
+                if(key == sec){
+                    $('#easy_num').val(value.easy);
+                    $('#medium_num').val(value.medium);
+                    $('#hard_num').val(value.hard);
+                }
+
+                $('#choose_section').on('click' , function(){
                     var sec = $('#choose_section option:selected').val();
                     if(key == sec){
                         $('#easy_num').val(value.easy);

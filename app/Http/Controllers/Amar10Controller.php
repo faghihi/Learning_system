@@ -26,7 +26,7 @@ class Amar10Controller extends Controller
         //set rules for validation
         $rules = array(
             'classname' => 'required|max:64',
-            //'join_code' => 'required'
+            'course' => 'required'
         );
 
         $messages = [
@@ -41,9 +41,11 @@ class Amar10Controller extends Controller
         }
         $classname = Input::get('classname');
         $school_id = Input::get('school');
-        //$code = Input::get('join_code');
+        $co = Input::get('course');
+
+
         $teacher = User::where('email',Session::get('Email'))->first();
-        $class = Classes::where('name',$classname)->where('school_id',$school_id)->first();
+        $class = Classes::where('name',$classname)->where('school_id',$school_id)->where('course_id',$co)->first();
 
         if($class){
             return redirect()->back()->with('error','قبلا از این اسم برای کلاس استفاده شده است');
@@ -52,8 +54,9 @@ class Amar10Controller extends Controller
             $class = new classes();
             $class->name = $classname;
             $class->school_id = $school_id;
-            $class->Rstring = strtoupper(str_random(7));
+            $class->Rstring = strtoupper(str_random(8));
             $class->teacher_name = $teacher->id;
+            $class->course_id = $co;
             $class->save();
 
             $ticket = new Ticket([
@@ -69,7 +72,7 @@ class Amar10Controller extends Controller
             $ticket->save();
         }
 
-        return redirect('/TDashboard')->with('message','کلاس جدید ایجاد شد');
+        return redirect()->back()->with('message' ,'رمز کلاس ایجاد شده :' .$class->Rstring);
     }
 
     //add course to database

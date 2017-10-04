@@ -557,8 +557,11 @@
                             <div class="col-md-4">
                                 <h4>نام تمرین</h4>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-2">
                                 <h4>آموزگار</h4>
+                            </div>
+                            <div class="col-md-2">
+                                <h4>زمان</h4>
                             </div>
                             <div class="col-md-2">
                                 <h4>حل</h4>
@@ -577,7 +580,7 @@
                                             <div class="col-md-4">
                                                 <p>{{$exercise->name}}</p>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-2">
                                                     @if($use->writer != 0)
                                                         @foreach($courses as $course)
                                                             @if($course->id == $use->course_id)
@@ -588,6 +591,17 @@
                                                         سایت
                                                     @endif
                                             </div>
+                                            <dic class="'col-md-2">
+                                            {{--@if(count($user_exercise) > 0)--}}
+                                                {{--@foreach($user_exercise as $exercise)--}}
+                                                    {{--@if($exercise)--}}
+                                                        {{--<p>{{'hello'}}</p>--}}
+                                                    {{--@else--}}
+                                                        {{--....--}}
+                                                    {{--@endif--}}
+                                                {{--@endforeach--}}
+                                            {{--@endif--}}
+                                            </dic>
                                             <div class="col-md-2">
                                                 <a href="/exercise/{{$exercise->id}}"><button class="btn btn-success btn-sm">شروع</button></a>
                                             </div>
