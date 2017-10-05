@@ -411,22 +411,25 @@ class HomeController extends Controller
         $user = User::where('email',$email)->first();
         $sections = Section::where('course_id',$id)->get();
         $scores = Score::where('user_id',$user->id)->where('course_id',$id)->get();
-        $exercises = Exercise::all();
-
+        $exercises = $user->exercises()->where('course_id',$id)->where('writer',0)->get();
+//        dd($exercises);
         $info['course_grade'] = $course->name.' '.$course->grade;
         $info['teacher'] = $course->teacher_name;
 
+        $flag = 1;
 
             if(count($scores) > 0) {
                 foreach ($scores as $score) {
                     foreach ($exercises as $exercise) {
-                        if ($score->exercise_id == $exercise->id && $exercise->writer == 0) {
+                        if ($score->exercise_id == $exercise->id) {
                             $info['score'][$score->exercise_id]['name'] = $exercise->name;
                             $info['score'][$score->exercise_id]['st_point'] = $score->st_point;
                             $info['score'][$score->exercise_id]['t_point'] = $score->t_point;
                             $info['score'][$score->exercise_id]['percent'] = $score->percent;
                             $labels[] = $exercise->name;
-                            $data[] =$score->percent;
+                            $data[] = $score->percent;
+
+                            $flag = 0;
                         }
                     }
                 }
@@ -437,12 +440,25 @@ class HomeController extends Controller
                 $info['score'][0]['percent'] = 0;
                 $labels[] = 'فعلا هیچی';
                 $data[] = 0;
+
+                $flag = 0;
             }
 
 
+            if($flag) {
+                $info['score'][0]['name'] = 'فعلا هیچی';
+                $info['score'][0]['st_point'] = 0;
+                $info['score'][0]['t_point'] = 0;
+                $info['score'][0]['percent'] = 0;
+                $labels[] = 'فعلا هیچی';
+                $data[] = 0;
+
+                $flag = 0;
+            }
+
         $info['labels'] = $labels;
         $info['data'] = $data;
-        //dd($info);
+//        dd($info);
         return json_encode($info);
     }
 
