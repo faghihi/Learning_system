@@ -165,6 +165,8 @@
                         </div>
                         <p> تمرین های حل شده:&nbsp;<span class="UrTest">{{$count}}</span>/<span class="GoalTest">{{$info['exam']}}</span></p>
                         <p>سوالات حل شده:&nbsp;<span class="UrQue">{{$answer_count}}</span>/<span class="GoalQue">{{$info['questions']}}</span></p>
+                        <hr>
+                        <b><p>زمان باقی مانده :&nbsp;<span>{{$info['time']}} روز</span></p></b>
                     </div>
                 </div>
                 <br><br>

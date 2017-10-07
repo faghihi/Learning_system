@@ -65,70 +65,109 @@ class DashboardController extends Controller
             return redirect('/TDashboard');
         }
 
+        $dt = Carbon::now();
         $goals = Goal::where('user_id',$user->id)->get();
 
-        $info=array();
-        $info['exam']=0;
-        $info['questions']=0;
-        foreach ($goals as $us){
-            $info['exam']=$us->ex_count;
-            $info['questions']=$us->q_count;
+        $info = array();
+        $info['exam'] = 0;
+        $info['questions'] = 0;
+        $info['time'] = 0;
+        $count_answer = 0;
+        $count_solve = 0;
+        $totalDuration = [];
+
+        if(count($goals) > 0) {
+            foreach ($goals as $us) {
+                $info['exam'] = $us->ex_count;
+                $info['questions'] = $us->q_count;
+
+                $stGoalTime = Carbon::parse($dt);
+
+                if ($us->end_date > $dt) {
+                    $enGoalTime = Carbon::parse($us->end_date);
+                    $dead = $enGoalTime->diff($stGoalTime)->format('%d') + 1;
+                    if ($dead > 0) {
+                        $info['time'] = $dead;
+
+                        $user_exercise = $user->exercises;
+
+                        $count_solve = 0;
+                        $count_answer = 0;
+
+                        if (count($user_exercise) > 0) {
+                            foreach ($user_exercise as $us_ex) {
+                                $startTime = Carbon::parse($dt);
+
+                                if ($us_ex->end_date != null && $us_ex->end_date > $dt) {
+                                    $finishTime = Carbon::parse($us_ex->end_date);
+                                    $dead = $finishTime->diff($startTime)->format('%d') + 1;
+                                    if ($dead > 0) {
+                                        $totalDuration[$us_ex->id] = $dead;
+                                    } else {
+                                        //$user->exercises()->detach($us_ex->id);
+                                    }
+                                }
+
+                                $exam = Score::where('exercise_id', $us_ex->id)->where('user_id', $user->id)->first();
+                                $temp = tempanswer::where('exercise_id', $us_ex->id)->where('user_id', $user->id)->get();
+
+                                $smp = DB::table('users_exercises')->where('exercise_id', $us_ex->id)
+                                    ->where('user_id', $user->id)->first();
+
+                                if ($smp->status == 2) {
+                                    $count_solve++;
+                                }
+                                if (count($temp) > 0) {
+                                    foreach ($temp as $t) {
+                                        if ($t->answer > 0) {
+                                            $count_answer++;
+                                        }
+                                    }
+                                }
+
+                                if ($exam) {
+                                    $count_answer += $exam->q_count;
+                                } else {
+                                    $exam = [];
+                                }
+                            }
+
+                        }
+                    }
+                } else {
+                    $count_answer = 0;
+                    $count_solve = 0;
+
+                    $us->delete();
+                }
+            }
         }
+
         $courses = Course::all();
         $exercises = Exercise::all();
         $classes = Classes::all();
         $user_course = $user->courses;
         $user_exercise = $user->exercises;
 
-        $dt = Carbon::now();
-        //$exercises = Exercise::where('end_date', '>', $dt)->get();
-
-        $count_solve = 0;
-        $count_answer = 0;
-
-        if(count($user_exercise) > 0) {
+        if (count($user_exercise) > 0) {
             foreach ($user_exercise as $us_ex) {
                 $startTime = Carbon::parse($dt);
 
-                if($us_ex->end_date != null && $us_ex->end_date > $dt) {
+                if ($us_ex->end_date != null && $us_ex->end_date > $dt) {
                     $finishTime = Carbon::parse($us_ex->end_date);
-                    $dead = $finishTime->diff($startTime)->format('%d');
-                    if($dead > 0) {
+                    $dead = $finishTime->diff($startTime)->format('%d') + 1;
+                    if ($dead > 0) {
                         $totalDuration[$us_ex->id] = $dead;
-                    }else{
-                        $user->exercises()->detach($us_ex->id);
+                    } else {
+                        //$user->exercises()->detach($us_ex->id);
                     }
-                }
-
-                $exam = Score::where('exercise_id', $us_ex->id)->where('user_id', $user->id)->first();
-                $temp = tempanswer::where('exercise_id', $us_ex->id)->where('user_id', $user->id)->get();
-
-                $smp = DB::table('users_exercises')->where('exercise_id',$us_ex->id)
-                    ->where('user_id',$user->id)->first();
-
-                if ($smp->status == 2) {
-                    $count_solve++;
-                }
-                if (count($temp) > 0) {
-                    foreach ($temp as $t) {
-                        if ($t->answer > 0) {
-                            $count_answer++;
-                        }
-                    }
-                }
-
-                if ($exam) {
-                    $count_answer += $exam->q_count;
-                } else {
-                    $exam = [];
                 }
             }
-
         }
-//        dd($diff);
+
         $user_scores = Score::where('user_id',$user->id)->get();
         $user_classes = $user->classes;
-        $grades=Grade::all();
+        $grades = Grade::all();
         $teachers = User::where('type','teacher')->get();
         $schools = School::all();
         $categories = Category::all();
@@ -143,11 +182,10 @@ class DashboardController extends Controller
     public function SetGoal(){
         $exams=(int) Input::get('exam');
         $questions=(int) Input::get('questions');
-        $email=Session::get('Email');
-        $user=User::where('email',$email)->first();
-        $goals=Goal::where('user_id',$user->id)->get();
+        $email = Session::get('Email');
+        $user = User::where('email',$email)->first();
+        $goals = Goal::where('user_id',$user->id)->get();
         $check=0;
-
 
         $date = new \DateTime('now');
         $end = new \DateTime('now');
