@@ -20,7 +20,9 @@ use Illuminate\Support\Facades\Session;
 
 class ExerciseController extends Controller
 {
-    //create an exercise
+    /**
+     * create an exercise
+     */
     public function create(){
         //set rules for validation
         $rules = array(

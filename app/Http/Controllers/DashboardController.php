@@ -82,17 +82,14 @@ class DashboardController extends Controller
                 $info['questions'] = $us->q_count;
 
                 $stGoalTime = Carbon::parse($dt);
+                $enGoalTime = Carbon::parse($us->end_date);
 
                 if ($us->end_date > $dt) {
-                    $enGoalTime = Carbon::parse($us->end_date);
                     $dead = $enGoalTime->diff($stGoalTime)->format('%d') + 1;
                     if ($dead > 0) {
                         $info['time'] = $dead;
 
                         $user_exercise = $user->exercises;
-
-                        $count_solve = 0;
-                        $count_answer = 0;
 
                         if (count($user_exercise) > 0) {
                             foreach ($user_exercise as $us_ex) {
@@ -138,7 +135,13 @@ class DashboardController extends Controller
                     $count_answer = 0;
                     $count_solve = 0;
 
-                    $us->delete();
+                    $info['time'] = 7;
+
+                    $deadline =  $enGoalTime->addDays(7);
+
+                    $goal = Goal::find($us->id);
+                    $goal->end_date = $deadline->format('Y-m-d');
+                    $goal->save();
                 }
             }
         }
@@ -153,13 +156,17 @@ class DashboardController extends Controller
             foreach ($user_exercise as $us_ex) {
                 $startTime = Carbon::parse($dt);
 
-                if ($us_ex->end_date != null && $us_ex->end_date > $dt) {
+                if ($us_ex->end_date != null) {
                     $finishTime = Carbon::parse($us_ex->end_date);
                     $dead = $finishTime->diff($startTime)->format('%d') + 1;
-                    if ($dead > 0) {
+                    if ($dead > 0  && $us_ex->end_date > $dt) {
                         $totalDuration[$us_ex->id] = $dead;
                     } else {
-                        //$user->exercises()->detach($us_ex->id);
+                        foreach($us_ex as $exercise){
+                                $exercise=Exercise::find($us_ex->id);
+                                $exercise->deadline = true;
+                                $exercise->save();
+                        }
                     }
                 }
             }

@@ -592,7 +592,7 @@
                             @foreach($exercises as $exercise)
                                 @if(count($user_exercise) > 0)
                                 @foreach($user->exercises as $use)
-                                    @if($exercise->id == $use->id && $use->pivot->status == 0)
+                                    @if($exercise->id == $use->id && $use->deadline == false)
                                         <div class="row dash-table-content chapter">
                                             <div class="col-md-4">
                                                 <p>{{$exercise->name}}</p>
