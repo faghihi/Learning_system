@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Input;
 use Session;
 use App\tempanswer;
 
-class Amar10Controller extends Controller
+class CourseController extends Controller
 {
     //create class
     public function index() {

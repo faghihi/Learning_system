@@ -12,7 +12,11 @@ use Illuminate\Support\Facades\Input;
 
 class LoginController extends Controller
 {
-    //
+    /*
+     * show login & register form
+     *
+     *
+     */
     public function get(){
         if(Session::get('Login')=="True")
         {
@@ -20,7 +24,7 @@ class LoginController extends Controller
         }
         $schools = School::all();
         $courses = Course::all();
-        $grades=Grade::all();
+        $grades = Grade::all();
         $teachers = User::where('type','teacher')->get();
 
         return view('login-register')->with(['schools'=>$schools,'courses'=>$courses,'grades'=>$grades,'teachers'=>$teachers]);

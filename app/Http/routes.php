@@ -13,31 +13,13 @@
 
 Route::get('/', array('as' => 'home_route', 'uses' => 'HomeController@get'));
 
-Route::get('/Dashboard','DashboardController@get');
-Route::get('/TDashboard','DashboardController@index');
-Route::get('/Dashboard/SetGoal','DashboardController@SetGoal');
-Route::get('/Contact','ContactController@get');
-Route::get('/Courses/{id}','Amar10Controller@get');
-Route::get('/Q/Courses/{name}','Amar10Controller@quest');
-Route::get('/AddCourse/{id}','Amar10Controller@add');
-Route::post('/DeleteCourse/{id}' , 'Amar10Controller@delete');
-Route::get('/DeleteCourse/{id}', 'DashboardController@deletecourse');
-Route::post('/Check/{id}','Amar10Controller@check');
-Route::get('/see/{id}','Amar10Controller@see');
-Route::post('/Save/{id}','Amar10Controller@save');
-Route::get('/Q/Continue','Amar10Controller@continuethis');
-Route::get('/Dashboard/{id}', 'DashboardController@correct');
-
-Route::get('/Profile','ProfileController@get');
-Route::get('/Profile/Check','ProfileController@check');
-Route::post('/Profile','ProfileController@change');
-Route::post('/ChangePass','ProfileController@changepass');
+//LoginController Routes
 Route::get('/UserArea','LoginController@get');
 Route::post('/SignUp','LoginController@Signup');
 Route::post('/Login','LoginController@Login');
 Route::get('/Logout','LoginController@Logout');
-Route::post('/Contact','ContactController@post');
 
+//Forgot Password & Reset Password
 Route::get('/Forgetpass' , function(){
     return view ('forget');
 });
@@ -48,17 +30,41 @@ Route::get('/Reset' , function(){
 });
 Route::post('/Reset' , 'LoginController@reset');
 
-Route::post('/CreateClass' , 'Amar10Controller@index');
 
-Route::post('/CreateCourse' , 'Amar10Controller@addcourse');
+Route::get('/Dashboard','DashboardController@get');
+Route::get('/TDashboard','DashboardController@index');
+Route::get('/Dashboard/SetGoal','DashboardController@SetGoal');
+Route::get('/Contact','ContactController@get');
+Route::get('/Courses/{id}','CourseController@get');
+//Route::get('/Q/Courses/{name}','CourseController@quest');
+Route::get('/AddCourse/{id}','CourseController@add');
+Route::post('/DeleteCourse/{id}' , 'CourseController@delete');
+Route::get('/DeleteCourse/{id}', 'DashboardController@deletecourse');
+Route::post('/Check/{id}','CourseController@check');
+Route::get('/see/{id}','CourseController@see');
+Route::post('/Save/{id}','CourseController@save');
+Route::get('/Q/Continue','CourseController@continuethis');
+Route::get('/Dashboard/{id}', 'DashboardController@correct');
 
-Route::post('/checkcode' , 'Amar10Controller@checkrepetetive');
+//Profile Route
+Route::get('/Profile','ProfileController@get');
+Route::get('/Profile/Check','ProfileController@check');
+Route::post('/Profile','ProfileController@change');
+Route::post('/ChangePass','ProfileController@changepass');
 
-Route::get('/checkeasynum' , 'Amar10Controller@checkeasynum');
-Route::get('/checkmednum' , 'Amar10Controller@checkmednum');
-Route::get('/checkhardnum' , 'Amar10Controller@checkhardnum');
+Route::post('/Contact','ContactController@post');
 
-Route::get('/problem' , 'Amar10Controller@problem');
+Route::post('/CreateClass' , 'CourseController@index');
+
+Route::post('/CreateCourse' , 'CourseController@addcourse');
+
+Route::post('/checkcode' , 'CourseController@checkrepetetive');
+
+Route::get('/checkeasynum' , 'CourseController@checkeasynum');
+Route::get('/checkmednum' , 'CourseController@checkmednum');
+Route::get('/checkhardnum' , 'CourseController@checkhardnum');
+
+Route::get('/problem' , 'CourseController@problem');
 
 Route::post('/CreateEx' , 'ExerciseController@create');
 
@@ -84,9 +90,9 @@ Route::get('/delete/{id}' , 'ExerciseController@delete');
 
 Route::get('/del/{id}' , 'ExerciseController@del');
 
-Route::get('/DeleteClass/{id}' , 'Amar10Controller@deleteclass');
+Route::get('/DeleteClass/{id}' , 'CourseController@deleteclass');
 
-Route::get('/StuDeleteClass/{id}' , 'Amar10Controller@studeleteclass');
+Route::get('/StuDeleteClass/{id}' , 'CourseController@studeleteclass');
 
 Route::get('/DeleteTicket/{id}' , 'TicketsController@deleteticket');
 
