@@ -67,10 +67,10 @@
             <a href="#"></a>
         </div>
         <div class="social text-center">
-            <a href="#"><i class="fa fa-twitter" title="twitter"></i></a>
-            <a href="#"><i class="fa fa-facebook" title="facebook"></i></a>
-            <a href="#"><i class="fa fa-instagram" title="instagram"></i></a>
-            <a href="#"><i class="fa fa-location-arrow" title="telegram"></i></a>
+            {{--<a href="#"><i class="fa fa-twitter" title="twitter"></i></a>--}}
+            {{--<a href="#"><i class="fa fa-facebook" title="facebook"></i></a>--}}
+            <a href="https://www.instagram.com/_u/official.hich"><i class="fa fa-instagram" title="instagram"></i></a>
+            <a href="https://t.me/Official_Hich"><i class="fa fa-location-arrow" title="telegram"></i></a>
         </div>
 
         <!-- Modal -->
@@ -165,7 +165,11 @@
                             @foreach($courses as $course)
                                 <div class="course-block" data-filter-item data-filter-name="{{$course->name}}">
                                     <p>{{$course->name}}</p>
-                                    <p>مقطع: &nbsp;<span>{{$course->grade}}</span></p>
+                                    @foreach($grades as $grade)
+                                        @if($grade->id == $course->grade_id)
+                                            <p>مقطع: &nbsp;<span>{{$grade->name}}</span></p>
+                                        @endif
+                                    @endforeach
                                 </div>
                             @endforeach
                         </div>

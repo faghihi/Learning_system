@@ -67,7 +67,11 @@
                                     <div class="caption maxheight2">
                                         <div class="box_inner">
                                             <div class="box">
-                                                <p class="title"><h5>{{$nc->name}}</h5></p>
+                                                @foreach($grades as $grade)
+                                                    @if($nc->grade_id == $grade->id)
+                                                        <p class="title"><h5>{{$nc->name}}-{{$grade->name}}</h5></p>
+                                                    @endif
+                                                @endforeach
                                             </div>
                                         </div>
                                     </div>

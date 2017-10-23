@@ -26,11 +26,11 @@ class HomeController extends Controller
         $courses = Course::all();
         $teachers = User::where('type','teacher')->get();
         $schools = School::all();
-
+        $grades = Grade::all();
         //show 3 course in random order
         $new_course = Course::orderBy('created_at','desc')->take(3)->get();
 
-        return view('index' ,compact('user','courses','teachers','schools','new_course'));
+        return view('index' ,compact('user','courses','teachers','schools','new_course','grades'));
     }
 
     public function guide(){

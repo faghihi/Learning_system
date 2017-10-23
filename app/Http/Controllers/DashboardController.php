@@ -41,7 +41,7 @@ class DashboardController extends Controller
         $sections = Section::all();
         $class_exercise = ClassExercise::all();
         $grades=Grade::all();
-        $tickets = Ticket::where('user_id', $user->id)->get();
+        $tickets = Ticket::where('user_id', $user->id)->orderBy('created_at','desc')->get();
         $categories = Category::all();
         $teachers = User::where('type','teacher')->get();
         $user_classes = Classes::where('teacher_name',$user->id)->get();

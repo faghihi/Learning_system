@@ -113,8 +113,6 @@
                                     @endif
                                 @endforeach
                             @endforeach
-                        @else
-                            فعلا هیچی
                         @endif
                     </ul>
                     <br>
